@@ -1,3 +1,5 @@
 company-plan.html
 .playwright-mcp/
 .DS_Store
+.vercel
+node_modules/
