@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { PersonaProvider } from "@/components/PersonaProvider";
-import SiteNav from "@/components/SiteNav";
-import SiteFooter from "@/components/SiteFooter";
 
 // Fraunces — variable, optical-size axis, normal + italic (replaces the blocking @import).
 const fraunces = Fraunces({
@@ -50,11 +47,7 @@ export default function RootLayout({
     <html lang="en-IN" className={`${fraunces.variable} ${jakarta.variable}`} suppressHydrationWarning>
       <body className="grain">
         <script dangerouslySetInnerHTML={{ __html: noFoucScript }} />
-        <PersonaProvider>
-          <SiteNav />
-          {children}
-          <SiteFooter />
-        </PersonaProvider>
+        {children}
       </body>
     </html>
   );
