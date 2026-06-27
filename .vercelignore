@@ -1,0 +1,18 @@
+# Only the Next.js app (app/, components/, public/, config) is deployed.
+# Everything below is local experiment / asset / tooling clutter — never shipped.
+# Root-anchored file patterns (leading /) so nothing under public/ is excluded.
+.playwright-mcp/
+.design-sync/
+audit/
+design-system/
+driftibo-marketing/
+driftibo-brand-kit/
+instagram-mcp/
+legacy/
+/*.png
+/*.jpg
+/*.jpeg
+/*.zip
+/*.mov
+/*.webm
+/*.html

@@ -3,3 +3,28 @@ company-plan.html
 .DS_Store
 .vercel
 node_modules/
+
+# Next.js
+.next/
+next-env.d.ts
+out/
+.turbo/
+
+# Driftibo generation pipeline — never commit secrets, sessions, or generated media
+**/pipeline/.env
+**/.grok-auth.json
+**/pipeline/out/
+**/pipeline/anchors/
+**/pipeline/music/
+
+# Driftibo growth-agent — never commit the review queue, sessions, secrets, or generated assets
+# (redline: no committed secrets/sessions/generated media — [rules-of-the-road.md §6])
+**/growth-agent/.env
+**/growth-agent/.sessions/
+**/growth-agent/out/
+**/growth-agent/*.session.json
+**/growth-agent/.*-auth.json
+
+# generated overlay renders (large, lossless)
+**/templates/overlays/*.mov
+**/templates/overlays/*.webm

@@ -1,0 +1,325 @@
+/* Driftibo Design System — shared foundation.
+   Ported verbatim from the Claude Design project's tokens.css.
+   The only change: the Google-Fonts @import is dropped (fonts now load via
+   next/font in app/layout.tsx) and --display/--ui point at the injected
+   --font-display / --font-ui CSS variables.
+   Coral = punctuation only; --pk-ink for seal/footer/dark-callout only; no dark scrims. */
+
+:root {
+  /* ── Teal ink ramp (seal / footer / dark callouts only) ── */
+  --pk-ink:        oklch(0.38 0.06 220);
+  --pk-ink-soft:   oklch(0.46 0.06 220);
+  --pk-on-ink:     oklch(0.965 0.012 210);
+
+  /* ── Coral accent (1 punctuation per section) ── */
+  --pk-accent:     oklch(0.80 0.085 32);
+  --pk-accent-deep:oklch(0.66 0.12 32);   /* coral as TEXT on light — passes contrast */
+
+  /* ── Light ground ramp ── */
+  --pk-paper:      oklch(0.972 0.012 210); /* primary ground */
+  --pk-panel:      oklch(0.95 0.016 215);  /* raised section */
+  --pk-card:       oklch(0.995 0.004 210); /* card surface */
+  --pk-sky:        oklch(0.93 0.035 220);  /* nav "sky" scrolled state */
+
+  /* ── Text ── */
+  --pk-text:       oklch(0.32 0.035 220);  /* body on light */
+  --pk-muted:      oklch(0.57 0.03 210);   /* secondary */
+
+  /* ── Lines ── */
+  --pk-line:       oklch(0.85 0.028 210);
+  --pk-line-soft:  oklch(0.90 0.02 210);
+  --pk-line-strong:oklch(0.76 0.025 210); /* UI component boundaries — SC 1.4.11 (3:1) */
+
+  /* ── Teal-tinted shadows ── */
+  --pk-shadow-sm:  0 1px 3px oklch(0.38 0.06 220 / 0.07);
+  --pk-shadow:     0 2px 8px oklch(0.38 0.06 220 / 0.07), 0 14px 36px oklch(0.38 0.06 220 / 0.10);
+  --pk-shadow-lg:  0 4px 14px oklch(0.38 0.06 220 / 0.10), 0 28px 64px oklch(0.38 0.06 220 / 0.14);
+
+  /* ── Spacing scale (8pt) ── */
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px; --s5: 24px;
+  --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px; --s10: 128px;
+
+  /* ── Radii ── */
+  --r-sm: 8px; --r-md: 14px; --r-lg: 22px; --r-pill: 999px;
+
+  --display: var(--font-display), 'Fraunces', Georgia, serif;
+  --ui: var(--font-ui), 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--ui);
+  color: var(--pk-text);
+  background: var(--pk-paper);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.65;
+}
+
+/* Grain — fixed film over everything @0.035 */
+.grain::before, body.grain::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Type helpers ── */
+.display   { font-family: var(--display); font-weight: 300; line-height: 1.02; letter-spacing: -0.015em; color: var(--pk-text); }
+.display-xl{ font-family: var(--display); font-weight: 300; line-height: 0.98; letter-spacing: -0.02em; font-size: clamp(2.8rem, 7vw, 5.5rem); color: var(--pk-text); }
+.poetry    { font-family: var(--display); font-weight: 300; font-style: italic; color: var(--pk-text); }
+.kicker    { font-family: var(--ui); font-weight: 700; text-transform: uppercase; letter-spacing: 0.34em; font-size: 0.6875rem; color: var(--pk-accent-deep); }
+.lede      { font-size: 1.0625rem; color: var(--pk-muted); }
+.eyebrow   { font-family: var(--display); font-style: italic; font-weight: 300; color: var(--pk-muted); }
+
+/* ── Rule ── */
+.rule { width: 32px; height: 1px; background: var(--pk-accent); opacity: 0.45; border: 0; }
+
+/* ── Buttons ── */
+.btn { font-family: var(--ui); font-weight: 600; font-size: 0.9375rem; border: 0; border-radius: var(--r-pill);
+  padding: 13px 26px; cursor: pointer; transition: transform .18s ease, box-shadow .18s ease;
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: var(--pk-ink); color: var(--pk-on-ink); box-shadow: var(--pk-shadow-sm); }
+.btn-primary:hover { box-shadow: var(--pk-shadow); }
+.btn-accent  { background: oklch(0.80 0.085 32); color: oklch(0.24 0.03 250); }.btn-ghost   { background: transparent; color: var(--pk-text); box-shadow: inset 0 0 0 1px var(--pk-line); }
+.btn-ghost:hover { box-shadow: inset 0 0 0 1px var(--pk-accent); }
+.btn-sm { padding: 9px 16px; font-size: 0.8125rem; }
+.btn-lg { padding: 16px 34px; font-size: 1.0625rem; }
+
+/* ── Focus visibility (WCAG SC 2.4.7) ── */
+*:focus-visible { outline: 2px solid var(--pk-ink); outline-offset: 3px; border-radius: 4px; }
+.btn:focus-visible { outline: 2px solid var(--pk-ink); outline-offset: 4px; border-radius: var(--r-pill); }
+.pill:focus-visible { outline: 2px solid var(--pk-ink); outline-offset: 3px; border-radius: var(--r-pill); }
+.card:focus-visible { outline: 2px solid var(--pk-ink); outline-offset: 2px; border-radius: var(--r-lg); }
+.callout-ink *:focus-visible { outline-color: var(--pk-accent); }
+
+/* ── Pills / tags ── */
+.pill { font-family: var(--ui); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.02em;
+  padding: 6px 13px; border-radius: var(--r-pill); background: var(--pk-panel); color: var(--pk-muted);
+  box-shadow: inset 0 0 0 1px var(--pk-line-soft); display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  transition: all .15s ease; }
+.pill:hover { transform: translateY(-1px); }
+.pill[aria-pressed="true"], .pill.is-on { background: var(--pk-ink); color: var(--pk-on-ink);
+  box-shadow: 0 0 0 2px var(--pk-accent), var(--pk-shadow-sm); transform: translateY(-1px); }
+
+/* ── Card shell ── */
+.card { background: var(--pk-card); border-radius: var(--r-lg); box-shadow: var(--pk-shadow);
+  overflow: hidden; transition: border-radius .3s ease; }
+.card-pad { padding: var(--s5); }
+
+/* ── Image well — rich painterly stand-in for a real anchored photo ──
+   Deep, saturated, never washes to white. Add a scene class (.s-chopta etc.)
+   for a destination-specific palette; the base is a generic alpine dusk. */
+.well { position: relative; overflow: hidden; background:
+    radial-gradient(95% 70% at 32% -6%, oklch(0.80 0.09 222 / .92), transparent 60%),
+    radial-gradient(85% 65% at 84% 6%, oklch(0.90 0.04 250 / .7), transparent 55%),
+    radial-gradient(120% 95% at 50% 122%, oklch(0.40 0.08 200), transparent 62%),
+    linear-gradient(168deg, oklch(0.60 0.08 210) 0%, oklch(0.40 0.08 218) 70%, oklch(0.30 0.06 228) 100%); }
+
+/* ── Destination scene palettes — colorful, place-evocative ── */
+.s-chopta { background:
+    radial-gradient(95% 70% at 30% -4%, oklch(0.86 0.07 230 / .95), transparent 62%),
+    radial-gradient(78% 55% at 80% 6%, oklch(0.94 0.03 250 / .82), transparent 55%),
+    radial-gradient(125% 95% at 52% 122%, oklch(0.42 0.11 158), transparent 62%),
+    linear-gradient(168deg, oklch(0.64 0.09 205) 0%, oklch(0.42 0.10 166) 64%, oklch(0.30 0.08 172) 100%) !important; }
+.s-spiti { background:
+    radial-gradient(92% 64% at 50% -8%, oklch(0.40 0.08 288 / .96), transparent 60%),
+    radial-gradient(86% 58% at 82% 102%, oklch(0.80 0.08 68 / .55), transparent 58%),
+    radial-gradient(70% 60% at 16% 90%, oklch(0.62 0.07 300 / .6), transparent 60%),
+    linear-gradient(166deg, oklch(0.60 0.07 272) 0%, oklch(0.52 0.06 258) 46%, oklch(0.39 0.06 262) 100%) !important; }
+.s-ziro { background:
+    radial-gradient(92% 58% at 38% -4%, oklch(0.88 0.05 150 / .85), transparent 60%),
+    radial-gradient(72% 50% at 84% 64%, oklch(0.82 0.13 96 / .65), transparent 55%),
+    radial-gradient(110% 85% at 58% 122%, oklch(0.72 0.14 132), transparent 62%),
+    linear-gradient(166deg, oklch(0.68 0.11 152), oklch(0.44 0.12 140)) !important; }
+.s-gokarna { background:
+    radial-gradient(94% 60% at 50% -6%, oklch(0.84 0.11 50 / .92), transparent 60%),
+    radial-gradient(82% 52% at 82% 78%, oklch(0.88 0.10 76 / .7), transparent 55%),
+    radial-gradient(105% 72% at 48% 124%, oklch(0.60 0.11 214), transparent 62%),
+    linear-gradient(168deg, oklch(0.80 0.11 44), oklch(0.48 0.10 216)) !important; }
+.s-gangtey { background:
+    radial-gradient(95% 64% at 44% -4%, oklch(0.90 0.05 198 / .88), transparent 62%),
+    radial-gradient(112% 86% at 56% 122%, oklch(0.60 0.13 150), transparent 62%),
+    linear-gradient(166deg, oklch(0.72 0.10 176), oklch(0.42 0.11 156)) !important; }
+.s-dusk { background:
+    radial-gradient(95% 62% at 48% -6%, oklch(0.82 0.10 38 / .92), transparent 60%),
+    radial-gradient(90% 70% at 52% 122%, oklch(0.46 0.12 320), transparent 62%),
+    linear-gradient(168deg, oklch(0.72 0.11 36), oklch(0.40 0.10 300)) !important; }
+/* honesty caption as a bottom-left chip — never collides with an overlaid headline */
+.well::after { content: 'real anchored photo'; position: absolute; left: 9px; bottom: 8px; z-index: 1;
+  font-family: var(--ui); font-weight: 700; font-size: 0.5rem; letter-spacing: 0.13em; text-transform: uppercase;
+  color: oklch(0.99 0.01 210 / 0.92); background: oklch(0.22 0.04 225 / 0.42); -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 99px; pointer-events: none; }
+.well[data-label]::after { content: attr(data-label); }
+/* full-bleed background well behind text → drop the chip; the foreground names the place */
+.well.bg::after { display: none; }
+.mask-circle { border-radius: 50%; aspect-ratio: 1; }
+
+/* ── Compass seal (CSS clip-path star from index.html) ── */
+.seal { position: relative; border-radius: 50%; display: grid; place-items: center; aspect-ratio: 1; width: 120px; }
+.seal .ring { position: absolute; inset: 7.8%; border-radius: 50%; border: 1px solid currentColor; }
+.seal .star { width: 44%; height: 44%; position: relative;
+  clip-path: polygon(50% 0%,56% 44%,100% 50%,56% 56%,50% 100%,44% 56%,0% 50%,44% 44%); }
+.seal .card-pt { position: absolute; font-family: var(--ui); font-weight: 700; font-size: 0.5rem; line-height: 1; }
+.seal .pn { top: 9%; left: 50%; transform: translateX(-50%); }
+.seal .ps { bottom: 9%; left: 50%; transform: translateX(-50%); }
+.seal .pe { right: 9%; top: 50%; transform: translateY(-50%); }
+.seal .pw { left: 9%; top: 50%; transform: translateY(-50%); }
+/* theme: ink ground, coral star */
+.seal.t-ink  { background: var(--pk-ink); color: var(--pk-accent); }
+.seal.t-ink .star  { background: var(--pk-accent); }
+/* theme: paper ground, ink outline */
+.seal.t-paper { background: var(--pk-card); color: var(--pk-ink); box-shadow: var(--pk-shadow-sm); }
+.seal.t-paper .star { background: var(--pk-ink); }
+/* theme: coral solid */
+.seal.t-coral { background: var(--pk-accent); color: oklch(0.30 0.05 32); }
+.seal.t-coral .star { background: oklch(0.30 0.05 32); }
+
+/* spin */
+@keyframes spinRing { from { transform: rotate(0); } to { transform: rotate(1080deg); } }
+@keyframes spinStar { from { transform: rotate(0); } to { transform: rotate(-1440deg); } }
+@keyframes fadeUp  { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.spinning .ring { animation: spinRing 2.5s cubic-bezier(.15,.85,.9,1) forwards; }
+.spinning .star { animation: spinStar 2.5s cubic-bezier(.15,.85,.9,1) forwards; }
+/* looping demo spin so the design-system motion specimens are visibly in motion */
+.spin-loop .ring { animation: spinRing 3.4s cubic-bezier(.15,.85,.9,1) infinite; }
+.spin-loop .star { animation: spinStar 3.4s cubic-bezier(.15,.85,.9,1) infinite; }
+@keyframes shimmer { from { background-position: -150% 0; } to { background-position: 250% 0; } }
+@keyframes pop { 0% { opacity: 0; transform: scale(.92) translateY(10px); } 60% { transform: scale(1.02); } 100% { opacity: 1; transform: none; } }
+.shimmer-sweep::before { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: linear-gradient(110deg, transparent 35%, oklch(1 0 0 / .28) 50%, transparent 65%);
+  background-size: 220% 100%; animation: shimmer 1.6s ease-in-out infinite; }
+.pop { animation: pop .6s cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .spinning .ring, .spinning .star, .spin-loop .ring, .spin-loop .star, .shimmer-sweep::before, .pop { animation: none; }
+}
+
+/* ── Dark callout block (the only place --pk-ink fills a section) ── */
+.callout-ink { background: var(--pk-ink); color: var(--pk-on-ink); border-radius: var(--r-lg); }
+.callout-ink .kicker { color: var(--pk-accent); }
+
+/* ── dsCard preview frame — neutral mat so cards read cleanly in the pane ── */
+.ds-frame { padding: var(--s7) var(--s6); min-height: 100vh; }
+.ds-label { font-family: var(--ui); font-weight: 700; font-size: 0.625rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--pk-muted); margin-bottom: var(--s3); }
+.ds-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-end; }
+.ds-grid { display: grid; gap: var(--s4); }
+
+/* ════════ ELEVATION LAYER — premium + playful, bright direction (final) ════════ */
+/* Oversized editorial display; scales with persona */
+.display-mega { font-family: var(--display); font-weight: 300; line-height: 0.9; letter-spacing: -0.03em;
+  font-size: clamp(2.8rem, 9vw, 6.5rem); color: var(--pk-text); }
+
+/* Rich mesh ground — replaces flat fills where we want depth + energy */
+.mesh { background:
+  radial-gradient(58% 78% at 16% 10%, oklch(0.78 0.10 210 / .95), transparent 60%),
+  radial-gradient(64% 66% at 90% 16%, oklch(0.85 0.11 32 / .6), transparent 55%),
+  radial-gradient(80% 92% at 52% 116%, oklch(0.60 0.11 198 / .85), transparent 60%),
+  linear-gradient(160deg, oklch(0.56 0.07 214), oklch(0.43 0.07 226)); }
+
+.glow-coral { box-shadow: 0 12px 44px oklch(0.80 0.10 32 / .38), var(--pk-shadow); }
+.glow-teal  { box-shadow: 0 12px 44px oklch(0.46 0.08 220 / .35), var(--pk-shadow); }
+
+/* Sticker tag — playful, hand-placed feel */
+.sticker { display:inline-flex; align-items:center; gap:6px; font-family:var(--ui); font-weight:800; font-size:0.72rem;
+  letter-spacing:0.01em; padding:7px 13px; border-radius:99px; background:oklch(0.80 0.085 32);
+  color:oklch(0.24 0.06 32); box-shadow:0 5px 16px oklch(0.80 0.10 32 / .42); transform:rotate(-3deg); }
+
+@keyframes float  { from { transform: translateY(0); } to { transform: translateY(-7px); } }
+@keyframes breathe{ 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+.float   { animation: float 3s ease-in-out infinite alternate; }
+.breathe { animation: breathe 3.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .float, .breathe { animation: none; } }
+
+/* ── Persona adaptivity: the page morphs to who's dreaming ──
+   Set a persona class on <body>; type scale, accent heat, corner softness all shift. */
+:root          { --persona-scale: 1;    --persona-accent: oklch(0.80 0.085 32); --persona-accent-deep: oklch(0.66 0.12 32); --persona-radius: 22px; }
+.persona-genz    { --persona-scale: 1.18; --persona-accent: oklch(0.71 0.17 20);   --persona-accent-deep: oklch(0.62 0.19 19);  --persona-radius: 26px; }
+.persona-mil     { --persona-scale: 1.0;  --persona-accent: oklch(0.79 0.09 34);   --persona-accent-deep: oklch(0.64 0.13 32);  --persona-radius: 18px; }
+.persona-classic { --persona-scale: 0.92; --persona-accent: oklch(0.62 0.07 58);   --persona-accent-deep: oklch(0.48 0.07 54);  --persona-radius: 9px; }
+/* inline copy that swaps with persona — author all three, show the active one */
+.cz, .cm, .ct { display: none; }
+.persona-genz .cz, .persona-mil .cm, .persona-classic .ct { display: inline; }
+
+/* ── Persona theming via LITERAL descendant rules ──
+   Custom-property indirection (var(--persona-*)) silently fails to paint on
+   template nodes, so persona is expressed with concrete values here. Switching
+   persona visibly changes: accent color, card softness, headline scale, voice. */
+.persona-genz    .kicker { color: oklch(0.59 0.20 23); }
+.persona-mil     .kicker { color: oklch(0.64 0.13 32); }
+.persona-classic .kicker { color: oklch(0.48 0.06 56); }
+
+.persona-genz    .btn-accent { background: oklch(0.63 0.21 23); color: oklch(0.99 0.02 20); }
+.persona-mil     .btn-accent { background: oklch(0.80 0.085 32); color: oklch(0.24 0.03 250); }
+.persona-classic .btn-accent { background: oklch(0.78 0.07 58); color: oklch(0.18 0.04 58); }
+
+.persona-genz    .sticker { background: oklch(0.63 0.21 23); color: oklch(0.99 0.02 20); }
+.persona-classic .sticker { background: oklch(0.66 0.08 58); color: oklch(0.21 0.04 60); }
+
+.persona-genz    .seal.t-coral { background: oklch(0.63 0.21 23); color: oklch(0.99 0.02 20); }
+.persona-genz    .seal.t-coral .star { background: oklch(0.99 0.02 20); }
+.persona-classic .seal.t-coral { background: oklch(0.66 0.08 58); color: oklch(0.21 0.04 60); }
+.persona-classic .seal.t-coral .star { background: oklch(0.21 0.04 60); }
+
+/* ── Persona headline scale via LITERAL rules (var(--persona-scale) fails on template nodes) ── */
+.persona-genz .display-mega { font-size: clamp(3.3rem, 11vw, 7.5rem); letter-spacing: -0.035em; }
+.persona-genz .display-xl  { font-size: clamp(2.9rem, 9vw, 6rem); }
+.persona-genz .kicker { letter-spacing: 0.42em; }
+.persona-classic .display-mega { font-size: clamp(2.3rem, 7vw, 5rem); letter-spacing: -0.01em; }
+.persona-classic .display-xl  { font-size: clamp(2rem, 6.5vw, 4.5rem); }
+.persona-classic section { padding-top: calc(var(--s9) - 12px); padding-bottom: calc(var(--s9) - 12px); }
+
+.persona-genz    .card { border-radius: 24px; }
+.persona-classic .card { border-radius: 10px; }
+
+/* ════════ HERO — auto-rotating destination stage ════════ */
+.hero-scene { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; will-change: opacity; }
+.hero-scene.is-on { opacity: 1; }
+@keyframes heroFloat { 0%,100% { transform: translateY(0) rotate(var(--rot,0deg)); } 50% { transform: translateY(-15px) rotate(var(--rot,0deg)); } }
+@keyframes nameIn { from { opacity: 0; transform: translateY(22px); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+.hero-float { animation: heroFloat 6s ease-in-out infinite backwards; }
+.name-in { animation: nameIn .9s cubic-bezier(.2,.8,.2,1) both; }
+.hero-card { transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease, opacity .5s ease; }
+.hero-card.is-current { box-shadow: 0 18px 50px oklch(0.20 0.05 230 / .5), 0 0 0 3px oklch(1 0 0 / .6); }
+@media (prefers-reduced-motion: reduce) { .hero-float { animation: none; } .name-in { animation: none; } .hero-scene { transition: none; } .hero-card { transition: none; } }
+
+/* ── Mobile hero card behaviour ── */
+@media (max-width: 639px) {
+  .hero-card-cluster { display: none; }
+  .hero-card-strip { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding: 0 24px; -webkit-overflow-scrolling: touch; }
+  .hero-card-strip > div { flex-shrink: 0; min-width: 160px; aspect-ratio: 3/4; border-radius: var(--r-lg); overflow: hidden; scroll-snap-align: start; }
+}
+@media (min-width: 640px) { .hero-card-strip { display: none; } }
+@media (max-width: 480px) { .hero-float { animation: none; } }
+
+/* ── IG report frames: carousel on mobile, grid on desktop ── */
+@media (min-width: 640px) { .ig-frames { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; } }
+
+/* Nav: link strip on desktop, hamburger drawer on mobile */
+@media (max-width: 820px) {
+  .nav-links { display: none !important; }
+  .nav-burger { display: inline-flex !important; }
+  /* Collapse the inline CTA into the hamburger so the persona chip + burger
+     never overflow a narrow viewport (the game link lives in the drawer too). */
+  .nav-cta { display: none !important; }
+}
+@media (min-width: 821px) {
+  .nav-burger { display: none !important; }
+  .nav-drawer { display: none !important; }
+}
+
+/* ── Play cards (games hub band) ── */
+.play-card { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--r-lg);
+  background: var(--pk-card); box-shadow: var(--pk-shadow); text-decoration: none; color: inherit;
+  transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s ease; }
+.play-card:hover { transform: translateY(-7px); box-shadow: var(--pk-shadow-lg); }
+.play-card:hover .play-go { gap: 12px; }
+.play-go { display: inline-flex; align-items: center; gap: 7px; margin-top: auto; padding-top: 6px;
+  font-family: var(--ui); font-weight: 700; font-size: 0.9rem; color: var(--pk-accent-deep); transition: gap .2s ease; }
+.persona-genz .play-go { color: oklch(0.59 0.20 23); }
+.persona-classic .play-go { color: oklch(0.48 0.06 56); }
+
+/* Step numbers adapt to persona accent (literal rules — var() indirection fails on template nodes) */
+.step-num { color: var(--pk-accent-deep); }
+.persona-genz .step-num { color: oklch(0.59 0.20 23); }
+.persona-mil .step-num { color: oklch(0.64 0.13 32); }
+.persona-classic .step-num { color: oklch(0.48 0.06 56); }
