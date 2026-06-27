@@ -10,6 +10,9 @@ next-env.d.ts
 out/
 .turbo/
 
+# local env / secrets — never commit
+.env*.local
+
 # Driftibo generation pipeline — never commit secrets, sessions, or generated media
 **/pipeline/.env
 **/.grok-auth.json

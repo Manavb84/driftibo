@@ -1,5 +1,12 @@
-import ComingSoonPage from "@/components/ComingSoonPage";
+import type { Metadata } from "next";
+import QuizClient from "./QuizClient";
 
-export default function Page() {
-  return <ComingSoonPage title="The Vibe Quiz" />;
+export const metadata: Metadata = {
+  title: "Good-Life Vibe Quiz · Driftibo",
+  description:
+    "Five questions. No right answers — only taste. We read the pattern and name the kind of drifter you are.",
+};
+
+export default function QuizPage() {
+  return <QuizClient />;
 }

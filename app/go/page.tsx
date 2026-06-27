@@ -1,5 +1,10 @@
-import ComingSoonPage from "@/components/ComingSoonPage";
+import type { Metadata } from "next";
+import GoClient from "./GoClient";
+
+export const metadata: Metadata = {
+  title: "@driftibo · Start here",
+};
 
 export default function Page() {
-  return <ComingSoonPage title="Link in bio" />;
+  return <GoClient />;
 }
