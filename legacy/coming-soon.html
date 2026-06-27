@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driftibo — Travel by your own star</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pk-ink:       oklch(0.38 0.06 220);
+      --pk-on-ink:    oklch(0.965 0.012 210);
+      --pk-accent:    oklch(0.80 0.085 32);
+      --pk-muted:     oklch(0.57 0.03 210);
+      --pk-line-soft: oklch(0.85 0.028 210);
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      background: var(--pk-ink);
+      color: var(--pk-on-ink);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      padding: 2rem;
+    }
+
+    /* Grain texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Canvas star field */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Cursor-reactive glow — replaces body::after */
+    .glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    main {
+      text-align: center;
+      max-width: 480px;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Seal ── */
+    .seal-wrap {
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: center;
+      animation: fadeUp 0.9s ease-out both;
+    }
+
+    .seal {
+      position: relative;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 200px;
+      height: 200px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .seal:hover { transform: scale(1.03); }
+
+    .compass-ring {
+      position: absolute;
+      inset: 0;
+    }
+
+    .seal-ring {
+      position: absolute;
+      inset: 7.8%;
+      border-radius: 50%;
+      border: 1px solid currentColor;
+      pointer-events: none;
+    }
+
+    .seal-star {
+      width: 44%;
+      height: 44%;
+      clip-path: polygon(50% 0%,56% 44%,100% 50%,56% 56%,50% 100%,44% 56%,0% 50%,44% 44%);
+      position: relative;
+      z-index: 1;
+    }
+
+    .cardinal {
+      position: absolute;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      line-height: 1;
+      animation: fadeUp 0.9s 0.3s ease-out both;
+    }
+    .cardinal-n { top: 10%;    left: 50%;  transform: translateX(-50%); }
+    .cardinal-s { bottom: 10%; left: 50%;  transform: translateX(-50%); }
+    .cardinal-e { right: 10%;  top: 50%;   transform: translateY(-50%); }
+    .cardinal-w { left: 10%;   top: 50%;   transform: translateY(-50%); }
+
+    .seal.primary            { background: var(--pk-ink); }
+    .seal.primary .seal-ring,
+    .seal.primary .cardinal  { color: var(--pk-accent); }
+    .seal.primary .seal-star { background: var(--pk-accent); }
+
+    /* Spin animations */
+    @keyframes spinRing {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(1080deg); }
+    }
+    @keyframes spinStar {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(-1440deg); }
+    }
+
+    .seal.spinning .compass-ring {
+      animation: spinRing 1.8s cubic-bezier(0.15, 0.85, 0.9, 1) forwards;
+    }
+    .seal.spinning .seal-star {
+      animation: spinStar 1.8s cubic-bezier(0.15, 0.85, 0.9, 1) forwards;
+    }
+
+    /* Spin hint */
+    .spin-hint {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--pk-accent);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.9s 0.4s ease-out both;
+      transition: opacity 0.3s ease;
+    }
+    .spin-hint.hide { opacity: 0; }
+
+    /* ── Wordmark ── */
+    .wordmark {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(3.5rem, 14vw, 5rem);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1;
+      color: var(--pk-on-ink);
+      animation: fadeUp 0.9s 0.1s ease-out both;
+    }
+
+    .tagline {
+      margin-top: 1rem;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--pk-accent);
+      animation: fadeUp 0.9s 0.2s ease-out both;
+    }
+
+    /* Destination reveal */
+    #destination {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.1rem;
+      color: var(--pk-on-ink);
+      margin-top: 1.25rem;
+      min-height: 1.5em;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    #destination.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .rule {
+      width: 32px;
+      height: 1px;
+      background: var(--pk-accent);
+      opacity: 0.3;
+      margin: 2rem auto;
+      animation: fadeUp 0.9s 0.25s ease-out both;
+    }
+
+    .inquiry {
+      font-size: 0.8125rem;
+      color: var(--pk-muted);
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      animation: fadeUp 0.9s 0.3s ease-out both;
+    }
+
+    .inquiry a {
+      color: var(--pk-accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .inquiry a:hover { border-color: var(--pk-accent); }
+  </style>
+</head>
+<body>
+  <canvas id="stars"></canvas>
+  <div class="glow"></div>
+  <main>
+    <div class="seal-wrap" aria-hidden="true">
+      <div class="seal primary" id="compass">
+        <div class="compass-ring">
+          <div class="seal-ring"></div>
+          <span class="cardinal cardinal-n" style="font-size:17px;">N</span>
+          <span class="cardinal cardinal-e" style="font-size:17px;">E</span>
+          <span class="cardinal cardinal-s" style="font-size:17px;">S</span>
+          <span class="cardinal cardinal-w" style="font-size:17px;">W</span>
+        </div>
+        <div class="seal-star"></div>
+      </div>
+    </div>
+    <p class="spin-hint">↻ spin your star</p>
+    <h1 class="wordmark">Driftibo</h1>
+    <p class="tagline">Travel by your own star</p>
+    <p id="destination"></p>
+    <div class="rule" aria-hidden="true"></div>
+    <p class="inquiry">For early inquiries — <a href="mailto:travel@driftibo.com">travel@driftibo.com</a></p>
+  </main>
+  <script>
+    const DESTINATIONS = [
+      "Chopta — India's mini Switzerland",
+      "Spiti — looks like Iceland, costs a fraction",
+      "Gurez — the alpine valley nobody's geotagged",
+      "Khajjiar — Swiss meadows, a train ride away",
+      "Tirthan — the Alps, with a trout lunch",
+      "Ziro — rice terraces to rival Bali",
+      "Dzükou — New Zealand greens, in Nagaland",
+      "Kashmir's Great Lakes — Patagonia, no visa",
+      "Munnar — tea hills that out-green Sri Lanka",
+      "Chitkul — the last village before Tibet",
+      "Gokarna — Goa's quieter, cheaper coast",
+      "Mechuka — Arunachal's hidden Shangri-La",
+      "Sandakphu — four giants on one ridge",
+      "Yumthang — Sikkim's valley of flowers",
+      "Kalpa — orchards under Kinnaur Kailash",
+      "Nubra — high-desert dunes at 10,000 ft",
+      "Chembra — a heart-shaped lake in Wayanad",
+      "Kasol — riverside pines, Himachal-cheap",
+    ];
+
+    // --- Star field ---
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    let mouse = { x: 0, y: 0 };
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function initStars() {
+      stars = Array.from({ length: 70 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 0.6 + Math.random() * 0.8,
+        o: 0.08 + Math.random() * 0.27,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+      }));
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2, cy = canvas.height / 2;
+      const dx = (mouse.x - cx) / (cx || 1);
+      const dy = (mouse.y - cy) / (cy || 1);
+
+      for (const s of stars) {
+        s.x += s.vx;
+        s.y += s.vy;
+        if (s.x < 0) s.x += canvas.width;
+        if (s.x > canvas.width) s.x -= canvas.width;
+        if (s.y < 0) s.y += canvas.height;
+        if (s.y > canvas.height) s.y -= canvas.height;
+
+        // brighter stars shift more with parallax
+        const px = s.x + dx * s.o * 18;
+        const py = s.y + dy * s.o * 18;
+
+        ctx.beginPath();
+        ctx.arc(px, py, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.o})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(drawStars);
+    }
+
+    resize();
+    initStars();
+    window.addEventListener('resize', () => { resize(); initStars(); });
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    drawStars();
+
+    // --- Cursor glow lerp ---
+    const glowEl = document.querySelector('.glow');
+    let glowX = 50, glowY = 38;
+    let targetX = 50, targetY = 38;
+    const EASE = 0.06;
+
+    window.addEventListener('mousemove', e => {
+      targetX = (e.clientX / window.innerWidth) * 100;
+      targetY = (e.clientY / window.innerHeight) * 100;
+    });
+
+    (function lerpGlow() {
+      glowX += (targetX - glowX) * EASE;
+      glowY += (targetY - glowY) * EASE;
+      glowEl.style.background = `radial-gradient(ellipse 44% 38% at ${glowX.toFixed(2)}% ${glowY.toFixed(2)}%, oklch(0.46 0.06 220) 0%, transparent 70%)`;
+      requestAnimationFrame(lerpGlow);
+    })();
+
+    // --- Compass spin ---
+    const compass = document.getElementById('compass');
+    const ring = compass.querySelector('.compass-ring');
+    const dest = document.getElementById('destination');
+    const hint = document.querySelector('.spin-hint');
+    let spinning = false;
+    let lastIdx = -1;
+    let hintGone = false;
+
+    function pickDestination() {
+      let idx;
+      do { idx = Math.floor(Math.random() * DESTINATIONS.length); } while (idx === lastIdx);
+      lastIdx = idx;
+      return DESTINATIONS[idx];
+    }
+
+    compass.addEventListener('click', () => {
+      if (spinning) return;
+      spinning = true;
+
+      if (!hintGone) {
+        hintGone = true;
+        hint.classList.add('hide');
+        setTimeout(() => { hint.style.display = 'none'; }, 300);
+      }
+
+      dest.classList.remove('visible');
+
+      compass.classList.remove('spinning');
+      void compass.offsetWidth; // force reflow to restart animation
+      compass.classList.add('spinning');
+
+      ring.addEventListener('animationend', () => {
+        compass.classList.remove('spinning');
+        dest.textContent = pickDestination();
+        dest.classList.add('visible');
+        spinning = false;
+      }, { once: true });
+    });
+  </script>
+</body>
+</html>
