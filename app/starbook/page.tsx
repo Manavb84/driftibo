@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import PassportClient from "./PassportClient";
+import StarbookClient from "./StarbookClient";
 
 export const metadata: Metadata = {
-  title: "Star Passport · Driftibo",
+  title: "Starbook · Driftibo",
 };
 export const dynamic = "force-dynamic";
 
@@ -18,11 +18,11 @@ export default async function Page() {
     user = u ?? null;
     if (user) {
       const { data } = await supabase
-        .from("passport_stamps")
+        .from("starbook_stamps")
         .select("*")
         .eq("user_id", user.id);
       stamps = data ?? [];
     }
   } catch {}
-  return <PassportClient user={user} stamps={stamps} />;
+  return <StarbookClient user={user} stamps={stamps} />;
 }

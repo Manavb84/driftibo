@@ -56,7 +56,7 @@ type Props = {
 type AuthStage = "email" | "otp" | "success";
 
 // ─── Component ────────────────────────────────────────────────────────────────
-export default function PassportClient({ user, stamps }: Props) {
+export default function StarbookClient({ user, stamps }: Props) {
   const router = useRouter();
   const { persona } = usePersona();
 
@@ -186,7 +186,7 @@ export default function PassportClient({ user, stamps }: Props) {
           className="display-mega"
           style={{ fontSize: "clamp(2.2rem,7vw,3.2rem)", marginTop: 6, marginBottom: 6 }}
         >
-          Your Star Passport
+          Your Starbook
         </h1>
         <p className="lede" style={{ maxWidth: "46ch", margin: "0 auto" }}>
           Every place the star sent you, stamped. Badges you earn by fate, not by grinding. And a
@@ -194,7 +194,7 @@ export default function PassportClient({ user, stamps }: Props) {
         </p>
       </div>
 
-      {/* ── 2. Passport callout-ink card ── */}
+      {/* ── 2. Starbook callout-ink card ── */}
       <div className="callout-ink" style={{ borderRadius: 22, padding: 28 }}>
         {!user ? (
           /* ── Sign-in panel ── */
@@ -202,7 +202,7 @@ export default function PassportClient({ user, stamps }: Props) {
             {authStage === "email" && (
               <form onSubmit={handleSendOtp}>
                 <p className="kicker" style={{ marginBottom: 10 }}>
-                  Sign in to your passport
+                  Sign in to your Starbook
                 </p>
                 <h2
                   className="display"
@@ -331,13 +331,13 @@ export default function PassportClient({ user, stamps }: Props) {
                   className="display"
                   style={{ fontSize: "1.4rem", color: "var(--pk-on-ink)", marginTop: 14 }}
                 >
-                  Signed in — refreshing your passport…
+                  Signed in — refreshing your Starbook…
                 </p>
               </div>
             )}
           </div>
         ) : (
-          /* ── Passport (logged in) ── */
+          /* ── Starbook (logged in) ── */
           <div>
             {/* Header row */}
             <div
@@ -350,7 +350,7 @@ export default function PassportClient({ user, stamps }: Props) {
               }}
             >
               <div>
-                <p className="kicker">Star Passport</p>
+                <p className="kicker">Starbook</p>
                 <p
                   style={{
                     fontFamily: "var(--display)",

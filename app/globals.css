@@ -117,30 +117,36 @@ body {
 
 /* ── Destination scene palettes — colorful, place-evocative ── */
 .s-chopta { background:
+    url(/images/chopta-hero.jpg) center/cover no-repeat,
     radial-gradient(95% 70% at 30% -4%, oklch(0.86 0.07 230 / .95), transparent 62%),
     radial-gradient(78% 55% at 80% 6%, oklch(0.94 0.03 250 / .82), transparent 55%),
     radial-gradient(125% 95% at 52% 122%, oklch(0.42 0.11 158), transparent 62%),
     linear-gradient(168deg, oklch(0.64 0.09 205) 0%, oklch(0.42 0.10 166) 64%, oklch(0.30 0.08 172) 100%) !important; }
 .s-spiti { background:
+    url(/images/spiti-hero.jpg) center/cover no-repeat,
     radial-gradient(92% 64% at 50% -8%, oklch(0.40 0.08 288 / .96), transparent 60%),
     radial-gradient(86% 58% at 82% 102%, oklch(0.80 0.08 68 / .55), transparent 58%),
     radial-gradient(70% 60% at 16% 90%, oklch(0.62 0.07 300 / .6), transparent 60%),
     linear-gradient(166deg, oklch(0.60 0.07 272) 0%, oklch(0.52 0.06 258) 46%, oklch(0.39 0.06 262) 100%) !important; }
 .s-ziro { background:
+    url(/images/ziro-hero.jpg) center/cover no-repeat,
     radial-gradient(92% 58% at 38% -4%, oklch(0.88 0.05 150 / .85), transparent 60%),
     radial-gradient(72% 50% at 84% 64%, oklch(0.82 0.13 96 / .65), transparent 55%),
     radial-gradient(110% 85% at 58% 122%, oklch(0.72 0.14 132), transparent 62%),
     linear-gradient(166deg, oklch(0.68 0.11 152), oklch(0.44 0.12 140)) !important; }
 .s-gokarna { background:
+    url(/images/gokarna-hero.jpg) center/cover no-repeat,
     radial-gradient(94% 60% at 50% -6%, oklch(0.84 0.11 50 / .92), transparent 60%),
     radial-gradient(82% 52% at 82% 78%, oklch(0.88 0.10 76 / .7), transparent 55%),
     radial-gradient(105% 72% at 48% 124%, oklch(0.60 0.11 214), transparent 62%),
     linear-gradient(168deg, oklch(0.80 0.11 44), oklch(0.48 0.10 216)) !important; }
 .s-gangtey { background:
+    url(/images/gangtey-reveal.jpg) center/cover no-repeat,
     radial-gradient(95% 64% at 44% -4%, oklch(0.90 0.05 198 / .88), transparent 62%),
     radial-gradient(112% 86% at 56% 122%, oklch(0.60 0.13 150), transparent 62%),
     linear-gradient(166deg, oklch(0.72 0.10 176), oklch(0.42 0.11 156)) !important; }
 .s-dusk { background:
+    url(/images/dusk.jpg) center/cover no-repeat,
     radial-gradient(95% 62% at 48% -6%, oklch(0.82 0.10 38 / .92), transparent 60%),
     radial-gradient(90% 70% at 52% 122%, oklch(0.46 0.12 320), transparent 62%),
     linear-gradient(168deg, oklch(0.72 0.11 36), oklch(0.40 0.10 300)) !important; }

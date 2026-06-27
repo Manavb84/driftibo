@@ -275,14 +275,14 @@ export default function Home() {
         >
           {(
             [
-              ["s-chopta", "Chopta · ref ✓", "Chopta", "Mini-Switzerland · Uttarakhand"],
-              ["s-spiti", "Spiti", "Spiti", "Looks like Iceland · Himachal"],
-              ["s-ziro", "Ziro", "Ziro", "Rice terraces to rival Bali · Arunachal"],
-              ["s-gokarna", "Gokarna", "Gokarna", "Goa's quieter coast · Karnataka"],
+              ["s-chopta", "Chopta · ref ✓", "Chopta", "Mini-Switzerland · Uttarakhand", "chopta-portrait"],
+              ["s-spiti", "Spiti", "Spiti", "Looks like Iceland · Himachal", "spiti-portrait"],
+              ["s-ziro", "Ziro", "Ziro", "Rice terraces to rival Bali · Arunachal", "ziro-portrait"],
+              ["s-gokarna", "Gokarna", "Gokarna", "Goa's quieter coast · Karnataka", "gokarna-portrait"],
             ] as const
-          ).map(([scene, label, title, sub]) => (
+          ).map(([scene, label, title, sub, portrait]) => (
             <Link key={title} href="/destinations" className="card" style={{ textDecoration: "none", color: "inherit" }}>
-              <div className={`well ${scene}`} style={{ aspectRatio: "3/4" }} data-label={label} />
+              <div className={`well ${scene}`} style={{ aspectRatio: "3/4", backgroundImage: `url(/images/${portrait}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }} data-label={label} />
               <div className="card-pad">
                 <h3 className="display" style={{ fontSize: "1.2rem" }}>
                   {title}

@@ -60,11 +60,12 @@ export default function SiteFooter() {
           <Col
             title="Play"
             links={[
+              ["/play", "Play"],
               ["/game", "The star game"],
               ["/dream", "Dream My Trip"],
               ["/quiz", "Vibe quiz"],
-              ["/passport", "Star Passport"],
-              ["/passport#star-drop", "Star Drop"],
+              ["/starbook", "Starbook"],
+              ["/starbook#star-drop", "Star Drop"],
             ]}
           />
           <Col

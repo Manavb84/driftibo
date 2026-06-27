@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { usePersona } from "@/components/PersonaProvider";
 import { createClient } from "@/lib/supabase/client";
-import { submitCapture } from "@/lib/actions";
+import { submitCapture, addStarbookStamp } from "@/lib/actions";
 import WhatsAppClose from "@/components/WhatsAppClose";
 import { SITE } from "@/lib/site";
 
@@ -109,6 +110,7 @@ const FI: React.CSSProperties = {
 
 export default function GameClient() {
   const { persona } = usePersona();
+  const router = useRouter();
 
   // ── State ──────────────────────────────────────────────────────────────────
   const [stage, setStage] = useState<Stage>("wizard");
@@ -371,7 +373,16 @@ export default function GameClient() {
       {/* ░░ REVEAL ░░ */}
       {stage === "reveal" && (
         <article className="pop" style={{ background: "var(--pk-card)", borderRadius: 22, overflow: "hidden", boxShadow: "var(--pk-shadow-lg)", maxWidth: 680, margin: "0 auto" }}>
-          <div className="well" style={{ aspectRatio: "16/10" }} data-label={revPhoto} />
+          <div
+            className="well"
+            style={{
+              aspectRatio: "16/10",
+              backgroundImage: `url(${intl ? "/images/gangtey-reveal.jpg" : "/images/chopta-reveal.jpg"})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+            data-label={revPhoto}
+          />
           <div style={{ padding: 28 }}>
             <p className="kicker">Your star sent you to</p>
             <h2 className="display" style={{ fontSize: "clamp(2rem,6vw,2.6rem)" }}>{revName}</h2>
@@ -589,7 +600,7 @@ export default function GameClient() {
       {stage === "itin" && (
         <article className="pop" style={{ background: "var(--pk-card)", borderRadius: 24, overflow: "hidden", boxShadow: "var(--pk-shadow)", maxWidth: 680, margin: "0 auto" }}>
           <header style={{ position: "relative", height: 240, display: "flex", alignItems: "flex-end" }}>
-            <div className="well bg" style={{ position: "absolute", inset: 0 }} />
+            <div className="well bg" style={{ position: "absolute", inset: 0, backgroundImage: "url(/images/chopta-reveal.jpg)", backgroundSize: "cover", backgroundPosition: "center" }} />
             <div style={{ position: "relative", padding: 24, textShadow: "0 2px 18px oklch(0.3 0.06 225 / .5)" }}>
               <p className="kicker" style={{ color: "var(--pk-on-ink)" }}>5 days · sent by your star</p>
               <h1 className="display-xl" style={{ fontSize: "clamp(2.2rem,6vw,3.2rem)", color: "var(--pk-on-ink)" }}>Chopta</h1>
@@ -651,7 +662,7 @@ export default function GameClient() {
           <p className="lede" style={{ textAlign: "center", marginBottom: 24 }}>Screenshot it. Send it. Dare a friend.</p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 24, justifyItems: "center" }}>
             <div style={{ position: "relative", aspectRatio: "4/5", maxWidth: 340, width: "100%", borderRadius: 22, overflow: "hidden", boxShadow: "var(--pk-shadow-lg)", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 20, textShadow: "0 2px 16px oklch(0.28 0.06 225 / .5)" }}>
-              <div className="well bg" style={{ position: "absolute", inset: 0 }} />
+              <div className="well bg" style={{ position: "absolute", inset: 0, backgroundImage: "url(/images/chopta-story.jpg)", backgroundSize: "cover", backgroundPosition: "center" }} />
               <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span className="seal t-paper" style={{ width: 34 }}>
                   <span className="ring" />
@@ -686,14 +697,14 @@ export default function GameClient() {
           <p className="kicker" style={{ textAlign: "center", margin: "36px 0 14px" }}>IG Story · 3-frame template (9:16)</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
             <div style={{ position: "relative", aspectRatio: "9/16", borderRadius: 16, overflow: "hidden", boxShadow: "var(--pk-shadow)", display: "grid", placeItems: "center", textAlign: "center" }}>
-              <div className="well bg" style={{ position: "absolute", inset: 0 }} />
+              <div className="well bg" style={{ position: "absolute", inset: 0, backgroundImage: "url(/images/chopta-story.jpg)", backgroundSize: "cover", backgroundPosition: "center" }} />
               <div style={{ position: "relative", padding: 14, textShadow: "0 2px 12px oklch(0.28 0.06 225 / .5)" }}>
                 <p style={{ fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", fontSize: "0.6rem", color: "#fff" }}>I didn&apos;t pick this.</p>
                 <h3 className="display" style={{ color: "#fff", fontSize: "1.5rem" }}>My star did.</h3>
               </div>
             </div>
             <div style={{ position: "relative", aspectRatio: "9/16", borderRadius: 16, overflow: "hidden", boxShadow: "var(--pk-shadow)", display: "grid", placeItems: "center", textAlign: "center" }}>
-              <div className="well bg" style={{ position: "absolute", inset: 0 }} />
+              <div className="well bg" style={{ position: "absolute", inset: 0, backgroundImage: "url(/images/chopta-story.jpg)", backgroundSize: "cover", backgroundPosition: "center" }} />
               <div style={{ position: "relative", padding: 14, textShadow: "0 2px 12px oklch(0.28 0.06 225 / .5)" }}>
                 <p style={{ fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", fontSize: "0.6rem", color: "#fff" }}>It sent me to</p>
                 <h3 className="display" style={{ color: "#fff", fontSize: "1.8rem" }}>Chopta</h3>
@@ -711,7 +722,17 @@ export default function GameClient() {
             </div>
           </div>
           <div style={{ textAlign: "center", marginTop: 28 }}>
-            <Link href="/passport" className="btn btn-ghost btn-sm">Add Chopta to my Star Passport →</Link>
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={async () => {
+                // Stamp the draw, then open the Starbook. No-ops gracefully if signed out
+                // (the action returns {ok:false}; /starbook then shows the sign-in panel).
+                await addStarbookStamp("chopta", "Chopta");
+                router.push("/starbook");
+              }}
+            >
+              Add Chopta to my Starbook →
+            </button>
           </div>
         </div>
       )}

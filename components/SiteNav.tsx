@@ -8,13 +8,10 @@ import { usePersona } from "./PersonaProvider";
 type NavItem = { href: string; label: string; key: string };
 
 const NAV: NavItem[] = [
-  { href: "/game", label: "The game", key: "game" },
-  { href: "/quiz", label: "Vibe quiz", key: "quiz" },
-  { href: "/dream", label: "Dream it", key: "dream" },
+  { href: "/play", label: "Play", key: "play" },
   { href: "/packages", label: "Packages", key: "packages" },
   { href: "/destinations", label: "Explore", key: "destinations" },
   { href: "/offerings", label: "Plan with us", key: "offerings" },
-  { href: "/passport", label: "Passport", key: "passport" },
   { href: "/journal", label: "Journal", key: "journal" },
   { href: "/about", label: "About", key: "about" },
 ];

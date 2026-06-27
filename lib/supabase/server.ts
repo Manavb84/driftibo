@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 // Server Supabase client wired to Next's cookie store (Next 15: cookies() is async).
-// Used by server actions and protected server components (e.g. /passport).
+// Used by server actions and protected server components (e.g. /starbook).
 export async function createClient() {
   const cookieStore = await cookies();
   return createServerClient(

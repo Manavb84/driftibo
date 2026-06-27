@@ -78,6 +78,13 @@ const jrowStyle: React.CSSProperties = {
   boxShadow: "var(--pk-shadow-sm)",
 };
 
+// ─── portrait images for terrain suggestions ───────────────────────────────────
+const PLACE_PORTRAIT: Record<string, string> = {
+  Chopta: "chopta-portrait",
+  Gokarna: "gokarna-portrait",
+  Spiti: "spiti-portrait",
+};
+
 // ─── component ────────────────────────────────────────────────────────────────
 export default function GoClient() {
   const [pick, setPick] = useState<Terrain | null>(null);
@@ -187,7 +194,15 @@ export default function GoClient() {
             >
               <div
                 className="well mask-circle"
-                style={{ width: 64, flexShrink: 0 }}
+                style={{
+                  width: 64,
+                  flexShrink: 0,
+                  ...(PLACE_PORTRAIT[sug.place] ? {
+                    backgroundImage: `url(/images/${PLACE_PORTRAIT[sug.place]}.jpg)`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  } : {}),
+                }}
                 data-label=""
               />
               <div>
@@ -263,7 +278,7 @@ export default function GoClient() {
         <Link href="/journal" style={jrowStyle}>
           <div
             className="well"
-            style={{ width: 54, height: 54, borderRadius: 12, flexShrink: 0 }}
+            style={{ width: 54, height: 54, borderRadius: 12, flexShrink: 0, backgroundImage: "url(/images/chopta-portrait.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
           />
           <span style={{ fontFamily: "var(--display)", fontSize: "1rem", lineHeight: 1.2 }}>
             9 places in India that look like Switzerland
@@ -272,7 +287,7 @@ export default function GoClient() {
         <Link href="/journal" style={jrowStyle}>
           <div
             className="well"
-            style={{ width: 54, height: 54, borderRadius: 12, flexShrink: 0 }}
+            style={{ width: 54, height: 54, borderRadius: 12, flexShrink: 0, backgroundImage: "url(/images/spiti-portrait.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
           />
           <span style={{ fontFamily: "var(--display)", fontSize: "1rem", lineHeight: 1.2 }}>
             Why we stopped letting people choose

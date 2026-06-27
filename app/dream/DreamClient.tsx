@@ -444,7 +444,7 @@ export default function DreamClient() {
           >
             <div
               className="well"
-              style={{ aspectRatio: "1", borderRadius: 10 }}
+              style={{ aspectRatio: "1", borderRadius: 10, backgroundImage: "url(/images/chopta-portrait.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
             />
             <div
               className="well"
@@ -452,6 +452,9 @@ export default function DreamClient() {
                 aspectRatio: "1",
                 borderRadius: 10,
                 filter: "hue-rotate(-18deg)",
+                backgroundImage: "url(/images/spiti-portrait.jpg)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
               }}
             />
             <div
@@ -460,6 +463,9 @@ export default function DreamClient() {
                 aspectRatio: "1",
                 borderRadius: 10,
                 filter: "hue-rotate(14deg) saturate(1.2)",
+                backgroundImage: "url(/images/ziro-portrait.jpg)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
               }}
             />
             <div
@@ -468,6 +474,9 @@ export default function DreamClient() {
                 aspectRatio: "1",
                 borderRadius: 10,
                 filter: "hue-rotate(-32deg)",
+                backgroundImage: "url(/images/gokarna-portrait.jpg)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
               }}
             />
           </div>

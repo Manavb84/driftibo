@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 // One capture path for the whole funnel. The source plan named 7 near-identical
 // capture tables; we collapse them into one `captures` table partitioned by `kind`
 // (ponytail: 7 identical tables is machinery a lead funnel doesn't need — split
-// later if a kind grows its own columns). passport_stamps stays separate (user-scoped).
+// later if a kind grows its own columns). starbook_stamps stays separate (user-scoped).
 export type CaptureKind = "lead" | "quiz" | "dream" | "offering" | "game" | "star_drop";
 const KINDS: CaptureKind[] = ["lead", "quiz", "dream", "offering", "game", "star_drop"];
 
@@ -37,8 +37,8 @@ export async function submitCapture(input: CaptureInput): Promise<{ ok: boolean;
   return { ok: true };
 }
 
-// Add (idempotently) a stamp to the signed-in user's Star Passport.
-export async function addPassportStamp(
+// Add (idempotently) a stamp to the signed-in user's Starbook.
+export async function addStarbookStamp(
   slug: string,
   label: string,
 ): Promise<{ ok: boolean; error?: string }> {
@@ -48,7 +48,7 @@ export async function addPassportStamp(
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "Sign in to collect stamps." };
   const { error } = await supabase
-    .from("passport_stamps")
+    .from("starbook_stamps")
     .upsert({ user_id: user.id, slug, label }, { onConflict: "user_id,slug" });
   return error ? { ok: false, error: error.message } : { ok: true };
 }

@@ -21,6 +21,7 @@ const PACKS = [
     context: "the Spiti — Cold Desert package (7 nights)",
     even: true,
     wellScene: "s-spiti",
+    portraitImg: "spiti-portrait",
   },
   {
     kicker: "Drift 02 · Karnataka",
@@ -37,6 +38,7 @@ const PACKS = [
     context: "the Gokarna — Slow Coast package (5 nights)",
     even: false,
     wellScene: "s-gokarna",
+    portraitImg: "gokarna-portrait",
   },
   {
     kicker: "Drift 03 · Arunachal",
@@ -53,6 +55,7 @@ const PACKS = [
     context: "the Ziro — Rice & Fog package (6 nights)",
     even: true,
     wellScene: "s-ziro",
+    portraitImg: "ziro-portrait",
   },
   {
     kicker: "Drift 04 · Uttarakhand",
@@ -69,6 +72,7 @@ const PACKS = [
     context: "the Chopta — Temple Ridge package (5 nights)",
     even: false,
     wellScene: "s-chopta",
+    portraitImg: "chopta-portrait",
   },
 ] as const;
 
@@ -111,6 +115,9 @@ export default function PackagesPage() {
                 aspectRatio: "4/5",
                 minHeight: 340,
                 order: i % 2 ? 2 : 0,
+                backgroundImage: `url(/images/${p.portraitImg}.jpg)`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
               }}
               data-label={p.photo}
             />

@@ -1,7 +1,7 @@
 import { waLink } from "@/lib/site";
 
 // Faithful port of WhatsAppClose.dc.html — the "handoff" card used by 5 pages
-// (Game, Dream, Packages, Passport, Offerings). Stateless: the wa.me href is
+// (Game, Dream, Packages, Starbook, Offerings). Stateless: the wa.me href is
 // computed at render from `context`, so this works in server or client trees.
 export type WhatsAppCloseProps = {
   heading?: string;

@@ -14,30 +14,35 @@ const OFFERS: {
   name: OfferingName;
   photo: string;
   desc: string;
+  img: string;
 }[] = [
   {
     slug: "/surprise",
     name: "Surprise me",
     photo: "Let the star choose",
     desc: "Let the star pick — we book the trip it sends, end to end.",
+    img: "offering-surprise",
   },
   {
     slug: "/custom",
     name: "Custom & honeymoon",
     photo: "Tailored to you",
     desc: "You have a place in mind. We tailor it around the two of you.",
+    img: "offering-honeymoon",
   },
   {
     slug: "/concierge",
     name: "Concierge",
     photo: "Hands-off, premium",
     desc: "Premium and hands-off. We carry every detail so you carry none.",
+    img: "offering-concierge",
   },
   {
     slug: "/corporate",
     name: "Corporate offsites",
     photo: "Teams & logistics",
     desc: "Teams, logistics, one point of contact. We run the whole offsite.",
+    img: "offering-corporate",
   },
 ];
 
@@ -174,7 +179,12 @@ export default function OfferingsClient() {
             >
               <div
                 className="well"
-                style={{ aspectRatio: "16/9" }}
+                style={{
+                  aspectRatio: "16/9",
+                  backgroundImage: `url(/images/${o.img}.jpg)`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
                 data-label={o.photo}
               />
               <div className="card-pad">
