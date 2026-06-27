@@ -1,6 +1,7 @@
 // SERVER component — exports metadata, renders client island.
 import type { Metadata } from "next";
 import OfferingsClient from "./OfferingsClient";
+import { getOfferings } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Offerings · Driftibo",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function OfferingsPage() {
-  return <OfferingsClient />;
+export default async function OfferingsPage() {
+  const offers = await getOfferings();
+  return <OfferingsClient offers={offers} />;
 }

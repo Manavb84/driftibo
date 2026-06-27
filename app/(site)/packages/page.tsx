@@ -1,82 +1,13 @@
 import type { Metadata } from "next";
 import WhatsAppClose from "@/components/WhatsAppClose";
+import { getPackages } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Packages · Driftibo",
 };
 
-const PACKS = [
-  {
-    kicker: "Drift 01 · Himachal",
-    name: "The Cold Desert",
-    region: "Spiti · 7 nights",
-    photo: "Spiti · real anchored photo",
-    glow: "glow-teal",
-    rate: "≈ ₹7,400",
-    nights: "7 nights",
-    tags: ["High desert", "Monastery silence", "Big skies"],
-    blurb:
-      "Moonland switchbacks, thousand-year gompas, and nights so dark the Milky Way feels rude. The kind of quiet that resets you for a year.",
-    cta: "Take The Cold Desert",
-    context: "the Spiti — Cold Desert package (7 nights)",
-    even: true,
-    wellScene: "s-spiti",
-    portraitImg: "spiti-portrait",
-  },
-  {
-    kicker: "Drift 02 · Karnataka",
-    name: "Slow Coast",
-    region: "Gokarna · 5 nights",
-    photo: "Gokarna · real anchored photo",
-    glow: "glow-coral",
-    rate: "≈ ₹6,200",
-    nights: "5 nights",
-    tags: ["Five beaches", "No plan", "Scooter days"],
-    blurb:
-      "Goa’s quieter sibling — five beaches strung on a cliff path, temple town at the centre, and absolutely nowhere you have to be. Drift until the light turns gold.",
-    cta: "Take Slow Coast",
-    context: "the Gokarna — Slow Coast package (5 nights)",
-    even: false,
-    wellScene: "s-gokarna",
-    portraitImg: "gokarna-portrait",
-  },
-  {
-    kicker: "Drift 03 · Arunachal",
-    name: "Rice & Fog",
-    region: "Ziro · 6 nights",
-    photo: "Ziro · real anchored photo",
-    glow: "glow-teal",
-    rate: "≈ ₹6,900",
-    nights: "6 nights",
-    tags: ["Apatani valley", "Music country", "Rice terraces"],
-    blurb:
-      "Bali-green terraces farmed the old way, pine hills, and a valley that turns into a festival once a year. People, sound, and a story worth bringing home.",
-    cta: "Take Rice & Fog",
-    context: "the Ziro — Rice & Fog package (6 nights)",
-    even: true,
-    wellScene: "s-ziro",
-    portraitImg: "ziro-portrait",
-  },
-  {
-    kicker: "Drift 04 · Uttarakhand",
-    name: "Temple Ridge",
-    region: "Chopta · 5 nights",
-    photo: "Chopta · real anchored photo",
-    glow: "glow-coral",
-    rate: "≈ ₹6,800",
-    nights: "5 nights",
-    tags: ["Mini-Switzerland", "Highest Shiva temple", "Meadow walks"],
-    blurb:
-      "A deodar ridge under Tungnath, the highest Shiva temple on earth, and a Chandrashila sunrise lining up four Himalayan giants. Slow, soft, sized for a squad.",
-    cta: "Take Temple Ridge",
-    context: "the Chopta — Temple Ridge package (5 nights)",
-    even: false,
-    wellScene: "s-chopta",
-    portraitImg: "chopta-portrait",
-  },
-] as const;
-
-export default function PackagesPage() {
+export default async function PackagesPage() {
+  const PACKS = await getPackages();
   return (
     <>
       <section style={{ padding: "104px 22px 40px", maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
@@ -87,7 +18,7 @@ export default function PackagesPage() {
 
       {PACKS.map((p, i) => (
         <section
-          key={p.name}
+          key={p.id}
           style={{
             scrollSnapAlign: "start",
             padding: "48px 22px",
@@ -115,9 +46,7 @@ export default function PackagesPage() {
                 aspectRatio: "4/5",
                 minHeight: 340,
                 order: i % 2 ? 2 : 0,
-                backgroundImage: `url(/images/${p.portraitImg}.jpg)`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+                ...(p.portraitImageUrl ? { backgroundImage: `url(${p.portraitImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : {}),
               }}
               data-label={p.photo}
             />

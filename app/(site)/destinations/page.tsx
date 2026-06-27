@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import destinations from "@/lib/data/destinations";
+import { getDestinations } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Destinations · Driftibo",
@@ -13,7 +13,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DestinationsPage() {
+export default async function DestinationsPage() {
+  const destinations = await getDestinations();
   return (
     <main style={{ padding: "96px 22px 72px", maxWidth: 1000, margin: "0 auto", minHeight: "100vh" }}>
       <p className="kicker">The other India</p>
@@ -44,7 +45,7 @@ export default function DestinationsPage() {
           >
             <div
               className={`well ${dest.scene}`}
-              style={{ aspectRatio: "4/3" }}
+              style={{ aspectRatio: "4/3", ...(dest.heroImageUrl ? { backgroundImage: `url(${dest.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }}
               data-label={dest.photo}
             />
             <div className="card-pad">

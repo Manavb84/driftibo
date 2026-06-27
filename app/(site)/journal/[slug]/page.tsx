@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { articles } from "@/lib/data/journal";
+import { getArticle, getArticles } from "@/lib/content";
 
 export async function generateStaticParams() {
-  return articles.map((a) => ({ slug: a.slug }));
+  return (await getArticles()).map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({
@@ -13,7 +13,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const article = articles.find((a) => a.slug === slug);
+  const article = await getArticle(slug);
   if (!article) return {};
   return {
     title: `${article.title} · Driftibo`,
@@ -27,7 +27,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = articles.find((a) => a.slug === slug);
+  const article = await getArticle(slug);
   if (!article) notFound();
 
   return (
@@ -98,7 +98,14 @@ export default async function Page({
 
         <div
           className={`well ${article.scene}`}
-          style={{ aspectRatio: "16/9", borderRadius: 18, margin: "18px 0 24px" }}
+          style={{
+            aspectRatio: "16/9",
+            borderRadius: 18,
+            margin: "18px 0 24px",
+            ...(article.heroImageUrl
+              ? { backgroundImage: `url(${article.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+              : {}),
+          }}
           data-label={article.photo}
         ></div>
 

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { articles } from "@/lib/data/journal";
+import { getArticles } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Journal · Driftibo",
 };
 
-export default function Page() {
+export default async function Page() {
+  const articles = await getArticles();
   const featured = articles[0];
   const rest = articles.slice(1);
 
@@ -33,34 +34,41 @@ export default function Page() {
         Honest guides, short essays, and the occasional confession about how we work.
       </p>
 
-      <Link
-        href="/journal/switzerland-twins"
-        className="card"
-        style={{
-          display: "block",
-          textDecoration: "none",
-          color: "inherit",
-          marginBottom: 18,
-        }}
-      >
-        <div
-          className={`well ${featured.scene}`}
-          style={{ aspectRatio: "16/7" }}
-          data-label="Chopta ridge · ref ✓"
-        />
-        <div className="card-pad">
-          <p className="kicker">
-            {featured.kind} · {featured.read}
-          </p>
-          <h2
-            className="display"
-            style={{ fontSize: "clamp(1.5rem,4vw,2rem)" }}
-          >
-            {featured.title}
-          </h2>
-          <p style={{ color: "var(--pk-muted)", fontSize: "0.95rem" }}>{featured.dek}</p>
-        </div>
-      </Link>
+      {featured && (
+        <Link
+          href={`/journal/${featured.slug}`}
+          className="card"
+          style={{
+            display: "block",
+            textDecoration: "none",
+            color: "inherit",
+            marginBottom: 18,
+          }}
+        >
+          <div
+            className={`well ${featured.scene}`}
+            style={{
+              aspectRatio: "16/7",
+              ...(featured.heroImageUrl
+                ? { backgroundImage: `url(${featured.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                : {}),
+            }}
+            data-label={featured.photo}
+          />
+          <div className="card-pad">
+            <p className="kicker">
+              {featured.kind} · {featured.read}
+            </p>
+            <h2
+              className="display"
+              style={{ fontSize: "clamp(1.5rem,4vw,2rem)" }}
+            >
+              {featured.title}
+            </h2>
+            <p style={{ color: "var(--pk-muted)", fontSize: "0.95rem" }}>{featured.dek}</p>
+          </div>
+        </Link>
+      )}
 
       <div
         style={{
@@ -78,7 +86,12 @@ export default function Page() {
           >
             <div
               className={`well ${article.scene}`}
-              style={{ aspectRatio: "4/3" }}
+              style={{
+                aspectRatio: "4/3",
+                ...(article.heroImageUrl
+                  ? { backgroundImage: `url(${article.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                  : {}),
+              }}
               data-label={article.photo}
             />
             <div className="card-pad">

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { Destination } from "@/lib/data/destinations";
+import type { Destination } from "@/lib/content";
 import WhatsAppClose from "@/components/WhatsAppClose";
 import { waLink } from "@/lib/site";
 
@@ -59,7 +59,7 @@ export default function DestinationClient({ dest }: { dest: Destination }) {
           >
             <div
               className={`well bg ${dest.scene}`}
-              style={{ position: "absolute", inset: 0 }}
+              style={{ position: "absolute", inset: 0, ...(dest.heroImageUrl ? { backgroundImage: `url(${dest.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }}
             />
             <div
               style={{
@@ -241,7 +241,7 @@ export default function DestinationClient({ dest }: { dest: Destination }) {
         >
           <div
             className={`well bg ${dest.scene}`}
-            style={{ position: "absolute", inset: 0 }}
+            style={{ position: "absolute", inset: 0, ...(dest.heroImageUrl ? { backgroundImage: `url(${dest.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }}
           />
           <div
             style={{

@@ -4,63 +4,18 @@ import { useState, useRef } from "react";
 import WhatsAppClose from "@/components/WhatsAppClose";
 import { usePersona } from "@/components/PersonaProvider";
 import { submitCapture } from "@/lib/actions";
+import type { Offering } from "@/lib/content";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-
-type OfferingName = "Surprise me" | "Custom & honeymoon" | "Concierge" | "Corporate offsites";
-
-const OFFERS: {
-  slug: string;
-  name: OfferingName;
-  photo: string;
-  desc: string;
-  img: string;
-}[] = [
-  {
-    slug: "/surprise",
-    name: "Surprise me",
-    photo: "Let the star choose",
-    desc: "Let the star pick — we book the trip it sends, end to end.",
-    img: "offering-surprise",
-  },
-  {
-    slug: "/custom",
-    name: "Custom & honeymoon",
-    photo: "Tailored to you",
-    desc: "You have a place in mind. We tailor it around the two of you.",
-    img: "offering-honeymoon",
-  },
-  {
-    slug: "/concierge",
-    name: "Concierge",
-    photo: "Hands-off, premium",
-    desc: "Premium and hands-off. We carry every detail so you carry none.",
-    img: "offering-concierge",
-  },
-  {
-    slug: "/corporate",
-    name: "Corporate offsites",
-    photo: "Teams & logistics",
-    desc: "Teams, logistics, one point of contact. We run the whole offsite.",
-    img: "offering-corporate",
-  },
-];
-
-const FORM_SUB: Record<OfferingName, string> = {
-  "Surprise me": "Give us your limits — we'll let the star do the choosing.",
-  "Custom & honeymoon": "Tell us the place and the occasion. We tailor every day.",
-  Concierge: "Tell us the broad strokes. We handle the rest, invisibly.",
-  "Corporate offsites": "Team size and goals — we design the offsite around them.",
-};
+// ─── Static UI constants ──────────────────────────────────────────────────────
 
 const WHO_CHIPS = ["Just us two", "Squad", "Family", "A team"] as const;
 type Who = (typeof WHO_CHIPS)[number];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export default function OfferingsClient() {
+export default function OfferingsClient({ offers }: { offers: Offering[] }) {
   const { persona } = usePersona();
-  const [offering, setOffering] = useState<OfferingName>("Surprise me");
+  const [offering, setOffering] = useState<string>(offers[0]?.name ?? "");
   const [who, setWho] = useState<Who>("Squad");
 
   // Form fields
@@ -162,7 +117,7 @@ export default function OfferingsClient() {
           gap: 16,
         }}
       >
-        {OFFERS.map((o) => {
+        {offers.map((o) => {
           const isOn = o.name === offering;
           return (
             <article
@@ -181,7 +136,7 @@ export default function OfferingsClient() {
                 className="well"
                 style={{
                   aspectRatio: "16/9",
-                  backgroundImage: `url(/images/${o.img}.jpg)`,
+                  backgroundImage: `url(${o.imageUrl})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
@@ -202,7 +157,7 @@ export default function OfferingsClient() {
                     marginBottom: 12,
                   }}
                 >
-                  {o.desc}
+                  {o.descr}
                 </p>
                 <button
                   onClick={() => {
@@ -238,7 +193,7 @@ export default function OfferingsClient() {
             {formTitle}
           </h3>
           <p style={{ color: "var(--pk-muted)", fontSize: "0.88rem", marginBottom: 16 }}>
-            {FORM_SUB[offering]}
+            {offers.find((o) => o.name === offering)?.formSub ?? ""}
           </p>
 
           {status === "success" ? (

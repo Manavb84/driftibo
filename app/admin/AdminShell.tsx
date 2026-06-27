@@ -8,11 +8,11 @@ import { createClient } from "@/lib/supabase/client";
 // don't link anywhere (avoids 404s while phases land).
 const NAV: { href: string; label: string; ready: boolean }[] = [
   { href: "/admin", label: "Dashboard", ready: true },
-  { href: "/admin/destinations", label: "Destinations", ready: false },
-  { href: "/admin/blog", label: "Blog", ready: false },
-  { href: "/admin/packages", label: "Packages", ready: false },
-  { href: "/admin/offerings", label: "Offerings", ready: false },
-  { href: "/admin/media", label: "Media", ready: false },
+  { href: "/admin/destinations", label: "Destinations", ready: true },
+  { href: "/admin/blog", label: "Blog", ready: true },
+  { href: "/admin/packages", label: "Packages", ready: true },
+  { href: "/admin/offerings", label: "Offerings", ready: true },
+  { href: "/admin/media", label: "Media", ready: true },
 ];
 
 export default function AdminShell({ email, children }: { email: string; children: React.ReactNode }) {
