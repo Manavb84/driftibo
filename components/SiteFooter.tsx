@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import type { CSSProperties } from "react";
+import { submitCapture } from "@/lib/actions";
 
 const fl: CSSProperties = {
   display: "block",
@@ -24,6 +28,74 @@ function Col({ title, links }: { title: string; links: [string, string][] }) {
           {label}
         </Link>
       ))}
+    </div>
+  );
+}
+
+// ─── "Talk to us" lead capture form ───────────────────────────────────────────
+function TalkToUs() {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    const result = await submitCapture({ kind: "lead", email });
+    setLoading(false);
+    if (result.ok) {
+      setSubmitted(true);
+    } else {
+      setError(result.error ?? "Something went wrong.");
+    }
+  }
+
+  return (
+    <div style={{ maxWidth: 300 }}>
+      <p className="kicker" style={kicker}>
+        Talk to us
+      </p>
+      {submitted ? (
+        <p style={{ color: "var(--pk-on-ink)", opacity: 0.78, fontSize: "0.84rem" }}>
+          ✦ Got it — we&apos;ll be in touch on WhatsApp.
+        </p>
+      ) : (
+        <form onSubmit={handleSubmit} style={{ display: "grid", gap: 8, marginTop: 4 }}>
+          <input
+            type="email"
+            required
+            aria-label="Your email address"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{
+              display: "block",
+              width: "100%",
+              padding: "9px 12px",
+              borderRadius: 10,
+              border: "1px solid oklch(1 0 0 / .2)",
+              background: "oklch(1 0 0 / .08)",
+              fontFamily: "var(--ui)",
+              fontSize: "0.84rem",
+              color: "var(--pk-on-ink)",
+              outline: "none",
+            }}
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-accent btn-sm"
+            style={{ width: "100%", justifyContent: "center" }}
+          >
+            {loading ? "Sending…" : "Send"}
+          </button>
+          {error && (
+            <p style={{ color: "oklch(0.80 0.085 32)", fontSize: "0.78rem" }}>{error}</p>
+          )}
+        </form>
+      )}
     </div>
   );
 }
@@ -92,9 +164,10 @@ export default function SiteFooter() {
             links={[
               ["/legal", "Privacy"],
               ["/legal", "Terms"],
-              ["/legal#ai-disclosure", "AI disclosure"],
+              ["/legal#refund", "Refund policy"],
             ]}
           />
+          <TalkToUs />
         </div>
       </div>
       <div
@@ -112,7 +185,7 @@ export default function SiteFooter() {
         }}
       >
         <span>© 2026 Driftibo · Travel by your own star · #StarSent</span>
-        <span>Made in India · Loved across 9 states</span>
+        <span>Made in India · real corners of it</span>
       </div>
     </footer>
   );

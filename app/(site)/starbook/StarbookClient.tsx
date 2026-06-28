@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/client";
 import { submitCapture } from "@/lib/actions";
-import { usePersona } from "@/components/PersonaProvider";
+import { useEmailOtp } from "@/lib/hooks/useEmailOtp";
+import { INPUT_STYLE } from "@/lib/styles";
+import { PERSONA } from "@/lib/persona";
 
 // ─── Badge data ───────────────────────────────────────────────────────────────
 type Badge = {
@@ -58,7 +59,7 @@ type AuthStage = "email" | "otp" | "success";
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function StarbookClient({ user, stamps }: Props) {
   const router = useRouter();
-  const { persona } = usePersona();
+  const persona = PERSONA;
 
   // ── Countdown ──
   const [countdown, setCountdown] = useState<Countdown>({
@@ -86,51 +87,22 @@ export default function StarbookClient({ user, stamps }: Props) {
   // ── Auth state ──
   const [authStage, setAuthStage] = useState<AuthStage>("email");
   const [authEmail, setAuthEmail] = useState("");
-  const [authCode, setAuthCode] = useState("");
-  const [authError, setAuthError] = useState<string | null>(null);
-  const [authLoading, setAuthLoading] = useState(false);
+
+  const otp = useEmailOtp(() => {
+    setAuthStage("success");
+    router.refresh();
+  });
 
   async function handleSendOtp(e: React.FormEvent) {
     e.preventDefault();
-    setAuthError(null);
-    setAuthLoading(true);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase.auth.signInWithOtp({ email: authEmail });
-      if (error) {
-        setAuthError(error.message);
-      } else {
-        setAuthStage("otp");
-      }
-    } catch (err) {
-      setAuthError("Could not send code. Check your connection and try again.");
-    } finally {
-      setAuthLoading(false);
-    }
+    const ok = await otp.send(authEmail);
+    if (ok) setAuthStage("otp");
   }
 
   async function handleVerifyOtp(e: React.FormEvent) {
     e.preventDefault();
-    setAuthError(null);
-    setAuthLoading(true);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase.auth.verifyOtp({
-        email: authEmail,
-        token: authCode,
-        type: "email",
-      });
-      if (error) {
-        setAuthError(error.message);
-      } else {
-        setAuthStage("success");
-        router.refresh();
-      }
-    } catch (err) {
-      setAuthError("Verification failed. Please try again.");
-    } finally {
-      setAuthLoading(false);
-    }
+    // Navigation is driven by the onVerified callback passed to useEmailOtp
+    await otp.verify(authEmail);
   }
 
   // ── Star Drop signup ──
@@ -153,19 +125,12 @@ export default function StarbookClient({ user, stamps }: Props) {
     }
   }
 
-  // ── Shared input style ──
-  const inputStyle: React.CSSProperties = {
-    display: "block",
-    width: "100%",
-    marginTop: 6,
-    padding: "11px 13px",
-    borderRadius: 10,
-    border: "1px solid var(--pk-line)",
-    background: "var(--pk-paper)",
-    fontFamily: "var(--ui)",
-    fontSize: "0.9rem",
-    color: "var(--pk-text)",
-    outline: "none",
+  // Dark-surface input overlay (spread on top of INPUT_STYLE)
+  const darkInput: React.CSSProperties = {
+    ...INPUT_STYLE,
+    background: "oklch(1 0 0 / .08)",
+    color: "var(--pk-on-ink)",
+    border: "1px solid oklch(1 0 0 / .2)",
   };
 
   return (
@@ -225,21 +190,21 @@ export default function StarbookClient({ user, stamps }: Props) {
                     placeholder="aanya@email.com"
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
-                    style={{ ...inputStyle, background: "oklch(1 0 0 / .08)", color: "var(--pk-on-ink)", border: "1px solid oklch(1 0 0 / .2)" }}
+                    style={darkInput}
                   />
                 </label>
-                {authError && (
+                {otp.sendError && (
                   <p style={{ color: "oklch(0.80 0.085 32)", fontSize: "0.82rem", marginTop: 8 }}>
-                    {authError}
+                    {otp.sendError}
                   </p>
                 )}
                 <button
                   type="submit"
-                  disabled={authLoading}
+                  disabled={otp.sending}
                   className="btn btn-accent"
                   style={{ marginTop: 16, width: "100%", justifyContent: "center" }}
                 >
-                  {authLoading ? "Sending…" : "Send code"}
+                  {otp.sending ? "Sending…" : "Send code"}
                 </button>
               </form>
             )}
@@ -264,43 +229,48 @@ export default function StarbookClient({ user, stamps }: Props) {
                 >
                   We sent a one-time code to {authEmail}.
                 </p>
-                <label
-                  style={{
-                    display: "block",
-                    fontSize: "0.8125rem",
-                    fontWeight: 600,
-                    color: "var(--pk-on-ink)",
-                  }}
-                >
-                  Code
-                  <input
-                    type="text"
-                    required
-                    placeholder="123456"
-                    value={authCode}
-                    onChange={(e) => setAuthCode(e.target.value)}
-                    style={{ ...inputStyle, background: "oklch(1 0 0 / .08)", color: "var(--pk-on-ink)", border: "1px solid oklch(1 0 0 / .2)", letterSpacing: "0.18em" }}
-                  />
-                </label>
-                {authError && (
+                <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                  {otp.digits.map((d, i) => (
+                    <input
+                      key={i}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={d}
+                      onChange={(e) => otp.setDigit(i, e.target.value)}
+                      onKeyDown={(e) => otp.handleKeyDown(i, e)}
+                      ref={(el) => { otp.refs.current[i] = el; }}
+                      style={{
+                        ...darkInput,
+                        width: 42,
+                        marginTop: 0,
+                        textAlign: "center",
+                        letterSpacing: 0,
+                        padding: "11px 0",
+                        fontWeight: 700,
+                        fontSize: "1.05rem",
+                      }}
+                    />
+                  ))}
+                </div>
+                {otp.verifyError && (
                   <p style={{ color: "oklch(0.80 0.085 32)", fontSize: "0.82rem", marginTop: 8 }}>
-                    {authError}
+                    {otp.verifyError}
                   </p>
                 )}
                 <button
                   type="submit"
-                  disabled={authLoading}
+                  disabled={otp.verifying}
                   className="btn btn-accent"
                   style={{ marginTop: 16, width: "100%", justifyContent: "center" }}
                 >
-                  {authLoading ? "Verifying…" : "Verify"}
+                  {otp.verifying ? "Verifying…" : "Verify"}
                 </button>
                 <button
                   type="button"
                   onClick={() => {
                     setAuthStage("email");
-                    setAuthCode("");
-                    setAuthError(null);
+                    otp.reset();
                   }}
                   style={{
                     display: "block",
@@ -496,25 +466,44 @@ export default function StarbookClient({ user, stamps }: Props) {
           }}
           className="card"
         >
-          <span className="seal t-coral" style={{ width: 56 }}>
-            <span className="ring" />
-            <span className="star" />
-          </span>
-          <p className="kicker" style={{ marginTop: 14 }}>
-            Your star has chosen
-          </p>
-          <p
-            className="poetry"
-            style={{ fontSize: "1.7rem", maxWidth: "24ch" }}
-          >
-            You said yes. Welcome to the Drift.
-          </p>
-          <p style={{ color: "var(--pk-muted)", fontSize: "0.85rem" }}>
-            Chopta &middot; sent 26 Jun &middot; you leave 14 Jul
-          </p>
-          <button className="btn btn-ghost btn-sm" style={{ marginTop: 6 }}>
-            Share my oath card
-          </button>
+          {stamps.length === 0 ? (
+            /* ── Empty state ── */
+            <>
+              <span className="seal t-paper" style={{ width: 56 }}>
+                <span className="ring" />
+                <span className="star" />
+              </span>
+              <p className="kicker" style={{ marginTop: 14 }}>
+                No stamps yet
+              </p>
+              <p className="poetry" style={{ fontSize: "1.5rem", maxWidth: "28ch" }}>
+                Your first drop will appear here
+              </p>
+              <p style={{ color: "var(--pk-muted)", fontSize: "0.85rem", maxWidth: "34ch" }}>
+                Spin the star — when a destination chooses you, your oath card is stamped.
+              </p>
+            </>
+          ) : (
+            /* ── First stamp oath ── */
+            <>
+              <span className="seal t-coral" style={{ width: 56 }}>
+                <span className="ring" />
+                <span className="star" />
+              </span>
+              <p className="kicker" style={{ marginTop: 14 }}>
+                Your star has chosen
+              </p>
+              <p className="poetry" style={{ fontSize: "1.7rem", maxWidth: "24ch" }}>
+                You said yes. Welcome to the Drift.
+              </p>
+              <p style={{ color: "var(--pk-muted)", fontSize: "0.85rem" }}>
+                {stamps[0].label}
+              </p>
+              <button className="btn btn-ghost btn-sm" style={{ marginTop: 6 }}>
+                Share my oath card
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -581,16 +570,13 @@ export default function StarbookClient({ user, stamps }: Props) {
                   value={dropEmail}
                   onChange={(e) => setDropEmail(e.target.value)}
                   style={{
+                    ...INPUT_STYLE,
                     flex: 1,
                     minWidth: 160,
-                    fontFamily: "var(--ui)",
-                    fontSize: "0.9rem",
-                    padding: "10px 14px",
-                    borderRadius: 10,
-                    border: "1px solid oklch(1 0 0 / .2)",
+                    marginTop: 0,
                     background: "oklch(1 0 0 / .08)",
                     color: "var(--pk-on-ink)",
-                    outline: "none",
+                    border: "1px solid oklch(1 0 0 / .2)",
                   }}
                 />
                 <button

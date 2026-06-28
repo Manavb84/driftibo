@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAdminContext } from "@/lib/admin";
 
 export const dynamic = "force-dynamic";
@@ -32,23 +33,26 @@ function fmt(ts: string) {
 export default async function AdminDashboard() {
   const { supabase } = await getAdminContext(); // layout already guaranteed admin
 
-  // Per-kind counts (head:true → count only, no rows) + total Starbook stamps.
-  const counts: Record<string, number> = {};
-  await Promise.all(
-    KINDS.map(async ({ key }) => {
-      const { count } = await supabase.from("captures").select("*", { count: "exact", head: true }).eq("kind", key);
-      counts[key] = count ?? 0;
-    }),
-  );
-  const { count: stampCount } = await supabase.from("starbook_stamps").select("*", { count: "exact", head: true });
-  const { data: recent } = await supabase
-    .from("captures")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(25);
+  // One server-side aggregate for all kind counts (RLS-governed; no 1000-row PostgREST
+  // cap that a client-side select('kind') reduce would silently undercount). Replaces 6
+  // separate count round-trips.
+  const [{ data: countRows }, { count: stampCount }, { data: recent }] = await Promise.all([
+    supabase.rpc("get_capture_counts"),
+    supabase.from("starbook_stamps").select("*", { count: "exact", head: true }),
+    supabase.from("captures").select("*").order("created_at", { ascending: false }).limit(25),
+  ]);
+
+  const counts: Record<string, number> = Object.fromEntries(KINDS.map((k) => [k.key, 0]));
+  for (const row of (countRows ?? []) as { kind: string; n: number }[]) {
+    if (row.kind in counts) counts[row.kind] = Number(row.n);
+  }
+
   const rows = (recent ?? []) as Capture[];
 
-  const cards = [...KINDS.map((k) => ({ label: k.label, n: counts[k.key] ?? 0 })), { label: "Starbook stamps", n: stampCount ?? 0 }];
+  const cards = [
+    ...KINDS.map((k) => ({ label: k.label, n: counts[k.key] ?? 0 })),
+    { label: "Starbook stamps", n: stampCount ?? 0 },
+  ];
 
   return (
     <div style={{ maxWidth: 1100 }}>
@@ -64,6 +68,30 @@ export default async function AdminDashboard() {
           </div>
         ))}
       </div>
+
+      {/* Lead pipeline CTA */}
+      <Link
+        href="/admin/leads"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "14px 20px",
+          borderRadius: 14,
+          background: "var(--pk-accent-deep, oklch(0.42 0.14 258))",
+          color: "#fff",
+          textDecoration: "none",
+          marginBottom: 30,
+        }}
+      >
+        <div>
+          <div style={{ fontFamily: "var(--display)", fontSize: "1.05rem", fontWeight: 700 }}>Lead Pipeline</div>
+          <div style={{ fontSize: "0.82rem", opacity: 0.85, marginTop: 2 }}>
+            Update status, deal value &amp; reply on WhatsApp — {counts["lead"] ?? 0} leads so far
+          </div>
+        </div>
+        <span style={{ fontSize: "1.4rem", opacity: 0.85 }}>→</span>
+      </Link>
 
       {/* Recent activity */}
       <h2 style={{ fontFamily: "var(--display)", fontSize: "1.2rem", marginBottom: 12 }}>Recent activity</h2>

@@ -9,6 +9,10 @@ node_modules/
 next-env.d.ts
 out/
 .turbo/
+tsconfig.tsbuildinfo
+
+# DesignSync tooling state (local mirror, not source)
+.design-sync/
 
 # local env / secrets — never commit
 .env*.local

@@ -15,10 +15,33 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = await getArticle(slug);
   if (!article) return {};
+  const image = article.heroImageUrl ?? "/og.jpg";
   return {
     title: `${article.title} · Driftibo`,
     description: article.dek,
+    alternates: { canonical: `/journal/${article.slug}` },
+    openGraph: {
+      title: article.title,
+      description: article.dek,
+      images: [image],
+      type: "article",
+      url: `/journal/${article.slug}`,
+    },
+    twitter: { card: "summary_large_image", title: article.title, description: article.dek, images: [image] },
   };
+}
+
+function formatDate(iso: string | null): string {
+  if (!iso) return "";
+  try {
+    return new Intl.DateTimeFormat("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(iso));
+  } catch {
+    return "";
+  }
 }
 
 export default async function Page({
@@ -30,6 +53,30 @@ export default async function Page({
   const article = await getArticle(slug);
   if (!article) notFound();
 
+  const displayDate = formatDate(article.publishedAt);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.dek,
+    ...(article.heroImageUrl ? { image: article.heroImageUrl } : {}),
+    ...(article.publishedAt ? { datePublished: article.publishedAt } : {}),
+    author: { "@type": "Organization", name: "Driftibo", url: "https://driftibo.com" },
+    publisher: { "@type": "Organization", name: "Driftibo", url: "https://driftibo.com" },
+    mainEntityOfPage: `https://driftibo.com/journal/${article.slug}`,
+  };
+
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://driftibo.com" },
+      { "@type": "ListItem", position: 2, name: "Journal", item: "https://driftibo.com/journal" },
+      { "@type": "ListItem", position: 3, name: article.title, item: `https://driftibo.com/journal/${article.slug}` },
+    ],
+  };
+
   return (
     <main
       style={{
@@ -39,6 +86,14 @@ export default async function Page({
         minHeight: "100vh",
       }}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
       <article>
         <Link
           href="/journal"
@@ -91,7 +146,7 @@ export default async function Page({
               By the Driftibo desk
             </p>
             <p style={{ color: "var(--pk-muted)", fontSize: "0.76rem" }}>
-              26 Jun 2026 · faceless on purpose
+              {displayDate ? `${displayDate} · ` : ""}faceless on purpose
             </p>
           </div>
         </div>

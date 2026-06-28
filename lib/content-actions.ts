@@ -65,11 +65,20 @@ export async function deleteDestination(id: string): Promise<ActionResult> {
   if (!isAdmin) return { ok: false, error: "Not authorized." };
   if (!id) return { ok: false, error: "id is required." };
 
+  // Fetch slug first so we can revalidate the detail page after deletion.
+  const { data: row } = await supabase
+    .from("destinations")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+  const slug: string | undefined = row?.slug;
+
   const { error } = await supabase.from("destinations").delete().eq("id", id);
   if (error) return { ok: false, error: error.message };
 
   revalidateTag("destinations");
   revalidatePath("/destinations");
+  if (slug) revalidatePath("/destinations/" + slug);
   return { ok: true };
 }
 
@@ -122,11 +131,20 @@ export async function deleteArticle(id: string): Promise<ActionResult> {
   if (!isAdmin) return { ok: false, error: "Not authorized." };
   if (!id) return { ok: false, error: "id is required." };
 
+  // Fetch slug first so we can revalidate the detail page after deletion.
+  const { data: row } = await supabase
+    .from("articles")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+  const slug: string | undefined = row?.slug;
+
   const { error } = await supabase.from("articles").delete().eq("id", id);
   if (error) return { ok: false, error: error.message };
 
   revalidateTag("articles");
   revalidatePath("/journal");
+  if (slug) revalidatePath("/journal/" + slug);
   return { ok: true };
 }
 
@@ -181,11 +199,20 @@ export async function deletePackage(id: string): Promise<ActionResult> {
   if (!isAdmin) return { ok: false, error: "Not authorized." };
   if (!id) return { ok: false, error: "id is required." };
 
+  // Fetch slug first so we can revalidate the detail page after deletion.
+  const { data: row } = await supabase
+    .from("packages")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+  const slug: string | undefined = row?.slug;
+
   const { error } = await supabase.from("packages").delete().eq("id", id);
   if (error) return { ok: false, error: error.message };
 
   revalidateTag("packages");
   revalidatePath("/packages");
+  if (slug) revalidatePath("/packages/" + slug);
   return { ok: true };
 }
 

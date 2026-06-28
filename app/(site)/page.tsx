@@ -1,8 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import HeroStage from "@/components/HeroStage";
 import OtherIndiaRotator from "@/components/OtherIndiaRotator";
+import HomeFAQ from "@/components/HomeFAQ";
+import SocialProof from "@/components/SocialProof";
+import PriceBadge from "@/components/PriceBadge";
+import { getDestinations } from "@/lib/content";
 
-export default function Home() {
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
+export default async function Home() {
+  const destinations = await getDestinations();
+  // Slice to 4 for the teaser sections; fall back gracefully to empty array
+  const featuredDests = destinations.slice(0, 4);
+
   return (
     <>
       <HeroStage />
@@ -42,7 +53,7 @@ export default function Home() {
               It sends you somewhere real
             </h3>
             <p style={{ color: "var(--pk-muted)", fontSize: "0.94rem", marginTop: 6 }}>
-              The star draws a real place that fits — anchored to a real reference photo. No phantom destinations.
+              The star draws a real place that fits. No phantom destinations.
             </p>
           </div>
           <div>
@@ -78,9 +89,7 @@ export default function Home() {
               className="display"
               style={{ color: "var(--pk-on-ink)", fontSize: "clamp(1.9rem,4.4vw,2.8rem)", marginTop: 8 }}
             >
-              <span className="cz">Don&apos;t plan it. Play for it.</span>
-              <span className="cm">Don&apos;t plan it. Play for it.</span>
-              <span className="ct">Don&apos;t plan it. Earn it.</span>
+              Don&apos;t plan it. Play for it.
             </h2>
             <p className="lede" style={{ color: "oklch(0.95 0.01 210 / .8)", marginTop: 10 }}>
               Every road into Driftibo is a little game. Pick the one that matches your mood — each takes under two minutes.
@@ -215,86 +224,103 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PACKAGES TEASER */}
-      <section style={{ background: "var(--pk-panel)", padding: "72px 24px" }}>
-        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+      {/* PACKAGES TEASER — CMS-driven (getDestinations, up to 4) */}
+      {featuredDests.length > 0 && (
+        <section style={{ background: "var(--pk-panel)", padding: "72px 24px" }}>
+          <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 14 }}>
+              <div>
+                <p className="kicker">Done-for-you drifts</p>
+                <h2 className="display" style={{ fontSize: "clamp(1.7rem,3.5vw,2.3rem)", marginTop: 6 }}>
+                  Four trips, already dreamed up
+                </h2>
+              </div>
+              <Link href="/packages" className="btn btn-ghost btn-sm">
+                See all packages →
+              </Link>
+            </div>
+            <div
+              style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 18, marginTop: 28 }}
+            >
+              {featuredDests.map((dest) => (
+                <Link
+                  key={dest.slug}
+                  href={`/destinations/${dest.slug}`}
+                  className="card"
+                  style={{ textDecoration: "none", color: "inherit", display: "block" }}
+                >
+                  <div
+                    className={`well ${dest.scene}`}
+                    style={{ aspectRatio: "5/4" }}
+                    data-label={dest.name}
+                  />
+                  <div className="card-pad">
+                    <h3 className="display" style={{ fontSize: "1.3rem" }}>
+                      {dest.name}
+                    </h3>
+                    <p style={{ color: "var(--pk-muted)", fontSize: "0.85rem", margin: "4px 0 10px", minHeight: "2.6rem" }}>
+                      {dest.lede || `${dest.name}, ${dest.dayCount}`}
+                    </p>
+                    {dest.rate ? (
+                      <span className="pill is-on">
+                        ≈ <PriceBadge amount={dest.rate} unit="/ person / day" approx={false} />
+                      </span>
+                    ) : null}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* OTHER INDIA GALLERY — CMS-driven (getDestinations, up to 4) */}
+      {featuredDests.length > 0 && (
+        <section style={{ maxWidth: 1080, margin: "0 auto", padding: "8px 24px 72px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 14 }}>
             <div>
-              <p className="kicker">Done-for-you drifts</p>
-              <h2 className="display" style={{ fontSize: "clamp(1.7rem,3.5vw,2.3rem)", marginTop: 6 }}>
-                Four trips, already dreamed up
+              <p className="kicker">India that looks like abroad</p>
+              <h2 className="display" style={{ fontSize: "clamp(1.6rem,3.4vw,2.2rem)", marginTop: 6 }}>
+                Same soul. A fraction of the price.
               </h2>
             </div>
-            <Link href="/packages" className="btn btn-ghost btn-sm">
-              See all packages →
+            <Link href="/destinations" className="btn btn-ghost btn-sm">
+              All destinations →
             </Link>
           </div>
           <div
-            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 18, marginTop: 28 }}
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 18, marginTop: 24 }}
           >
-            {(
-              [
-                ["s-spiti", "Spiti · ref ✓", "The Cold Desert", "Spiti, 7 nights · monastery silence", "≈ ₹7,400 / day"],
-                ["s-gokarna", "Gokarna · ref ✓", "Slow Coast", "Gokarna, 5 nights · five quiet beaches", "≈ ₹6,200 / day"],
-                ["s-ziro", "Ziro · ref ✓", "Rice & Fog", "Ziro, 6 nights · Apatani valley", "≈ ₹6,900 / day"],
-                ["s-chopta", "Chopta · ref ✓", "Temple Ridge", "Chopta, 5 nights · mini-Switzerland", "≈ ₹6,800 / day"],
-              ] as const
-            ).map(([scene, label, title, sub, price]) => (
-              <Link key={title} href="/packages" className="card" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
-                <div className={`well ${scene}`} style={{ aspectRatio: "5/4" }} data-label={label} />
+            {featuredDests.map((dest) => (
+              <Link
+                key={dest.slug}
+                href={`/destinations/${dest.slug}`}
+                className="card"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <div
+                  className={`well ${dest.scene}`}
+                  style={{
+                    aspectRatio: "3/4",
+                    ...(dest.portraitImageUrl
+                      ? { backgroundImage: `url(${dest.portraitImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                      : {}),
+                  }}
+                  data-label={dest.name}
+                />
                 <div className="card-pad">
-                  <h3 className="display" style={{ fontSize: "1.3rem" }}>
-                    {title}
+                  <h3 className="display" style={{ fontSize: "1.2rem" }}>
+                    {dest.name}
                   </h3>
-                  <p style={{ color: "var(--pk-muted)", fontSize: "0.85rem", margin: "4px 0 10px", minHeight: "2.6rem" }}>
-                    {sub}
+                  <p style={{ color: "var(--pk-muted)", fontSize: "0.8rem", marginTop: 2, minHeight: "2.7rem" }}>
+                    {dest.tag || dest.lookLike}
                   </p>
-                  <span className="pill is-on">{price}</span>
                 </div>
               </Link>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* OTHER INDIA GALLERY */}
-      <section style={{ maxWidth: 1080, margin: "0 auto", padding: "8px 24px 72px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 14 }}>
-          <div>
-            <p className="kicker">India that looks like abroad</p>
-            <h2 className="display" style={{ fontSize: "clamp(1.6rem,3.4vw,2.2rem)", marginTop: 6 }}>
-              Same soul. A fraction of the price.
-            </h2>
-          </div>
-          <Link href="/destinations" className="btn btn-ghost btn-sm">
-            All 83 corners →
-          </Link>
-        </div>
-        <div
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 18, marginTop: 24 }}
-        >
-          {(
-            [
-              ["s-chopta", "Chopta · ref ✓", "Chopta", "Mini-Switzerland · Uttarakhand", "chopta-portrait"],
-              ["s-spiti", "Spiti", "Spiti", "Looks like Iceland · Himachal", "spiti-portrait"],
-              ["s-ziro", "Ziro", "Ziro", "Rice terraces to rival Bali · Arunachal", "ziro-portrait"],
-              ["s-gokarna", "Gokarna", "Gokarna", "Goa's quieter coast · Karnataka", "gokarna-portrait"],
-            ] as const
-          ).map(([scene, label, title, sub, portrait]) => (
-            <Link key={title} href="/destinations" className="card" style={{ textDecoration: "none", color: "inherit" }}>
-              <div className={`well ${scene}`} style={{ aspectRatio: "3/4", backgroundImage: `url(/images/${portrait}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }} data-label={label} />
-              <div className="card-pad">
-                <h3 className="display" style={{ fontSize: "1.2rem" }}>
-                  {title}
-                </h3>
-                <p style={{ color: "var(--pk-muted)", fontSize: "0.8rem", marginTop: 2, minHeight: "2.7rem" }}>
-                  {sub}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* OFFERINGS QUAD */}
       <section style={{ maxWidth: 1080, margin: "0 auto", padding: "72px 24px" }}>
@@ -394,7 +420,7 @@ export default function Home() {
                 Looks like a lakh
               </p>
               <p style={{ fontFamily: "var(--display)", fontSize: "2rem", lineHeight: 1.05, marginTop: 2 }}>
-                ≈ ₹6,800 <span style={{ fontSize: "0.82rem", color: "var(--pk-muted)" }}>/ person / day</span>
+                <PriceBadge amount="6,800" unit="/ person / day" />
               </p>
             </div>
             <p style={{ fontSize: "0.82rem", color: "var(--pk-muted)", maxWidth: "20ch", textAlign: "right" }}>
@@ -404,44 +430,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HONEST ABOUT AI */}
-      <section style={{ maxWidth: 1080, margin: "0 auto", padding: "72px 24px" }}>
-        <div
-          className="callout-ink"
-          style={{
-            borderRadius: "var(--persona-radius)",
-            padding: "42px 38px",
-            display: "flex",
-            gap: 32,
-            flexWrap: "wrap",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ maxWidth: "44ch" }}>
-            <p className="kicker">Honest about AI</p>
-            <p
-              className="poetry"
-              style={{ color: "var(--pk-on-ink)", fontSize: "1.4rem", marginTop: 10, lineHeight: 1.3 }}
-            >
-              Every image is generated — and anchored to a real reference photo of the real place. We never invent a destination.
-            </p>
-          </div>
-          <Link
-            href="/legal#ai-disclosure"
-            className="btn btn-ghost"
-            style={{ color: "var(--pk-on-ink)", boxShadow: "inset 0 0 0 1px oklch(1 0 0 / .3)" }}
-          >
-            Read our AI disclosure
-          </Link>
-        </div>
-        <p style={{ textAlign: "center", color: "var(--pk-muted)", fontSize: "0.82rem", marginTop: 26 }}>
-          83 corners, 9 states ·{" "}
-          <Link href="/go" style={{ color: "var(--pk-accent-deep)", textDecoration: "none" }}>
-            #StarSent
-          </Link>
-        </p>
-      </section>
+      {/* SOCIAL PROOF */}
+      <SocialProof />
+
+      {/* FAQ */}
+      <HomeFAQ />
+
+      <p style={{ textAlign: "center", color: "var(--pk-muted)", fontSize: "0.82rem", padding: "0 24px 48px" }}>
+        Real corners of India ·{" "}
+        <Link href="/go" style={{ color: "var(--pk-accent-deep)", textDecoration: "none" }}>
+          #StarSent
+        </Link>
+      </p>
     </>
   );
 }

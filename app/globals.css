@@ -106,7 +106,7 @@ body {
   overflow: hidden; transition: border-radius .3s ease; }
 .card-pad { padding: var(--s5); }
 
-/* ── Image well — rich painterly stand-in for a real anchored photo ──
+/* ── Image well — rich painterly destination stand-in ──
    Deep, saturated, never washes to white. Add a scene class (.s-chopta etc.)
    for a destination-specific palette; the base is a generic alpine dusk. */
 .well { position: relative; overflow: hidden; background:
@@ -150,13 +150,7 @@ body {
     radial-gradient(95% 62% at 48% -6%, oklch(0.82 0.10 38 / .92), transparent 60%),
     radial-gradient(90% 70% at 52% 122%, oklch(0.46 0.12 320), transparent 62%),
     linear-gradient(168deg, oklch(0.72 0.11 36), oklch(0.40 0.10 300)) !important; }
-/* honesty caption as a bottom-left chip — never collides with an overlaid headline */
-.well::after { content: 'real anchored photo'; position: absolute; left: 9px; bottom: 8px; z-index: 1;
-  font-family: var(--ui); font-weight: 700; font-size: 0.5rem; letter-spacing: 0.13em; text-transform: uppercase;
-  color: oklch(0.99 0.01 210 / 0.92); background: oklch(0.22 0.04 225 / 0.42); -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px); padding: 4px 8px; border-radius: 99px; pointer-events: none; }
-.well[data-label]::after { content: attr(data-label); }
-/* full-bleed background well behind text → drop the chip; the foreground names the place */
+/* full-bleed background well behind text → chip is suppressed */
 .well.bg::after { display: none; }
 .mask-circle { border-radius: 50%; aspect-ratio: 1; }
 
@@ -236,46 +230,16 @@ body {
 .breathe { animation: breathe 3.6s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .float, .breathe { animation: none; } }
 
-/* ── Persona adaptivity: the page morphs to who's dreaming ──
-   Set a persona class on <body>; type scale, accent heat, corner softness all shift. */
+/* ── Persona: site is frozen to the "Refined" (mil) look ── */
 :root          { --persona-scale: 1;    --persona-accent: oklch(0.80 0.085 32); --persona-accent-deep: oklch(0.66 0.12 32); --persona-radius: 22px; }
-.persona-genz    { --persona-scale: 1.18; --persona-accent: oklch(0.71 0.17 20);   --persona-accent-deep: oklch(0.62 0.19 19);  --persona-radius: 26px; }
 .persona-mil     { --persona-scale: 1.0;  --persona-accent: oklch(0.79 0.09 34);   --persona-accent-deep: oklch(0.64 0.13 32);  --persona-radius: 18px; }
-.persona-classic { --persona-scale: 0.92; --persona-accent: oklch(0.62 0.07 58);   --persona-accent-deep: oklch(0.48 0.07 54);  --persona-radius: 9px; }
-/* inline copy that swaps with persona — author all three, show the active one */
-.cz, .cm, .ct { display: none; }
-.persona-genz .cz, .persona-mil .cm, .persona-classic .ct { display: inline; }
+/* inline copy — only the mil variant is active */
+.cm { display: none; }
+.persona-mil .cm { display: inline; }
 
-/* ── Persona theming via LITERAL descendant rules ──
-   Custom-property indirection (var(--persona-*)) silently fails to paint on
-   template nodes, so persona is expressed with concrete values here. Switching
-   persona visibly changes: accent color, card softness, headline scale, voice. */
-.persona-genz    .kicker { color: oklch(0.59 0.20 23); }
-.persona-mil     .kicker { color: oklch(0.64 0.13 32); }
-.persona-classic .kicker { color: oklch(0.48 0.06 56); }
-
-.persona-genz    .btn-accent { background: oklch(0.63 0.21 23); color: oklch(0.99 0.02 20); }
-.persona-mil     .btn-accent { background: oklch(0.80 0.085 32); color: oklch(0.24 0.03 250); }
-.persona-classic .btn-accent { background: oklch(0.78 0.07 58); color: oklch(0.18 0.04 58); }
-
-.persona-genz    .sticker { background: oklch(0.63 0.21 23); color: oklch(0.99 0.02 20); }
-.persona-classic .sticker { background: oklch(0.66 0.08 58); color: oklch(0.21 0.04 60); }
-
-.persona-genz    .seal.t-coral { background: oklch(0.63 0.21 23); color: oklch(0.99 0.02 20); }
-.persona-genz    .seal.t-coral .star { background: oklch(0.99 0.02 20); }
-.persona-classic .seal.t-coral { background: oklch(0.66 0.08 58); color: oklch(0.21 0.04 60); }
-.persona-classic .seal.t-coral .star { background: oklch(0.21 0.04 60); }
-
-/* ── Persona headline scale via LITERAL rules (var(--persona-scale) fails on template nodes) ── */
-.persona-genz .display-mega { font-size: clamp(3.3rem, 11vw, 7.5rem); letter-spacing: -0.035em; }
-.persona-genz .display-xl  { font-size: clamp(2.9rem, 9vw, 6rem); }
-.persona-genz .kicker { letter-spacing: 0.42em; }
-.persona-classic .display-mega { font-size: clamp(2.3rem, 7vw, 5rem); letter-spacing: -0.01em; }
-.persona-classic .display-xl  { font-size: clamp(2rem, 6.5vw, 4.5rem); }
-.persona-classic section { padding-top: calc(var(--s9) - 12px); padding-bottom: calc(var(--s9) - 12px); }
-
-.persona-genz    .card { border-radius: 24px; }
-.persona-classic .card { border-radius: 10px; }
+/* ── Persona theming (mil-only) ── */
+.persona-mil .kicker { color: oklch(0.64 0.13 32); }
+.persona-mil .btn-accent { background: oklch(0.80 0.085 32); color: oklch(0.24 0.03 250); }
 
 /* ════════ HERO — auto-rotating destination stage ════════ */
 .hero-scene { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; will-change: opacity; }
@@ -321,11 +285,6 @@ body {
 .play-card:hover .play-go { gap: 12px; }
 .play-go { display: inline-flex; align-items: center; gap: 7px; margin-top: auto; padding-top: 6px;
   font-family: var(--ui); font-weight: 700; font-size: 0.9rem; color: var(--pk-accent-deep); transition: gap .2s ease; }
-.persona-genz .play-go { color: oklch(0.59 0.20 23); }
-.persona-classic .play-go { color: oklch(0.48 0.06 56); }
-
-/* Step numbers adapt to persona accent (literal rules — var() indirection fails on template nodes) */
+/* Step numbers */
 .step-num { color: var(--pk-accent-deep); }
-.persona-genz .step-num { color: oklch(0.59 0.20 23); }
 .persona-mil .step-num { color: oklch(0.64 0.13 32); }
-.persona-classic .step-num { color: oklch(0.48 0.06 56); }

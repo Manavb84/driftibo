@@ -3,6 +3,21 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Play · Driftibo",
+  description: "Four little games — each one ends with a real place. Pick the one that matches your mood.",
+  alternates: { canonical: "/play" },
+  openGraph: {
+    title: "Play · Driftibo",
+    description: "Four little games — each one ends with a real place. Pick the one that matches your mood.",
+    images: ["/og.jpg"],
+    type: "website",
+    url: "/play",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Play · Driftibo",
+    description: "Four little games — each one ends with a real place. Pick the one that matches your mood.",
+    images: ["/og.jpg"],
+  },
 };
 
 export default function PlayPage() {

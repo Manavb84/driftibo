@@ -34,26 +34,29 @@ const DOCS: Doc[] = [
     ],
   },
   {
-    title: "AI Disclosure",
+    // DRAFT — founder review
+    title: "Refund Policy",
     blocks: [
-      { text: "Generated, and anchored", isHeading: true },
-      { text: "Every location image on Driftibo is AI-generated. Each one is anchored to a real reference photo of that exact place, declared at upload.", isHeading: false },
-      { text: "The spin pool", isHeading: true },
-      { text: "A destination only enters the game once its real reference exists and the render is approved against it. We never invent a place.", isHeading: false },
-      { text: "Copy & itineraries", isHeading: true },
-      { text: "Itinerary text is drafted with AI assistance and checked by a human before it reaches you. Honest catches are written, not hidden.", isHeading: false },
-      { text: "Spotted a drift?", isHeading: true },
-      { text: "If a render strays from the real place, tell us and it leaves the pool. Boring, on purpose.", isHeading: false },
+      { text: "DRAFT — founder review", isHeading: true },
+      { text: "This policy is a placeholder and requires founder review before going live.", isHeading: false },
+      { text: "Deposit", isHeading: true },
+      { text: "[placeholder] A refundable deposit is held to confirm your trip slot. The deposit amount and refund window will be confirmed in your quote.", isHeading: false },
+      { text: "Cancellations by you", isHeading: true },
+      { text: "[placeholder] Cancellations made more than [X] days before departure receive a full deposit refund. Cancellations inside [X] days forfeit the deposit. Exact windows will be specified per booking.", isHeading: false },
+      { text: "Cancellations by Driftibo", isHeading: true },
+      { text: "[placeholder] If Driftibo cancels your trip for any reason, you receive a full refund of all amounts paid, with no penalty.", isHeading: false },
+      { text: "How to request a refund", isHeading: true },
+      { text: "[placeholder] Contact us on WhatsApp or at refunds@driftibo.com. We aim to process all refund requests within [X] business days.", isHeading: false },
     ],
   },
 ];
 
-const TAB_NAMES = ["Privacy", "Terms", "AI disclosure"];
+const TAB_NAMES = ["Privacy", "Terms", "Refund policy"];
 
 const HASH_TO_TAB: Record<string, number> = {
-  "#ai-disclosure": 2,
   "#privacy": 0,
   "#terms": 1,
+  "#refund": 2,
 };
 
 const headingStyle: CSSProperties = {
@@ -87,7 +90,7 @@ export default function LegalTabs() {
   }, []);
 
   const doc = DOCS[tab];
-  const articleId = tab === 2 ? "ai-disclosure" : tab === 1 ? "terms" : "privacy";
+  const articleId = tab === 2 ? "refund" : tab === 1 ? "terms" : "privacy";
 
   return (
     <div style={{ background: "var(--pk-card)", borderRadius: 20, boxShadow: "var(--pk-shadow-sm)", overflow: "hidden" }}>

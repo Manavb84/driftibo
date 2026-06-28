@@ -4,6 +4,21 @@ import { getArticles } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Journal · Driftibo",
+  description: "Honest guides, short essays, and the occasional confession about how we travel — from the Driftibo desk.",
+  alternates: { canonical: "/journal" },
+  openGraph: {
+    title: "Journal · Driftibo",
+    description: "Honest guides, short essays, and the occasional confession about how we travel — from the Driftibo desk.",
+    images: ["/og.jpg"],
+    type: "website",
+    url: "/journal",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Journal · Driftibo",
+    description: "Honest guides, short essays, and the occasional confession about how we travel — from the Driftibo desk.",
+    images: ["/og.jpg"],
+  },
 };
 
 export default async function Page() {

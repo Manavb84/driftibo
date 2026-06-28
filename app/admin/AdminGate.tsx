@@ -3,37 +3,35 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useEmailOtp } from "@/lib/hooks/useEmailOtp";
 
 // Shown when the visitor is not a signed-in admin. Two states: the email-OTP login,
 // and a "not authorized" screen for a signed-in non-admin (with sign-out).
+// OTP logic (signInWithOtp / verifyOtp / digit state) is sourced from the shared
+// useEmailOtp hook; only stage and email remain as local state.
 export default function AdminGate({ signedInEmail }: { signedInEmail: string | null }) {
   const router = useRouter();
   const [stage, setStage] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [err, setErr] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
 
-  async function sendOtp(e: React.FormEvent) {
+  const { digits, setDigit, handleKeyDown, refs, sending, sendError, verifying, verifyError, send, verify, reset } =
+    useEmailOtp(() => router.refresh());
+
+  async function handleSendOtp(e: React.FormEvent) {
     e.preventDefault();
-    setErr(null);
-    setBusy(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({ email });
-    setBusy(false);
-    if (error) setErr(error.message);
-    else setStage("otp");
+    const ok = await send(email);
+    if (ok) setStage("otp");
   }
 
-  async function verifyOtp(e: React.FormEvent) {
+  async function handleVerifyOtp(e: React.FormEvent) {
     e.preventDefault();
-    setErr(null);
-    setBusy(true);
-    const supabase = createClient();
-    const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
-    setBusy(false);
-    if (error) setErr(error.message);
-    else router.refresh();
+    await verify(email);
+    // onVerified callback passed to useEmailOtp drives router.refresh()
+  }
+
+  function handleBack() {
+    setStage("email");
+    reset();
   }
 
   async function signOut() {
@@ -78,7 +76,7 @@ export default function AdminGate({ signedInEmail }: { signedInEmail: string | n
             </button>
           </>
         ) : stage === "email" ? (
-          <form onSubmit={sendOtp}>
+          <form onSubmit={handleSendOtp}>
             <label style={{ fontSize: "0.82rem", fontWeight: 600 }}>
               Admin email
               <input
@@ -90,33 +88,78 @@ export default function AdminGate({ signedInEmail }: { signedInEmail: string | n
                 style={input}
               />
             </label>
-            {err && <p style={{ color: "var(--pk-coral, oklch(0.6 0.13 25))", fontSize: "0.82rem", marginTop: 8 }}>{err}</p>}
-            <button type="submit" disabled={busy} className="btn btn-primary" style={{ marginTop: 16, width: "100%", justifyContent: "center" }}>
-              {busy ? "Sending…" : "Send login code"}
+            {sendError && (
+              <p style={{ color: "var(--pk-coral, oklch(0.6 0.13 25))", fontSize: "0.82rem", marginTop: 8 }}>
+                {sendError}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={sending}
+              className="btn btn-primary"
+              style={{ marginTop: 16, width: "100%", justifyContent: "center" }}
+            >
+              {sending ? "Sending…" : "Send login code"}
             </button>
           </form>
         ) : (
-          <form onSubmit={verifyOtp}>
+          <form onSubmit={handleVerifyOtp}>
             <p style={{ color: "var(--pk-muted)", fontSize: "0.85rem", marginBottom: 12 }}>
-              Enter the code sent to {email}.
+              Enter the 6-digit code sent to {email}.
             </p>
-            <label style={{ fontSize: "0.82rem", fontWeight: 600 }}>
-              Code
-              <input
-                type="text"
-                required
-                inputMode="numeric"
-                placeholder="123456"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                style={{ ...input, letterSpacing: "0.2em" }}
-              />
-            </label>
-            {err && <p style={{ color: "var(--pk-coral, oklch(0.6 0.13 25))", fontSize: "0.82rem", marginTop: 8 }}>{err}</p>}
-            <button type="submit" disabled={busy} className="btn btn-primary" style={{ marginTop: 16, width: "100%", justifyContent: "center" }}>
-              {busy ? "Verifying…" : "Enter"}
+            {/* 6-box OTP input wired to hook */}
+            <div style={{ display: "flex", gap: 6 }}>
+              {digits.map((d, i) => (
+                <input
+                  key={i}
+                  ref={(el) => {
+                    refs.current[i] = el;
+                  }}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={d}
+                  onChange={(e) => setDigit(i, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(i, e)}
+                  style={{
+                    ...input,
+                    width: "100%",
+                    textAlign: "center",
+                    fontSize: "1.3rem",
+                    letterSpacing: 0,
+                    padding: "10px 4px",
+                    marginTop: 0,
+                  }}
+                />
+              ))}
+            </div>
+            {verifyError && (
+              <p style={{ color: "var(--pk-coral, oklch(0.6 0.13 25))", fontSize: "0.82rem", marginTop: 8 }}>
+                {verifyError}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={verifying}
+              className="btn btn-primary"
+              style={{ marginTop: 16, width: "100%", justifyContent: "center" }}
+            >
+              {verifying ? "Verifying…" : "Enter"}
             </button>
-            <button type="button" onClick={() => { setStage("email"); setCode(""); setErr(null); }} style={{ display: "block", marginTop: 12, background: "none", border: 0, color: "var(--pk-muted)", fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline" }}>
+            <button
+              type="button"
+              onClick={handleBack}
+              style={{
+                display: "block",
+                marginTop: 12,
+                background: "none",
+                border: 0,
+                color: "var(--pk-muted)",
+                fontSize: "0.8rem",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
               ← different email
             </button>
           </form>

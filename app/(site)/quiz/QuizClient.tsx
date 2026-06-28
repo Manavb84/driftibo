@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePersona } from "@/components/PersonaProvider";
+import { PERSONA } from "@/lib/persona";
 import { submitCapture } from "@/lib/actions";
 import { SITE } from "@/lib/site";
 
@@ -143,8 +143,7 @@ type Stage = "intro" | "q" | "result";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function QuizClient() {
-  const { persona } = usePersona();
-  const effectivePersona = persona ?? "mil";
+  const effectivePersona = PERSONA;
 
   const [stage, setStage] = useState<Stage>("intro");
   const [qi, setQi] = useState(0);

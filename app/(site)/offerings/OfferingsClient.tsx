@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import WhatsAppClose from "@/components/WhatsAppClose";
-import { usePersona } from "@/components/PersonaProvider";
+import { PERSONA } from "@/lib/persona";
 import { submitCapture } from "@/lib/actions";
 import type { Offering } from "@/lib/content";
 
@@ -14,7 +14,7 @@ type Who = (typeof WHO_CHIPS)[number];
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function OfferingsClient({ offers }: { offers: Offering[] }) {
-  const { persona } = usePersona();
+  const persona = PERSONA;
   const [offering, setOffering] = useState<string>(offers[0]?.name ?? "");
   const [who, setWho] = useState<Who>("Squad");
 

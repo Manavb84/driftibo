@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePersona } from "@/components/PersonaProvider";
+import { PERSONA } from "@/lib/persona";
 import { submitCapture } from "@/lib/actions";
 import WhatsAppClose from "@/components/WhatsAppClose";
 
@@ -68,8 +68,6 @@ function BudgetTiers({
     borderRadius: 14,
     cursor: "pointer",
     transition: "transform .16s ease",
-    // longhand (not `border` shorthand) so the selected variant can override
-    // borderColor without a shorthand/longhand React style conflict.
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: "var(--pk-line)",
@@ -132,16 +130,12 @@ function BudgetTiers({
 
 // ─── main component ────────────────────────────────────────────────────────────
 export default function DreamClient() {
-  const { persona } = usePersona();
-  const effectivePersona = persona ?? "mil";
+  const persona = PERSONA;
 
   const [stage, setStage] = useState<Stage>("input");
   const [energy, setEnergy] = useState("Wild & remote");
   const [budget, setBudget] = useState("Comfortable");
   const [when, setWhen] = useState("A weekend soon");
-
-  // result destination (fixed in the prototype; same copy here)
-  const resultDestination = "A quiet alpine ridge";
 
   // prefers-reduced-motion gate (read after mount to avoid SSR mismatch)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -155,14 +149,6 @@ export default function DreamClient() {
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // mr heading varies by persona — mirrors the prototype's renderVals
-  const mrHeadingMap: Record<string, string> = {
-    genz: "Wanna make it real? 🔥",
-    mil: "Want us to make it real?",
-    classic: "Shall we arrange it?",
-  };
-  const mrHeading = mrHeadingMap[effectivePersona] ?? mrHeadingMap.mil;
-
   async function dream() {
     setStage("dreaming");
     const delay = prefersReducedMotion ? 0 : 2200;
@@ -170,8 +156,8 @@ export default function DreamClient() {
       setStage("result");
       await submitCapture({
         kind: "dream",
-        persona: effectivePersona,
-        data: { energy, budget, when, resultDestination },
+        persona,
+        data: { energy, budget, when },
       });
     }, delay);
   }
@@ -219,10 +205,7 @@ export default function DreamClient() {
             className="display-mega"
             style={{ fontSize: "clamp(2rem,7vw,3rem)" }}
           >
-            Tell me the{" "}
-            <span className="cz">vibe.</span>
-            <span className="cm">feeling.</span>
-            <span className="ct">mood.</span>
+            Tell me the feeling.
           </h1>
           <p
             style={{
@@ -232,18 +215,8 @@ export default function DreamClient() {
               maxWidth: "46ch",
             }}
           >
-            <span className="cz">
-              No itinerary. No stress. Drop your energy, your budget, your dates
-              — watch a place appear. ✦
-            </span>
-            <span className="cm">
-              Three quick choices and we&apos;ll conjure somewhere that fits the
-              feeling you&apos;re after.
-            </span>
-            <span className="ct">
-              A few details, and we&apos;ll suggest a destination worthy of your
-              time.
-            </span>
+            Three quick choices and we&apos;ll conjure somewhere that fits the
+            feeling you&apos;re after.
           </p>
 
           <PillGroup
@@ -284,10 +257,7 @@ export default function DreamClient() {
               boxShadow: "0 12px 36px oklch(0.62 0.10 32 / .4)",
             }}
           >
-            ✦{" "}
-            <span className="cz">Show me where</span>
-            <span className="cm">Dream it for me</span>
-            <span className="ct">Reveal a destination</span>
+            ✦ Dream it for me
           </button>
         </div>
       )}
@@ -322,9 +292,7 @@ export default function DreamClient() {
               textShadow: "0 2px 14px oklch(0.3 0.06 225 / .5)",
             }}
           >
-            <span className="cz">cooking something unreal…</span>
-            <span className="cm">finding your place…</span>
-            <span className="ct">composing your destination…</span>
+            finding your place…
           </p>
           <div style={{ display: "flex", gap: 10, width: "100%", maxWidth: 420 }}>
             <div
@@ -391,10 +359,7 @@ export default function DreamClient() {
               className="sticker float"
               style={{ position: "absolute", top: 18, right: 16 }}
             >
-              ✦{" "}
-              <span className="cz">your star ate</span>
-              <span className="cm">dreamed for you</span>
-              <span className="ct">chosen for you</span>
+              ✦ dreamed for you
             </span>
             <div
               style={{
@@ -413,9 +378,7 @@ export default function DreamClient() {
                   margin: "4px 0 8px",
                 }}
               >
-                <span className="cz">Pine, snow &amp; zero signal.</span>
-                <span className="cm">A quiet alpine ridge.</span>
-                <span className="ct">A serene Himalayan retreat.</span>
+                A quiet alpine ridge.
               </h2>
               <p
                 style={{
@@ -528,7 +491,7 @@ export default function DreamClient() {
 
             <WhatsAppClose
               eyebrow="Make it real"
-              heading={mrHeading}
+              heading="Want us to make it real?"
               sub="We name the place, lock the dates, and send the full itinerary on chat."
               context="the alpine ridge you dreamed up for me on Dream My Trip"
             />

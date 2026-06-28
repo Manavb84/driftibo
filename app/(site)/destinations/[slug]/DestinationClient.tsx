@@ -5,20 +5,44 @@ import Link from "next/link";
 import type { Destination } from "@/lib/content";
 import WhatsAppClose from "@/components/WhatsAppClose";
 import { waLink } from "@/lib/site";
+import { track } from "@/lib/analytics";
 
 type View = "detail" | "itin";
 
 export default function DestinationClient({ dest }: { dest: Destination }) {
   const [view, setView] = useState<View>("detail");
+  const [copied, setCopied] = useState(false);
 
   const context = `${dest.name} (${dest.region}) — the ${dest.dayCount} sample drift`;
-  const waHref = waLink(`make the ${dest.name} sample itinerary real?`);
+  const waHref = waLink(`I want to drift to ${dest.name} — ${dest.dayCount}`);
 
   function go(v: View) {
     setView(v);
     try {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (_) {}
+  }
+
+  async function handleCopy() {
+    track("share_click", { destination: dest.slug, method: "copy_link" });
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch (_) {}
+  }
+
+  async function handleShare() {
+    track("share_click", { destination: dest.slug, method: "native_or_whatsapp" });
+    const url = window.location.href;
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ title: dest.name, url });
+        return;
+      } catch (_) {}
+    }
+    // Fallback: open WhatsApp share
+    window.open(waLink(`check out ${dest.name} on Driftibo`), "_blank", "noopener");
   }
 
   // ── DETAIL VIEW ───────────────────────────────────────────────────────────
@@ -176,6 +200,36 @@ export default function DestinationClient({ dest }: { dest: Destination }) {
               </p>
             </div>
 
+            {/* INCLUSIONS / EXCLUSIONS PLACEHOLDER — DRAFT — founder review */}
+            <div style={{ background: "var(--pk-panel)", borderRadius: 16, padding: 20, display: "grid", gap: 14 }}>
+              <div>
+                <p className="kicker">What&apos;s included</p>
+                <p
+                  style={{
+                    fontSize: "0.82rem",
+                    color: "var(--pk-muted)",
+                    fontStyle: "italic",
+                    marginTop: 6,
+                  }}
+                >
+                  DRAFT — founder review: [e.g. accommodation, airport transfers, one guided day activity, breakfast daily]
+                </p>
+              </div>
+              <div>
+                <p className="kicker">Extras &amp; exclusions</p>
+                <p
+                  style={{
+                    fontSize: "0.82rem",
+                    color: "var(--pk-muted)",
+                    fontStyle: "italic",
+                    marginTop: 6,
+                  }}
+                >
+                  DRAFT — founder review: [e.g. flights, personal expenses, additional activities]
+                </p>
+              </div>
+            </div>
+
             {/* MOOD ITINERARY */}
             <div
               style={{ background: "var(--pk-panel)", borderRadius: 16, padding: 22 }}
@@ -186,17 +240,23 @@ export default function DestinationClient({ dest }: { dest: Destination }) {
               </p>
             </div>
 
-            {/* CTA BUTTONS */}
+            {/* CTA BUTTONS — WhatsApp is primary */}
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-accent"
+                onClick={() => track("destination_whatsapp_click", { destination: dest.slug })}
+              >
+                Chat on WhatsApp ✦
+              </a>
               <button
                 onClick={() => go("itin")}
-                className="btn btn-accent"
+                className="btn btn-ghost"
               >
-                See the full sample itinerary →
+                See the full itinerary →
               </button>
-              <Link href="/game" className="btn btn-ghost">
-                Send me here ✦
-              </Link>
             </div>
           </div>
         </article>
@@ -269,20 +329,28 @@ export default function DestinationClient({ dest }: { dest: Destination }) {
         <div style={{ padding: 28, display: "grid", gap: 22 }}>
           {/* SHARE ACTIONS */}
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button className="btn btn-primary btn-sm">Share · IG Story</button>
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={handleShare}
+            >
+              Share · IG Story
+            </button>
             <a
               className="btn btn-sm"
               href={waHref}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               style={{
                 background: "oklch(0.72 0.13 150)",
                 color: "oklch(0.22 0.05 150)",
               }}
+              onClick={() => track("destination_whatsapp_click", { destination: dest.slug, source: "itinerary" })}
             >
               WhatsApp
             </a>
-            <button className="btn btn-ghost btn-sm">Copy link</button>
+            <button className="btn btn-ghost btn-sm" onClick={handleCopy}>
+              {copied ? "Copied ✓" : "Copy link"}
+            </button>
           </div>
 
           {/* DAY BY DAY */}

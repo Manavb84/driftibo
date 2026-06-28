@@ -13,6 +13,7 @@ export async function uploadMedia(
   const file = formData.get("file") as File | null;
   if (!file) return { ok: false, error: "No file provided." };
   if (!file.type.startsWith("image/")) return { ok: false, error: "File must be an image." };
+  if (file.size > 20 * 1024 * 1024) return { ok: false, error: "File must be under 20 MB." };
 
   const buf = Buffer.from(await file.arrayBuffer());
   const out = await sharp(buf)

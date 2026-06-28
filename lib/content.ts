@@ -55,6 +55,7 @@ export type Article = {
   heroImageUrl: string | null;
   status: string;
   sortOrder: number;
+  publishedAt: string | null;
 };
 
 export type Package = {
@@ -129,6 +130,8 @@ function toArticle(row: any): Article {
     heroImageUrl: row.hero_image_url ?? null,
     status: row.status ?? "draft",
     sortOrder: row.sort_order ?? 0,
+    // Fall back through published_at → created_at → null; no DB change needed.
+    publishedAt: row.published_at ?? row.created_at ?? null,
   };
 }
 
@@ -234,6 +237,22 @@ export async function getArticle(slug: string): Promise<Article | null> {
     },
     ["article", slug],
     { tags: ["articles"] },
+  )();
+}
+
+export async function getPackage(slug: string): Promise<Package | null> {
+  return unstable_cache(
+    async () => {
+      const supabase = publicClient();
+      const { data } = await supabase
+        .from("packages")
+        .select("*")
+        .eq("slug", slug)
+        .maybeSingle();
+      return data ? toPackage(data) : null;
+    },
+    ["package", slug],
+    { tags: ["packages"] },
   )();
 }
 

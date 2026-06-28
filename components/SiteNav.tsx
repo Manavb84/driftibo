@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type CSSProperties } from "react";
-import { usePersona } from "./PersonaProvider";
 
 type NavItem = { href: string; label: string; key: string };
 
@@ -16,14 +15,7 @@ const NAV: NavItem[] = [
   { href: "/about", label: "About", key: "about" },
 ];
 
-const PERSONA_LABEL: Record<string, string> = {
-  genz: "Gen-Z",
-  mil: "Millennial",
-  classic: "Timeless",
-};
-
 export default function SiteNav() {
-  const { persona, openOverlay } = usePersona();
   const pathname = usePathname();
   const active = (pathname || "/").replace(/^\//, "").split("/")[0];
 
@@ -98,26 +90,6 @@ export default function SiteNav() {
       : { background: "oklch(1 0 0 / .16)", color: "var(--pk-on-ink)", backdropFilter: "blur(6px)" }),
   };
 
-  const chipStyle: CSSProperties = {
-    cursor: "pointer",
-    border: 0,
-    fontFamily: "var(--ui)",
-    fontWeight: 700,
-    fontSize: "0.74rem",
-    padding: "7px 12px",
-    borderRadius: 99,
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 5,
-    ...(sky
-      ? {
-          background: "var(--pk-panel)",
-          color: "var(--pk-text)",
-          boxShadow: "inset 0 0 0 1px var(--pk-line-soft)",
-        }
-      : { background: "oklch(1 0 0 / .16)", color: "var(--pk-on-ink)", backdropFilter: "blur(6px)" }),
-  };
-
   return (
     <>
       <nav style={navStyle}>
@@ -173,12 +145,6 @@ export default function SiteNav() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-            {persona && (
-              <button onClick={openOverlay} title="Not you?" style={chipStyle}>
-                <span style={{ opacity: 0.65 }}>✦</span> {PERSONA_LABEL[persona]}{" "}
-                <span style={{ opacity: 0.55, fontWeight: 600 }}>· not you?</span>
-              </button>
-            )}
             <Link href="/game" className="nav-cta btn btn-primary btn-sm">
               Spin my star
             </Link>

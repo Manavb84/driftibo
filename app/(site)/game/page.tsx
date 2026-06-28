@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getDestinations } from "@/lib/content";
 import GameClient from "./GameClient";
 
 export const metadata: Metadata = {
@@ -6,6 +7,7 @@ export const metadata: Metadata = {
   description: "Six taps. Zero typing. Tell your star your limits — it picks a real place that fits. Free reveal, no email yet.",
 };
 
-export default function GamePage() {
-  return <GameClient />;
+export default async function GamePage() {
+  const destinations = await getDestinations();
+  return <GameClient destinations={destinations} />;
 }

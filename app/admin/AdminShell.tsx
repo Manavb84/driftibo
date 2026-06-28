@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 // don't link anywhere (avoids 404s while phases land).
 const NAV: { href: string; label: string; ready: boolean }[] = [
   { href: "/admin", label: "Dashboard", ready: true },
+  { href: "/admin/leads", label: "Lead Pipeline", ready: true },
   { href: "/admin/destinations", label: "Destinations", ready: true },
   { href: "/admin/blog", label: "Blog", ready: true },
   { href: "/admin/packages", label: "Packages", ready: true },

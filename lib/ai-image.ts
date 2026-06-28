@@ -24,7 +24,8 @@ export async function generateImage(
   if (!trimmed) return { ok: false, error: "Prompt cannot be empty." };
 
   const MODEL = "gemini-3.1-flash-image-preview";
-  const ENDPOINT = `https://aiplatform.googleapis.com/v1/publishers/google/models/${MODEL}:generateContent?key=${key}`;
+  // Security: key sent as Authorization header, not URL query param (prevents leaking into server logs)
+  const ENDPOINT = `https://aiplatform.googleapis.com/v1/publishers/google/models/${MODEL}:generateContent`;
 
   const body = {
     contents: [
@@ -47,7 +48,10 @@ export async function generateImage(
 
   const res = await fetch(ENDPOINT, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${key}`,
+    },
     body: JSON.stringify(body),
   });
   if (!res.ok) return { ok: false, error: `Gemini ${res.status}` };

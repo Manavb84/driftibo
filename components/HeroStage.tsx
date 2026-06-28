@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, type CSSProperties } from "react";
+import { track } from "@/lib/analytics";
 
 type Scene = { name: string; tag: string; blurb: string };
 
@@ -147,6 +148,20 @@ export default function HeroStage() {
               Travel by your own star
             </p>
           </div>
+          {/* Value-prop subhead */}
+          <p
+            style={{
+              fontFamily: "var(--ui)",
+              fontSize: "0.94rem",
+              color: "oklch(0.98 0.01 210 / .80)",
+              textShadow: "0 1px 10px oklch(0.2 0.05 232 / .5)",
+              maxWidth: "44ch",
+              lineHeight: 1.55,
+              marginBottom: 14,
+            }}
+          >
+            Surprise travel to India&apos;s hidden corners — you tell us your limits, we plan the trip and close it on WhatsApp.
+          </p>
           <p
             style={{
               fontFamily: "var(--display)",
@@ -157,9 +172,7 @@ export default function HeroStage() {
               marginBottom: 4,
             }}
           >
-            <span className="cz">Your star&apos;s eyeing —</span>
-            <span className="cm">Your star could send you to —</span>
-            <span className="ct">Where your star may send you —</span>
+            Your star could send you to —
           </p>
           <h1
             data-hero-name
@@ -205,7 +218,11 @@ export default function HeroStage() {
             {scene.blurb}
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 26 }}>
-            <Link href="/game" className="btn btn-accent btn-lg">
+            <Link
+              href="/game"
+              className="btn btn-accent btn-lg"
+              onClick={() => track("home_cta_click", { cta: "spin_my_star" })}
+            >
               ✦ Spin my star
             </Link>
             <Link
@@ -218,6 +235,7 @@ export default function HeroStage() {
                 backdropFilter: "blur(8px)",
                 boxShadow: "inset 0 0 0 1px oklch(1 0 0 / .38)",
               }}
+              onClick={() => track("home_cta_click", { cta: "dream_my_trip" })}
             >
               Dream My Trip →
             </Link>

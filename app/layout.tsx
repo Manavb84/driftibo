@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import Analytics from "@/components/Analytics";
 
 // Fraunces — variable, optical-size axis, normal + italic (replaces the blocking @import).
 const fraunces = Fraunces({
@@ -34,19 +35,31 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-// Set the persona class on <html> before first paint so type-scale, accent, and
-// copy don't flash the default. Mirrors PersonaProvider's mount logic (default 'mil').
-const noFoucScript = `(function(){try{var p=localStorage.getItem('driftibo-persona');document.documentElement.classList.add('persona-'+(p==='genz'||p==='mil'||p==='classic'?p:'mil'))}catch(e){document.documentElement.classList.add('persona-mil')}})();`;
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // `persona-mil` is now static (the generational customization was removed) — it
+  // drives the "Refined" look: --persona-* vars, accent, scale, and the .cm copy.
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Driftibo",
+    url: "https://driftibo.com",
+    logo: "https://driftibo.com/favicon.svg",
+    description:
+      "Driftibo sends you to real Indian places that look like abroad — six taps, no destination choice.",
+    sameAs: ["https://instagram.com/driftibo"],
+  };
   return (
-    <html lang="en-IN" className={`${fraunces.variable} ${jakarta.variable}`} suppressHydrationWarning>
+    <html lang="en-IN" className={`persona-mil ${fraunces.variable} ${jakarta.variable}`}>
       <body className="grain">
-        <script dangerouslySetInnerHTML={{ __html: noFoucScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+        <Analytics />
         {children}
       </body>
     </html>

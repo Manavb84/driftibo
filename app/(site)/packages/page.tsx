@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import WhatsAppClose from "@/components/WhatsAppClose";
 import { getPackages } from "@/lib/content";
 
@@ -78,6 +79,11 @@ export default async function PackagesPage() {
                   <p style={{ fontFamily: "var(--display)", fontSize: "1.6rem" }}>{p.rate} <span style={{ fontSize: "0.78rem", color: "var(--pk-muted)" }}>/ person / day</span></p>
                 </div>
                 <p style={{ fontSize: "0.78rem", color: "var(--pk-muted)", maxWidth: "20ch", textAlign: "right" }}>{p.nights} · stay, transfers, a guided day. Verified.</p>
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+                <Link href={`/packages/${p.slug}`} className="btn btn-ghost btn-sm">
+                  See full details →
+                </Link>
               </div>
               <WhatsAppClose
                 eyebrow="Take this one"
