@@ -36,11 +36,40 @@ export default async function AdminDashboard() {
   // One server-side aggregate for all kind counts (RLS-governed; no 1000-row PostgREST
   // cap that a client-side select('kind') reduce would silently undercount). Replaces 6
   // separate count round-trips.
-  const [{ data: countRows }, { count: stampCount }, { data: recent }] = await Promise.all([
+  const [
+    { data: countRows },
+    { count: stampCount },
+    { data: recent },
+    { data: leadRows },
+    { data: bookingRows },
+  ] = await Promise.all([
     supabase.rpc("get_capture_counts"),
     supabase.from("starbook_stamps").select("*", { count: "exact", head: true }),
     supabase.from("captures").select("*").order("created_at", { ascending: false }).limit(25),
+    // ponytail: client-side group is fine until leads pass PostgREST's 1000-row cap;
+    // promote to an rpc (like get_capture_counts) when the funnel actually gets big.
+    supabase.from("captures").select("lead_status"),
+    supabase.from("bookings").select("status"),
   ]);
+
+  // Funnel: captures move new → contacted → quoted → won; bookings move created → paid.
+  const LEAD_STAGES: [string, string][] = [
+    ["new", "New"],
+    ["contacted", "Contacted"],
+    ["quoted", "Quoted"],
+    ["won", "Won"],
+  ];
+  const leadCounts: Record<string, number> = {};
+  for (const r of (leadRows ?? []) as { lead_status: string }[])
+    leadCounts[r.lead_status] = (leadCounts[r.lead_status] ?? 0) + 1;
+  const bookingCounts: Record<string, number> = {};
+  for (const r of (bookingRows ?? []) as { status: string }[])
+    bookingCounts[r.status] = (bookingCounts[r.status] ?? 0) + 1;
+  const funnel: { label: string; n: number }[] = [
+    ...LEAD_STAGES.map(([k, label]) => ({ label, n: leadCounts[k] ?? 0 })),
+    { label: "Deposits", n: bookingCounts["created"] ?? 0 },
+    { label: "Paid", n: bookingCounts["paid"] ?? 0 },
+  ];
 
   const counts: Record<string, number> = Object.fromEntries(KINDS.map((k) => [k.key, 0]));
   for (const row of (countRows ?? []) as { kind: string; n: number }[]) {
@@ -92,6 +121,25 @@ export default async function AdminDashboard() {
         </div>
         <span style={{ fontSize: "1.4rem", opacity: 0.85 }}>→</span>
       </Link>
+
+      {/* Quote → deposit → paid funnel */}
+      <h2 style={{ fontFamily: "var(--display)", fontSize: "1.2rem", marginBottom: 12 }}>Funnel</h2>
+      <div
+        className="card"
+        style={{ display: "flex", alignItems: "stretch", gap: 0, flexWrap: "wrap", borderRadius: 14, padding: 6, marginBottom: 30 }}
+      >
+        {funnel.map((s, i) => (
+          <div key={s.label} style={{ display: "flex", alignItems: "center", flex: "1 1 90px" }}>
+            <div style={{ textAlign: "center", padding: "10px 14px", flex: 1 }}>
+              <div style={{ fontFamily: "var(--display)", fontSize: "1.6rem", lineHeight: 1 }}>{s.n}</div>
+              <div style={{ color: "var(--pk-muted)", fontSize: "0.72rem", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                {s.label}
+              </div>
+            </div>
+            {i < funnel.length - 1 && <span style={{ color: "var(--pk-muted)", opacity: 0.5 }}>→</span>}
+          </div>
+        ))}
+      </div>
 
       {/* Recent activity */}
       <h2 style={{ fontFamily: "var(--display)", fontSize: "1.2rem", marginBottom: 12 }}>Recent activity</h2>

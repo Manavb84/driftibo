@@ -35,6 +35,7 @@ function Col({ title, links }: { title: string; links: [string, string][] }) {
 // ─── "Talk to us" lead capture form ───────────────────────────────────────────
 function TalkToUs() {
   const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -42,6 +43,11 @@ function TalkToUs() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    // DPDP consent guard — no capture write until the box is ticked.
+    if (!consent) {
+      setError("Please tick the consent box so we can reply.");
+      return;
+    }
     setLoading(true);
     const result = await submitCapture({ kind: "lead", email });
     setLoading(false);
@@ -83,9 +89,21 @@ function TalkToUs() {
               outline: "none",
             }}
           />
+          <label style={{ display: "flex", gap: 8, fontSize: "0.72rem", color: "var(--pk-on-ink)", opacity: 0.78, lineHeight: 1.45 }}>
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              style={{ marginTop: 2, accentColor: "var(--pk-accent)" }}
+            />
+            <span>
+              I agree Driftibo may contact me, per the{" "}
+              <Link href="/legal#privacy" style={{ color: "var(--pk-accent)" }}>Privacy Notice</Link>. DPDP — not pre-ticked.
+            </span>
+          </label>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !consent}
             className="btn btn-accent btn-sm"
             style={{ width: "100%", justifyContent: "center" }}
           >
@@ -143,10 +161,7 @@ export default function SiteFooter() {
           <Col
             title="Plan"
             links={[
-              ["/offerings", "Surprise me"],
-              ["/offerings", "Custom & honeymoon"],
-              ["/offerings", "Concierge"],
-              ["/offerings", "Corporate"],
+              ["/offerings", "Plan with us"],
               ["/packages", "Packages"],
             ]}
           />

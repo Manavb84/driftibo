@@ -5,14 +5,32 @@ import OtherIndiaRotator from "@/components/OtherIndiaRotator";
 import HomeFAQ from "@/components/HomeFAQ";
 import SocialProof from "@/components/SocialProof";
 import PriceBadge from "@/components/PriceBadge";
-import { getDestinations } from "@/lib/content";
+import { getDestinations, getPackages, getOfferings, minTierPrice } from "@/lib/content";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
+const inr = (n: number) => n.toLocaleString("en-IN");
+
+// Per-offering cosmetics for the home grid (the DB carries copy, not styling).
+// Unknown slugs (e.g. a new lane) fall back to DEFAULT so they still appear.
+const SURFACE_STYLE: Record<string, { scene: string; glyph: string; sticker: string }> = {
+  "/surprise": { scene: "s-spiti", glyph: "✦", sticker: "Hands-off" },
+  "/custom": { scene: "s-gokarna", glyph: "♡", sticker: "Yours, tailored" },
+  "/concierge": { scene: "s-chopta", glyph: "◆", sticker: "White-glove" },
+  "/corporate": { scene: "s-dusk", glyph: "◈", sticker: "For teams" },
+  "/abroad": { scene: "s-gangtey", glyph: "✈", sticker: "Beyond India" },
+};
+const DEFAULT_SURFACE = { scene: "s-dusk", glyph: "✦", sticker: "New lane" };
+
 export default async function Home() {
-  const destinations = await getDestinations();
+  const [destinations, packages, offerings] = await Promise.all([
+    getDestinations(),
+    getPackages(),
+    getOfferings(),
+  ]);
   // Slice to 4 for the teaser sections; fall back gracefully to empty array
   const featuredDests = destinations.slice(0, 4);
+  const featuredPacks = packages.slice(0, 4);
 
   return (
     <>
@@ -224,15 +242,15 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* PACKAGES TEASER — CMS-driven (getDestinations, up to 4) */}
-      {featuredDests.length > 0 && (
+      {/* PACKAGES TEASER — CMS-driven (getPackages, up to 4), with from-price */}
+      {featuredPacks.length > 0 && (
         <section style={{ background: "var(--pk-panel)", padding: "72px 24px" }}>
           <div style={{ maxWidth: 1080, margin: "0 auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 14 }}>
               <div>
                 <p className="kicker">Done-for-you drifts</p>
                 <h2 className="display" style={{ fontSize: "clamp(1.7rem,3.5vw,2.3rem)", marginTop: 6 }}>
-                  Four trips, already dreamed up
+                  Trips, already dreamed up
                 </h2>
               </div>
               <Link href="/packages" className="btn btn-ghost btn-sm">
@@ -242,33 +260,43 @@ export default async function Home() {
             <div
               style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 18, marginTop: 28 }}
             >
-              {featuredDests.map((dest) => (
-                <Link
-                  key={dest.slug}
-                  href={`/destinations/${dest.slug}`}
-                  className="card"
-                  style={{ textDecoration: "none", color: "inherit", display: "block" }}
-                >
-                  <div
-                    className={`well ${dest.scene}`}
-                    style={{ aspectRatio: "5/4" }}
-                    data-label={dest.name}
-                  />
-                  <div className="card-pad">
-                    <h3 className="display" style={{ fontSize: "1.3rem" }}>
-                      {dest.name}
-                    </h3>
-                    <p style={{ color: "var(--pk-muted)", fontSize: "0.85rem", margin: "4px 0 10px", minHeight: "2.6rem" }}>
-                      {dest.lede || `${dest.name}, ${dest.dayCount}`}
-                    </p>
-                    {dest.rate ? (
-                      <span className="pill is-on">
-                        ≈ <PriceBadge amount={dest.rate} unit="/ person / day" approx={false} />
-                      </span>
-                    ) : null}
-                  </div>
-                </Link>
-              ))}
+              {featuredPacks.map((pack) => {
+                const from = minTierPrice(pack);
+                return (
+                  <Link
+                    key={pack.slug}
+                    href={`/packages/${pack.slug}`}
+                    className="card"
+                    style={{ textDecoration: "none", color: "inherit", display: "block" }}
+                  >
+                    <div
+                      className={`well ${pack.wellScene} ${pack.glow}`}
+                      style={{
+                        aspectRatio: "5/4",
+                        ...(pack.portraitImageUrl
+                          ? { backgroundImage: `url(${pack.portraitImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                          : {}),
+                      }}
+                      data-label={pack.name}
+                    />
+                    <div className="card-pad">
+                      <h3 className="display" style={{ fontSize: "1.3rem" }}>
+                        {pack.name}
+                      </h3>
+                      <p style={{ color: "var(--pk-muted)", fontSize: "0.85rem", margin: "4px 0 10px", minHeight: "2.6rem" }}>
+                        {pack.region}
+                      </p>
+                      {from != null ? (
+                        <span className="pill is-on">from ₹{inr(from)}</span>
+                      ) : pack.rate ? (
+                        <span className="pill is-on">
+                          <PriceBadge amount={pack.rate.replace(/[^\d,]/g, "")} unit="/ person / day" />
+                        </span>
+                      ) : null}
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -322,66 +350,73 @@ export default async function Home() {
         </section>
       )}
 
-      {/* OFFERINGS QUAD */}
-      <section style={{ maxWidth: 1080, margin: "0 auto", padding: "72px 24px" }}>
-        <p className="kicker" style={{ textAlign: "center" }}>
-          When you want a human, not a spin
-        </p>
-        <h2 className="display" style={{ fontSize: "clamp(1.7rem,3.5vw,2.3rem)", textAlign: "center", marginTop: 6 }}>
-          Four ways to be sent
-        </h2>
-        <div
-          style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20, marginTop: 28 }}
-        >
-          {(
-            [
-              ["s-spiti", "Hands-off", "oklch(0.28 0.06 262 / .42)", "oklch(0.99 0.01 210)", "✦", "0 2px 16px oklch(0.2 0.05 262 / .5)", "Surprise me", "Let the star pick. We book the trip it sends.", "Be sent →"],
-              ["s-gokarna", "Yours, tailored", "oklch(0.3 0.06 40 / .42)", "oklch(0.99 0.01 20)", "♡", "0 2px 16px oklch(0.2 0.05 40 / .5)", "Custom & honeymoon", "You have a place in mind. We tailor it.", "Plan it with us →"],
-              ["s-chopta", "White-glove", "oklch(0.26 0.06 200 / .42)", "oklch(0.99 0.01 210)", "◆", "0 2px 16px oklch(0.2 0.05 200 / .5)", "Concierge", "Premium, hands-off, end to end.", "Go premium →"],
-              ["s-dusk", "For teams", "oklch(0.3 0.06 320 / .42)", "oklch(0.99 0.01 20)", "◈", "0 2px 16px oklch(0.2 0.05 320 / .5)", "Corporate offsites", "Teams, logistics, one point of contact.", "Brief us →"],
-            ] as const
-          ).map(([scene, sticker, stickerBg, stickerColor, glyph, glyphShadow, title, blurb, go]) => (
-            <Link key={title} href="/offerings" className="play-card">
-              <div
-                className={`well bg ${scene}`}
-                style={{ height: 128, display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 16 }}
-              >
-                <span
-                  style={{
-                    alignSelf: "flex-start",
-                    fontFamily: "var(--ui)",
-                    fontWeight: 800,
-                    fontSize: "0.58rem",
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: stickerColor,
-                    background: stickerBg,
-                    WebkitBackdropFilter: "blur(4px)",
-                    backdropFilter: "blur(4px)",
-                    padding: "5px 10px",
-                    borderRadius: 99,
-                  }}
-                >
-                  {sticker}
-                </span>
-                <span
-                  className="display"
-                  style={{ fontSize: "2.4rem", color: "oklch(1 0 0 / .92)", lineHeight: 0.8, textShadow: glyphShadow }}
-                >
-                  {glyph}
-                </span>
-              </div>
-              <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 7, flex: 1 }}>
-                <h3 className="display" style={{ fontSize: "1.3rem" }}>
-                  {title}
-                </h3>
-                <p style={{ color: "var(--pk-muted)", fontSize: "0.88rem" }}>{blurb}</p>
-                <span className="play-go">{go}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* OFFERINGS GRID — CMS-driven (getOfferings); the 5th "abroad" lane appears here too */}
+      {offerings.length > 0 && (
+        <section style={{ maxWidth: 1080, margin: "0 auto", padding: "72px 24px" }}>
+          <p className="kicker" style={{ textAlign: "center" }}>
+            When you want a human, not a spin
+          </p>
+          <h2 className="display" style={{ fontSize: "clamp(1.7rem,3.5vw,2.3rem)", textAlign: "center", marginTop: 6 }}>
+            Ways to be sent
+          </h2>
+          <div
+            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20, marginTop: 28 }}
+          >
+            {offerings.map((o) => {
+              const s = SURFACE_STYLE[o.slug] ?? DEFAULT_SURFACE;
+              return (
+                <Link key={o.id} href="/offerings" className="play-card">
+                  <div
+                    className={`well bg ${s.scene}`}
+                    style={{
+                      height: 128,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      padding: 16,
+                      ...(o.imageUrl
+                        ? { backgroundImage: `url(${o.imageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                        : {}),
+                    }}
+                  >
+                    <span
+                      style={{
+                        alignSelf: "flex-start",
+                        fontFamily: "var(--ui)",
+                        fontWeight: 800,
+                        fontSize: "0.58rem",
+                        letterSpacing: "0.14em",
+                        textTransform: "uppercase",
+                        color: "oklch(0.99 0.01 210)",
+                        background: "oklch(0.26 0.06 250 / .45)",
+                        WebkitBackdropFilter: "blur(4px)",
+                        backdropFilter: "blur(4px)",
+                        padding: "5px 10px",
+                        borderRadius: 99,
+                      }}
+                    >
+                      {s.sticker}
+                    </span>
+                    <span
+                      className="display"
+                      style={{ fontSize: "2.4rem", color: "oklch(1 0 0 / .92)", lineHeight: 0.8, textShadow: "0 2px 16px oklch(0.2 0.05 250 / .5)" }}
+                    >
+                      {s.glyph}
+                    </span>
+                  </div>
+                  <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 7, flex: 1 }}>
+                    <h3 className="display" style={{ fontSize: "1.3rem" }}>
+                      {o.name}
+                    </h3>
+                    <p style={{ color: "var(--pk-muted)", fontSize: "0.88rem" }}>{o.descr}</p>
+                    <span className="play-go">Start →</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* VALUE-PROOF MOMENT */}
       <section style={{ background: "var(--pk-panel)", padding: "72px 24px", textAlign: "center" }}>

@@ -37,6 +37,8 @@ export default async function EditDestinationPage({
     mood: row.mood ?? "",
     catches: Array.isArray(row.catches) ? row.catches : [],
     numbers: Array.isArray(row.numbers) ? row.numbers : [],
+    inclusions: Array.isArray(row.inclusions) ? row.inclusions : [],
+    exclusions: Array.isArray(row.exclusions) ? row.exclusions : [],
     days: Array.isArray(row.days) ? (row.days as ItinDay[]) : [],
     heroImageUrl: row.hero_image_url ?? null,
     portraitImageUrl: row.portrait_image_url ?? null,

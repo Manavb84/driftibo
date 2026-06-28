@@ -107,14 +107,10 @@ export function ArrayField({
     <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
       <label style={LABEL_STYLE}>{label}</label>
       <textarea
+        // Split only — keep blank/in-progress lines so pressing Enter doesn't fight
+        // the cursor. Blanks are stripped at the save boundary (cleanArr in content-actions).
         value={text}
-        onChange={(e) =>
-          onChange(
-            e.target.value
-              .split("\n")
-              .filter((line) => line.trim() !== ""),
-          )
-        }
+        onChange={(e) => onChange(e.target.value.split("\n"))}
         rows={4}
         style={{ ...INPUT_STYLE, resize: "vertical", lineHeight: 1.55 }}
       />

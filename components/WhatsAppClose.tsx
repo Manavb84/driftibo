@@ -101,10 +101,9 @@ export default function WhatsAppClose({
         email={email}
       />
 
-      {/* Travel insurance upsell — DRAFT — founder review */}
+      {/* Optional travel insurance — priced per trip in your quote, no placeholder rate */}
       <p style={{ color: muted, fontSize: "0.78rem", margin: 0 }}>
-        Add travel insurance from INR X/day{" "}
-        <span style={{ opacity: 0.65 }}>— [placeholder rate, founder review]</span>
+        Optional travel insurance — ask us to add it to your quote.
       </p>
 
       <div

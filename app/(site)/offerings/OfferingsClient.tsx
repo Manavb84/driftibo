@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Link from "next/link";
 import WhatsAppClose from "@/components/WhatsAppClose";
 import { PERSONA } from "@/lib/persona";
 import { submitCapture } from "@/lib/actions";
@@ -23,6 +24,7 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
   const [whatsapp, setWhatsapp] = useState("");
   const [email, setEmail] = useState("");
   const [dates, setDates] = useState("");
+  const [consent, setConsent] = useState(false);
 
   // Submission state
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -43,6 +45,12 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    // DPDP consent guard — no capture write until the box is ticked.
+    if (!consent) {
+      setStatus("error");
+      setErrorMsg("Please tick the consent box so we can reply.");
+      return;
+    }
     setStatus("loading");
     setErrorMsg("");
     const result = await submitCapture({
@@ -101,7 +109,7 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
           className="display-mega"
           style={{ fontSize: "clamp(2.2rem,7vw,3.4rem)", margin: "6px 0 6px" }}
         >
-          Four ways to be sent
+          Ways to be sent
         </h1>
         <p className="lede" style={{ maxWidth: "46ch", margin: "0 auto" }}>
           Pick a lane. Tell us a little. Everything closes on WhatsApp — a quote, never a booking
@@ -133,12 +141,18 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
               }}
             >
               <div
-                className="well"
+                // Fall back to a scene class only when photo holds a scene token
+                // (s-*); otherwise just the base .well gradient (photo may be prose).
+                className={`well ${o.imageUrl ? "" : o.photo?.startsWith("s-") ? o.photo : ""}`}
                 style={{
                   aspectRatio: "16/9",
-                  backgroundImage: `url(${o.imageUrl})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
+                  ...(o.imageUrl
+                    ? {
+                        backgroundImage: `url(${o.imageUrl})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }
+                    : {}),
                 }}
                 data-label={o.photo}
               />
@@ -274,6 +288,20 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
                 ))}
               </div>
 
+              <label style={{ display: "flex", gap: 10, fontSize: "0.74rem", color: "var(--pk-muted)", lineHeight: 1.5, marginTop: 16 }}>
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  style={{ marginTop: 3, accentColor: "var(--pk-ink)" }}
+                />
+                <span>
+                  I agree Driftibo may contact me about this trip via WhatsApp/email, per the{" "}
+                  <Link href="/legal#privacy" style={{ color: "var(--pk-accent-deep)" }}>Privacy Notice</Link>.{" "}
+                  <em style={{ fontStyle: "normal", color: "var(--pk-accent-deep)", fontWeight: 600 }}>DPDP — not pre-ticked.</em>
+                </span>
+              </label>
+
               {status === "error" && (
                 <p
                   style={{
@@ -289,7 +317,7 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
               <button
                 type="submit"
                 className="btn btn-accent"
-                disabled={status === "loading"}
+                disabled={status === "loading" || !consent}
                 style={{ marginTop: 18, width: "100%" }}
               >
                 {status === "loading" ? "Sending…" : "Send to a human →"}

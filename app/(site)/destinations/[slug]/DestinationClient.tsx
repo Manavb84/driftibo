@@ -9,7 +9,17 @@ import { track } from "@/lib/analytics";
 
 type View = "detail" | "itin";
 
+// Explore page → the package where you actually pick a tier & price.
+const DEST_TO_PACKAGE: Record<string, string> = {
+  chopta: "temple-ridge",
+  spiti: "cold-desert",
+  ziro: "rice-and-fog",
+  gokarna: "slow-coast",
+  "char-dham": "char-dham-circuit",
+};
+
 export default function DestinationClient({ dest }: { dest: Destination }) {
+  const packageSlug = DEST_TO_PACKAGE[dest.slug];
   const [view, setView] = useState<View>("detail");
   const [copied, setCopied] = useState(false);
 
@@ -200,35 +210,57 @@ export default function DestinationClient({ dest }: { dest: Destination }) {
               </p>
             </div>
 
-            {/* INCLUSIONS / EXCLUSIONS PLACEHOLDER — DRAFT — founder review */}
-            <div style={{ background: "var(--pk-panel)", borderRadius: 16, padding: 20, display: "grid", gap: 14 }}>
-              <div>
-                <p className="kicker">What&apos;s included</p>
-                <p
-                  style={{
-                    fontSize: "0.82rem",
-                    color: "var(--pk-muted)",
-                    fontStyle: "italic",
-                    marginTop: 6,
-                  }}
-                >
-                  DRAFT — founder review: [e.g. accommodation, airport transfers, one guided day activity, breakfast daily]
-                </p>
+            {/* INCLUSIONS / EXCLUSIONS — data-driven ✓/✗ */}
+            {(dest.inclusions.length > 0 || dest.exclusions.length > 0) && (
+              <div
+                style={{
+                  background: "var(--pk-panel)",
+                  borderRadius: 16,
+                  padding: 20,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
+                  gap: 20,
+                }}
+              >
+                {dest.inclusions.length > 0 && (
+                  <div>
+                    <p className="kicker">What&apos;s included</p>
+                    <ul style={{ listStyle: "none", margin: "10px 0 0", padding: 0, display: "grid", gap: 6 }}>
+                      {dest.inclusions.map((x) => (
+                        <li key={x} style={{ fontSize: "0.86rem", display: "flex", gap: 8 }}>
+                          <span style={{ color: "oklch(0.6 0.13 150)", fontWeight: 700 }}>✓</span>
+                          <span>{x}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {dest.exclusions.length > 0 && (
+                  <div>
+                    <p className="kicker">Not included</p>
+                    <ul style={{ listStyle: "none", margin: "10px 0 0", padding: 0, display: "grid", gap: 6 }}>
+                      {dest.exclusions.map((x) => (
+                        <li key={x} style={{ fontSize: "0.86rem", display: "flex", gap: 8, color: "var(--pk-muted)" }}>
+                          <span style={{ color: "oklch(0.6 0.16 25)", fontWeight: 700 }}>✗</span>
+                          <span>{x}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-              <div>
-                <p className="kicker">Extras &amp; exclusions</p>
-                <p
-                  style={{
-                    fontSize: "0.82rem",
-                    color: "var(--pk-muted)",
-                    fontStyle: "italic",
-                    marginTop: 6,
-                  }}
-                >
-                  DRAFT — founder review: [e.g. flights, personal expenses, additional activities]
-                </p>
-              </div>
-            </div>
+            )}
+
+            {/* See the priced package options */}
+            {packageSlug && (
+              <Link
+                href={`/packages/${packageSlug}`}
+                className="btn btn-primary btn-sm"
+                style={{ justifySelf: "start", textDecoration: "none" }}
+              >
+                See package options &amp; prices →
+              </Link>
+            )}
 
             {/* MOOD ITINERARY */}
             <div

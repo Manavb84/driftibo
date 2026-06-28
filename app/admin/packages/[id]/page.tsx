@@ -36,6 +36,8 @@ export default async function EditPackagePage({
     context: row.context ?? "",
     even: row.even === true,
     wellScene: row.well_scene ?? "",
+    departures: row.departures ?? "",
+    tiers: Array.isArray(row.tiers) ? row.tiers : [],
     portraitImageUrl: row.portrait_image_url ?? null,
     sortOrder: row.sort_order ?? 0,
   };

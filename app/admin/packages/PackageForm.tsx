@@ -6,7 +6,7 @@ import Field, { ArrayField } from "@/components/admin/Field";
 import ImagePicker from "@/components/admin/ImagePicker";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { upsertPackage, deletePackage } from "@/lib/content-actions";
-import type { Package } from "@/lib/content";
+import type { Package, Tier } from "@/lib/content";
 
 interface PackageFormProps {
   initial?: Package;
@@ -47,11 +47,27 @@ export default function PackageForm({ initial }: PackageFormProps) {
   const [blurb, setBlurb] = useState(initial?.blurb ?? "");
   const [tags, setTags] = useState<string[]>(initial?.tags ?? []);
   const [wellScene, setWellScene] = useState(initial?.wellScene ?? "");
+  const [departures, setDepartures] = useState(initial?.departures ?? "");
+  const [tiers, setTiers] = useState<Tier[]>(initial?.tiers ?? []);
   const [even, setEven] = useState<string>(initial?.even === true ? "true" : "false");
   const [sortOrder, setSortOrder] = useState(String(initial?.sortOrder ?? 0));
   const [portraitImageUrl, setPortraitImageUrl] = useState<string | null>(
     initial?.portraitImageUrl ?? null,
   );
+
+  // ── Tier inline editor helpers (mirrors DestinationForm's days editor) ──
+  function addTier() {
+    setTiers((prev) => [
+      ...prev,
+      { key: "", label: "", priceINR: 0, nights: "", blurb: "", inclusions: [], exclusions: [] },
+    ]);
+  }
+  function updateTier<K extends keyof Tier>(index: number, field: K, value: Tier[K]) {
+    setTiers((prev) => prev.map((t, i) => (i === index ? { ...t, [field]: value } : t)));
+  }
+  function removeTier(index: number) {
+    setTiers((prev) => prev.filter((_, i) => i !== index));
+  }
 
   async function onSubmit() {
     return upsertPackage({
@@ -69,11 +85,37 @@ export default function PackageForm({ initial }: PackageFormProps) {
       blurb,
       tags,
       wellScene,
+      departures,
+      // Default a tier key from its label if the founder left it blank.
+      tiers: tiers.map((t) => ({ ...t, key: t.key || t.label.toLowerCase().replace(/\s+/g, "-") })),
       even: even === "true",
       sortOrder: Number(sortOrder),
       portraitImageUrl,
     });
   }
+
+  const TIER_INPUT: React.CSSProperties = {
+    fontFamily: "var(--ui)",
+    fontSize: "0.92rem",
+    padding: "9px 12px",
+    border: "1px solid var(--pk-line)",
+    borderRadius: 10,
+    background: "var(--pk-card, #fff)",
+    color: "var(--pk-text)",
+    boxSizing: "border-box",
+    outline: "none",
+    width: "100%",
+  };
+  const TIER_LABEL: React.CSSProperties = {
+    fontFamily: "var(--ui)",
+    fontSize: "0.78rem",
+    fontWeight: 600,
+    color: "var(--pk-muted)",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    display: "block",
+    marginBottom: 4,
+  };
 
   return (
     <>
@@ -112,6 +154,103 @@ export default function PackageForm({ initial }: PackageFormProps) {
           type="select"
           options={SCENE_OPTIONS}
         />
+        <Field
+          label="Departures"
+          value={departures}
+          onChange={setDepartures}
+          placeholder="e.g. Apr–Jun & Sep–Nov; fixed departures every 2 weeks"
+          hint="Shown above the fold on the package page"
+        />
+
+        {/* Tiers — inline repeatable editor (Budget · Comfort · Luxury) */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <label style={TIER_LABEL}>Price tiers (budget → luxury)</label>
+          {tiers.map((t, i) => (
+            <div
+              key={i}
+              style={{
+                display: "grid",
+                gap: 8,
+                padding: "12px 14px",
+                background: "var(--pk-panel)",
+                borderRadius: 12,
+                border: "1px solid var(--pk-line)",
+              }}
+            >
+              <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr auto", gap: 8, alignItems: "end" }}>
+                <div>
+                  <label style={TIER_LABEL}>Label</label>
+                  <input
+                    style={TIER_INPUT}
+                    value={t.label}
+                    onChange={(e) => updateTier(i, "label", e.target.value)}
+                    placeholder="Comfort"
+                  />
+                </div>
+                <div>
+                  <label style={TIER_LABEL}>Price ₹</label>
+                  <input
+                    style={TIER_INPUT}
+                    type="number"
+                    value={String(t.priceINR ?? 0)}
+                    onChange={(e) => updateTier(i, "priceINR", Number(e.target.value))}
+                    placeholder="20500"
+                  />
+                </div>
+                <div>
+                  <label style={TIER_LABEL}>Nights</label>
+                  <input
+                    style={TIER_INPUT}
+                    value={t.nights}
+                    onChange={(e) => updateTier(i, "nights", e.target.value)}
+                    placeholder="5 nights"
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => removeTier(i)}
+                  style={{ color: "oklch(0.5 0.15 20)", whiteSpace: "nowrap" }}
+                >
+                  Remove
+                </button>
+              </div>
+              <div>
+                <label style={TIER_LABEL}>Blurb</label>
+                <input
+                  style={TIER_INPUT}
+                  value={t.blurb}
+                  onChange={(e) => updateTier(i, "blurb", e.target.value)}
+                  placeholder="One line on what this tier feels like"
+                />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                <div>
+                  <label style={TIER_LABEL}>Included (one per line)</label>
+                  <textarea
+                    style={{ ...TIER_INPUT, resize: "vertical", lineHeight: 1.5 }}
+                    rows={4}
+                    value={t.inclusions.join("\n")}
+                    onChange={(e) => updateTier(i, "inclusions", e.target.value.split("\n"))}
+                  />
+                </div>
+                <div>
+                  <label style={TIER_LABEL}>Not included (one per line)</label>
+                  <textarea
+                    style={{ ...TIER_INPUT, resize: "vertical", lineHeight: 1.5 }}
+                    rows={4}
+                    value={t.exclusions.join("\n")}
+                    onChange={(e) => updateTier(i, "exclusions", e.target.value.split("\n"))}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+          <button type="button" className="btn btn-sm" onClick={addTier} style={{ alignSelf: "flex-start" }}>
+            + Add tier
+          </button>
+        </div>
+
         <Field
           label="Even"
           value={even}

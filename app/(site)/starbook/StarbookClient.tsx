@@ -499,7 +499,25 @@ export default function StarbookClient({ user, stamps }: Props) {
               <p style={{ color: "var(--pk-muted)", fontSize: "0.85rem" }}>
                 {stamps[0].label}
               </p>
-              <button className="btn btn-ghost btn-sm" style={{ marginTop: 6 }}>
+              <button
+                className="btn btn-ghost btn-sm"
+                style={{ marginTop: 6 }}
+                onClick={async () => {
+                  const text = `My star sent me to ${stamps[0].label} ✦ Where will yours send you?`;
+                  const url = "https://driftibo.com/game";
+                  try {
+                    if (typeof navigator !== "undefined" && navigator.share) {
+                      await navigator.share({ title: "Driftibo", text, url });
+                    } else {
+                      window.open(
+                        `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
+                        "_blank",
+                        "noopener",
+                      );
+                    }
+                  } catch {}
+                }}
+              >
                 Share my oath card
               </button>
             </>

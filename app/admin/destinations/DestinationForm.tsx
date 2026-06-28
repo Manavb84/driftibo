@@ -42,6 +42,8 @@ export default function DestinationForm({ initial }: Props) {
   const [mood, setMood] = useState(initial?.mood ?? "");
   const [catches, setCatches] = useState<string[]>(initial?.catches ?? []);
   const [numbers, setNumbers] = useState<string[]>(initial?.numbers ?? []);
+  const [inclusions, setInclusions] = useState<string[]>(initial?.inclusions ?? []);
+  const [exclusions, setExclusions] = useState<string[]>(initial?.exclusions ?? []);
   const [status, setStatus] = useState(initial?.status ?? "published");
   const [sortOrder, setSortOrder] = useState(String(initial?.sortOrder ?? 0));
   const [heroImageUrl, setHeroImageUrl] = useState<string | null>(
@@ -83,6 +85,8 @@ export default function DestinationForm({ initial }: Props) {
       mood,
       catches,
       numbers,
+      inclusions,
+      exclusions,
       status,
       sortOrder: Number(sortOrder),
       heroImageUrl,
@@ -151,6 +155,18 @@ export default function DestinationForm({ initial }: Props) {
           value={numbers}
           onChange={setNumbers}
           hint="Each line becomes one stat"
+        />
+        <ArrayField
+          label="What's included (one per line)"
+          value={inclusions}
+          onChange={setInclusions}
+          hint="Shown as a ✓ list on the destination page"
+        />
+        <ArrayField
+          label="Not included (one per line)"
+          value={exclusions}
+          onChange={setExclusions}
+          hint="Shown as a ✗ list on the destination page"
         />
         <Field
           label="Status"

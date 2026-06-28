@@ -12,6 +12,7 @@ const NAV: NavItem[] = [
   { href: "/destinations", label: "Explore", key: "destinations" },
   { href: "/offerings", label: "Plan with us", key: "offerings" },
   { href: "/journal", label: "Journal", key: "journal" },
+  { href: "/starbook", label: "Starbook", key: "starbook" },
   { href: "/about", label: "About", key: "about" },
 ];
 

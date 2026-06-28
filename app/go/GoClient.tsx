@@ -98,7 +98,7 @@ export default function GoClient() {
     : "#";
 
   return (
-    <main style={{ padding: "84px 18px 64px", maxWidth: 480, margin: "0 auto", minHeight: "100vh" }}>
+    <main style={{ padding: "44px 18px 56px", maxWidth: 480, margin: "0 auto", minHeight: "100vh" }}>
       {/* ── Header ── */}
       <div style={{ textAlign: "center", marginBottom: 24 }}>
         <span className="seal t-coral breathe" style={{ width: 64, margin: "0 auto" }}>
@@ -215,24 +215,6 @@ export default function GoClient() {
                 <p style={{ fontSize: "0.82rem", color: "var(--pk-muted)" }}>{sug.line}</p>
               </div>
             </div>
-            <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 600, marginTop: 14 }}>
-              Email me this one + a quote
-              <input
-                type="email"
-                placeholder="aanya@email.com"
-                style={{
-                  display: "block",
-                  width: "100%",
-                  marginTop: 6,
-                  padding: "11px 13px",
-                  borderRadius: 10,
-                  border: "1px solid var(--pk-line)",
-                  background: "var(--pk-paper)",
-                  fontFamily: "var(--ui)",
-                  fontSize: "0.9rem",
-                }}
-              />
-            </label>
             <a
               href={sugWaLink}
               target="_blank"
@@ -241,7 +223,7 @@ export default function GoClient() {
               style={{
                 width: "100%",
                 justifyContent: "center",
-                marginTop: 10,
+                marginTop: 14,
                 background: "oklch(0.72 0.13 150)",
                 color: "oklch(0.2 0.05 150)",
               }}

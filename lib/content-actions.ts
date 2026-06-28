@@ -7,6 +7,14 @@ import type { BodyBlock } from "@/lib/blocks";
 
 type ActionResult = { ok: boolean; error?: string; slug?: string };
 
+// Drop blank/whitespace-only entries from a string[]. Array editors split on "\n"
+// and carry transient blank lines while the user types, so clean at the save boundary.
+function cleanArr(v: unknown): string[] {
+  return Array.isArray(v)
+    ? v.filter((s): s is string => typeof s === "string" && s.trim() !== "")
+    : [];
+}
+
 // ── Destinations ──────────────────────────────────────────────────────────
 
 export async function upsertDestination(
@@ -33,8 +41,10 @@ export async function upsertDestination(
     rate: input.rate ?? "",
     day_count: input.dayCount ?? "",
     mood: input.mood ?? "",
-    catches: Array.isArray(input.catches) ? input.catches : [],
-    numbers: Array.isArray(input.numbers) ? input.numbers : [],
+    catches: cleanArr(input.catches),
+    numbers: cleanArr(input.numbers),
+    inclusions: cleanArr(input.inclusions),
+    exclusions: cleanArr(input.exclusions),
     days: Array.isArray(input.days) ? input.days : [],
     hero_image_url: input.heroImageUrl ?? null,
     portrait_image_url: input.portraitImageUrl ?? null,
@@ -170,12 +180,18 @@ export async function upsertPackage(
     glow: input.glow ?? "",
     rate: input.rate ?? "",
     nights: input.nights ?? "",
-    tags: Array.isArray(input.tags) ? input.tags : [],
+    tags: cleanArr(input.tags),
     blurb: input.blurb ?? "",
     cta: input.cta ?? "",
     context: input.context ?? "",
     even: input.even === true,
     well_scene: input.wellScene ?? "",
+    departures: input.departures ?? "",
+    tiers: (Array.isArray(input.tiers) ? input.tiers : []).map((t) => ({
+      ...t,
+      inclusions: cleanArr(t.inclusions),
+      exclusions: cleanArr(t.exclusions),
+    })),
     portrait_image_url: input.portraitImageUrl ?? null,
     sort_order: input.sortOrder ?? 0,
     updated_at: new Date().toISOString(),
@@ -191,6 +207,7 @@ export async function upsertPackage(
 
   revalidateTag("packages");
   revalidatePath("/packages");
+  revalidatePath("/packages/" + slug);
   return { ok: true, slug };
 }
 

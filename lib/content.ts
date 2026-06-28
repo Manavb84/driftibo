@@ -19,6 +19,17 @@ function publicClient() {
 
 export type ItinDay = { d: string; t: string; p: string };
 
+// A price tier on a package (budget → luxury). priceINR is the per-person trip total.
+export type Tier = {
+  key: string;
+  label: string;
+  priceINR: number;
+  nights: string;
+  blurb: string;
+  inclusions: string[];
+  exclusions: string[];
+};
+
 export type Destination = {
   id: string;
   slug: string;
@@ -35,6 +46,8 @@ export type Destination = {
   mood: string;
   catches: string[];
   numbers: string[];
+  inclusions: string[];
+  exclusions: string[];
   days: ItinDay[];
   heroImageUrl: string | null;
   portraitImageUrl: string | null;
@@ -74,6 +87,8 @@ export type Package = {
   context: string;
   even: boolean;
   wellScene: string;
+  departures: string;
+  tiers: Tier[];
   portraitImageUrl: string | null;
   sortOrder: number;
 };
@@ -108,6 +123,8 @@ function toDestination(row: any): Destination {
     mood: row.mood ?? "",
     catches: Array.isArray(row.catches) ? row.catches : [],
     numbers: Array.isArray(row.numbers) ? row.numbers : [],
+    inclusions: Array.isArray(row.inclusions) ? row.inclusions : [],
+    exclusions: Array.isArray(row.exclusions) ? row.exclusions : [],
     days: Array.isArray(row.days) ? row.days : [],
     heroImageUrl: row.hero_image_url ?? null,
     portraitImageUrl: row.portrait_image_url ?? null,
@@ -152,9 +169,28 @@ function toPackage(row: any): Package {
     context: row.context ?? "",
     even: row.even === true,
     wellScene: row.well_scene ?? "",
+    departures: row.departures ?? "",
+    // Normalise inner tier shape at the data boundary — JSONB from Supabase is `any`,
+    // so a tier missing inclusions/exclusions (direct DB edit, import) would otherwise
+    // crash the detail page / admin editor on `.length`/`.map`/`.join`.
+    tiers: (Array.isArray(row.tiers) ? row.tiers : []).map((t: any) => ({
+      key: t?.key ?? "",
+      label: t?.label ?? "",
+      priceINR: typeof t?.priceINR === "number" ? t.priceINR : 0,
+      nights: t?.nights ?? "",
+      blurb: t?.blurb ?? "",
+      inclusions: Array.isArray(t?.inclusions) ? t.inclusions : [],
+      exclusions: Array.isArray(t?.exclusions) ? t.exclusions : [],
+    })),
     portraitImageUrl: row.portrait_image_url ?? null,
     sortOrder: row.sort_order ?? 0,
   };
+}
+
+// Lowest tier price on a package, for "from ₹X" lines. null when no priced tiers.
+export function minTierPrice(pkg: Package): number | null {
+  const prices = pkg.tiers.map((t) => t.priceINR).filter((n) => n > 0);
+  return prices.length ? Math.min(...prices) : null;
 }
 
 function toOffering(row: any): Offering {

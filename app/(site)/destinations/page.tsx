@@ -5,7 +5,7 @@ import { getDestinations } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Destinations · Driftibo",
   description:
-    "83 corners of India that look like abroad — same soul as the postcard you saved, a fraction of the price, and actually bookable.",
+    "Real corners of India that look like abroad — same soul as the postcard you saved, a fraction of the price, and actually bookable.",
   openGraph: {
     title: "Destinations · Driftibo",
     description:
@@ -22,7 +22,7 @@ export default async function DestinationsPage() {
         className="display-mega"
         style={{ fontSize: "clamp(2.2rem,7vw,3.4rem)", margin: "4px 0 6px" }}
       >
-        83 corners that look like abroad
+        {destinations.length} corners that look like abroad
       </h1>
       <p className="lede" style={{ maxWidth: "48ch", marginBottom: 26 }}>
         Same soul as the postcard you saved — a fraction of the price, and actually bookable. Tap
@@ -75,7 +75,7 @@ export default async function DestinationsPage() {
           marginTop: 26,
         }}
       >
-        + 79 more in the full atlas ·{" "}
+        More corners added all the time ·{" "}
         <Link
           href="/game"
           style={{ color: "var(--pk-accent-deep)", textDecoration: "none" }}

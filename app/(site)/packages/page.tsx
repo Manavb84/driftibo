@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import WhatsAppClose from "@/components/WhatsAppClose";
-import { getPackages } from "@/lib/content";
+import { getPackages, minTierPrice } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Packages · Driftibo",
 };
+
+const inr = (n: number) => n.toLocaleString("en-IN");
 
 export default async function PackagesPage() {
   const PACKS = await getPackages();
@@ -13,11 +15,13 @@ export default async function PackagesPage() {
     <>
       <section style={{ padding: "104px 22px 40px", maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
         <p className="kicker" style={{ color: "var(--persona-accent,var(--pk-accent-deep))" }}>Done-for-you drifts</p>
-        <h1 className="display-mega" style={{ fontSize: "clamp(2.2rem,7vw,3.4rem)", margin: "6px 0 8px" }}>Four trips, already dreamed up</h1>
-        <p className="lede" style={{ maxWidth: "48ch", margin: "0 auto" }}>Not a pricing grid. Four finished ideas you can take as-is or bend to your dates. Prices stay calm — per head, verified, never shouted.</p>
+        <h1 className="display-mega" style={{ fontSize: "clamp(2.2rem,7vw,3.4rem)", margin: "6px 0 8px" }}>{PACKS.length} trips, already dreamed up</h1>
+        <p className="lede" style={{ maxWidth: "48ch", margin: "0 auto" }}>Not a pricing grid. Finished ideas you can take as-is or bend to your dates — each one with options from budget to luxury. Every card shows a from-price; the full quote comes on chat.</p>
       </section>
 
-      {PACKS.map((p, i) => (
+      {PACKS.map((p, i) => {
+        const from = minTierPrice(p);
+        return (
         <section
           key={p.id}
           style={{
@@ -75,10 +79,10 @@ export default async function PackagesPage() {
                 }}
               >
                 <div>
-                  <p style={{ fontFamily: "var(--ui)", fontWeight: 700, fontSize: "0.62rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--pk-muted)" }}>Looks like a lakh</p>
-                  <p style={{ fontFamily: "var(--display)", fontSize: "1.6rem" }}>{p.rate} <span style={{ fontSize: "0.78rem", color: "var(--pk-muted)" }}>/ person / day</span></p>
+                  <p style={{ fontFamily: "var(--ui)", fontWeight: 700, fontSize: "0.62rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--pk-muted)" }}>{from != null ? "From, per person" : "Looks like a lakh"}</p>
+                  <p style={{ fontFamily: "var(--display)", fontSize: "1.6rem" }}>{from != null ? `₹${inr(from)}` : p.rate} <span style={{ fontSize: "0.78rem", color: "var(--pk-muted)" }}>{from != null ? "all-in" : "/ person / day"}</span></p>
                 </div>
-                <p style={{ fontSize: "0.78rem", color: "var(--pk-muted)", maxWidth: "20ch", textAlign: "right" }}>{p.nights} · stay, transfers, a guided day. Verified.</p>
+                <p style={{ fontSize: "0.78rem", color: "var(--pk-muted)", maxWidth: "22ch", textAlign: "right" }}>{p.departures ? p.departures : `${p.nights} · stay, transfers, a guided day. Verified.`}</p>
               </div>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
                 <Link href={`/packages/${p.slug}`} className="btn btn-ghost btn-sm">
@@ -94,7 +98,8 @@ export default async function PackagesPage() {
             </div>
           </div>
         </section>
-      ))}
+        );
+      })}
     </>
   );
 }
