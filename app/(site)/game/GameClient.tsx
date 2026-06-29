@@ -10,26 +10,55 @@ import { submitCapture, addStarbookStamp } from "@/lib/actions";
 import WhatsAppClose from "@/components/WhatsAppClose";
 import type { Destination } from "@/lib/content";
 import { placeImage } from "@/lib/images";
+import { useIntent } from "@/components/IntentProvider";
+import type { Intent } from "@/lib/intent";
 
 // The star "routes" to a real published destination from the user's terrain pick
-// (vibe breaks the Forests tie). Not ML — an honest deterministic map over whatever
-// is published, so the reveal/itinerary/share all reflect a place that fits the six.
-const TERRAIN_TO_SLUG: Record<string, string> = {
-  Mountains: "chopta",
-  Forests: "ziro",
-  "Deserts & Canyons": "spiti",
-  "Coast & Islands": "gokarna",
-  "Villages & Culture": "ziro",
+// (vibe breaks the Mountains tie). Not ML — an honest deterministic map over whatever
+// is published, PER LANE, so International never sends you to Chopta. The reveal /
+// itinerary / share all reflect a real, lane-appropriate place that fits the six.
+const TERRAIN_BY_LANE: Record<Intent, Record<string, string>> = {
+  india: {
+    Mountains: "chopta",
+    Forests: "ziro",
+    "Deserts & Canyons": "spiti",
+    "Coast & Islands": "gokarna",
+    "Villages & Culture": "ziro",
+  },
+  international: {
+    Mountains: "switzerland",
+    Forests: "vietnam",
+    "Deserts & Canyons": "japan",
+    "Coast & Islands": "bali",
+    "Villages & Culture": "japan",
+  },
+  spiritual: {
+    Mountains: "char-dham",
+    Forests: "rishikesh-haridwar",
+    "Deserts & Canyons": "amritsar",
+    "Coast & Islands": "varanasi",
+    "Villages & Culture": "amritsar",
+  },
+};
+// The "wild mountains" tie-breaker per lane.
+const WILD_BY_LANE: Record<Intent, string> = {
+  india: "spiti",
+  international: "switzerland",
+  spiritual: "char-dham",
 };
 
-function routeDestination(sel: Sel, destinations: Destination[]): Destination | null {
+function routeDestination(sel: Sel, destinations: Destination[], lane: Intent): Destination | null {
   if (destinations.length === 0) return null;
-  const want = TERRAIN_TO_SLUG[sel.terrain];
   if (sel.terrain === "Mountains" && sel.vibe === "Wild") {
-    const spiti = destinations.find((d) => d.slug === "spiti");
-    if (spiti) return spiti;
+    const wild = destinations.find((d) => d.slug === WILD_BY_LANE[lane]);
+    if (wild) return wild;
   }
-  return destinations.find((d) => d.slug === want) ?? destinations[0];
+  const want = TERRAIN_BY_LANE[lane][sel.terrain];
+  return (
+    destinations.find((d) => d.slug === want) ??
+    destinations.find((d) => d.lane === lane) ??
+    destinations[0]
+  );
 }
 
 // ── FSM state type ──────────────────────────────────────────────────────────
@@ -99,6 +128,8 @@ const FI: React.CSSProperties = {
 export default function GameClient({ destinations }: { destinations: Destination[] }) {
   const persona = PERSONA;
   const router = useRouter();
+  const { intent } = useIntent();
+  const lane: Intent = intent ?? "india";
 
   // ── OTP hook (replaces inline otpDigits/refs/sending/error state + handlers) ──
   const {
@@ -129,7 +160,7 @@ export default function GameClient({ destinations }: { destinations: Destination
   });
   // The routed destination + a one-line summary of the six, reused in the WhatsApp
   // handoff so the agent opens already knowing who this is and what they picked.
-  const dest = useMemo(() => routeDestination(sel, destinations), [sel, destinations]);
+  const dest = useMemo(() => routeDestination(sel, destinations, lane), [sel, destinations, lane]);
   const selSummary = `${sel.terrain} · ${sel.vibe} · ${sel.who} · ${sel.long} · ${sel.comfort} · from ${sel.origin} (${sel.reach})`;
   const waContext = dest
     ? `my star sent me to ${dest.name}, ${dest.region} — ${selSummary}`
@@ -141,7 +172,9 @@ export default function GameClient({ destinations }: { destinations: Destination
   // Share loop: a referral link friends can follow back into the game, plus the
   // caption. The WhatsApp/Share buttons target the user's OWN contacts (no number).
   const shareUrl = `https://driftibo.com/r/${dest?.slug ?? "play"}`;
-  const shareText = `My star sent me to ${dest?.name ?? "a real Indian place"} ✦ Where will yours send you?`;
+  const placeFallback =
+    lane === "international" ? "somewhere abroad" : lane === "spiritual" ? "a sacred place" : "a real Indian place";
+  const shareText = `My star sent me to ${dest?.name ?? placeFallback} ✦ Where will yours send you?`;
 
   async function shareReport() {
     track("game_share");
@@ -396,7 +429,7 @@ export default function GameClient({ destinations }: { destinations: Destination
           />
           <div style={{ padding: 28 }}>
             <p className="kicker">Your star sent you to</p>
-            <h2 className="display" style={{ fontSize: "clamp(2rem,6vw,2.6rem)" }}>{revName}</h2>
+            <h2 className="display name-in" style={{ fontSize: "clamp(2rem,6vw,2.6rem)" }}>{revName}</h2>
             <p className="poetry" style={{ color: "var(--pk-muted)" }}>{revSub}</p>
             <p style={{ color: "var(--pk-text)", fontSize: "0.95rem", marginTop: 14, maxWidth: "52ch" }}>
               <strong style={{ color: "var(--pk-accent-deep)" }}>Why it fits you:</strong> {dest?.lede}

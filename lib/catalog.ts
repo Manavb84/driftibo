@@ -70,14 +70,25 @@ export const CATALOG_BLURB: Record<Catalog, string> = {
 
 const data = raw as unknown as Record<Catalog, Place[]>;
 
-// The 5 places that are actually bookable today (Supabase `destinations`). Everyone
+// The places that are actually bookable today (Supabase `destinations` + `packages`),
+// now spanning every lane so each intent has a real "Ready to book" path. Everyone
 // else in the catalogue is info-only on Explore — no price, no package.
 export const bookableSlugs = new Set<string>([
+  // India (offbeat)
   "chopta",
   "spiti",
   "ziro",
   "gokarna",
+  // Spiritual
   "char-dham",
+  "varanasi",
+  "rishikesh-haridwar",
+  "amritsar",
+  // International
+  "bali",
+  "switzerland",
+  "vietnam",
+  "japan",
 ]);
 
 // Bookable place slug → the package where you pick a tier & price.
@@ -87,6 +98,13 @@ export const DEST_TO_PACKAGE: Record<string, string> = {
   ziro: "rice-and-fog",
   gokarna: "slow-coast",
   "char-dham": "char-dham-circuit",
+  varanasi: "varanasi-ghats",
+  "rishikesh-haridwar": "ganga-sadhana",
+  amritsar: "golden-temple",
+  bali: "bali-escape",
+  switzerland: "swiss-classic",
+  vietnam: "vietnam-loop",
+  japan: "japan-discovery",
 };
 
 export function getCatalog(cat: Catalog): Place[] {

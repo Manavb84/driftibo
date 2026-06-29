@@ -23,6 +23,13 @@ const STATUS_OPTIONS = [
   { value: "draft", label: "draft" },
 ];
 
+// Lane = the intent this product surfaces under (international | india | spiritual).
+const LANE_OPTIONS = [
+  { value: "india", label: "India" },
+  { value: "international", label: "International" },
+  { value: "spiritual", label: "Spiritual" },
+];
+
 interface Props {
   initial?: Destination;
 }
@@ -45,6 +52,7 @@ export default function DestinationForm({ initial }: Props) {
   const [inclusions, setInclusions] = useState<string[]>(initial?.inclusions ?? []);
   const [exclusions, setExclusions] = useState<string[]>(initial?.exclusions ?? []);
   const [status, setStatus] = useState(initial?.status ?? "published");
+  const [lane, setLane] = useState<string>(initial?.lane ?? "india");
   const [sortOrder, setSortOrder] = useState(String(initial?.sortOrder ?? 0));
   const [heroImageUrl, setHeroImageUrl] = useState<string | null>(
     initial?.heroImageUrl ?? null,
@@ -88,6 +96,7 @@ export default function DestinationForm({ initial }: Props) {
       inclusions,
       exclusions,
       status,
+      lane: lane as Destination["lane"],
       sortOrder: Number(sortOrder),
       heroImageUrl,
       portraitImageUrl,
@@ -174,6 +183,13 @@ export default function DestinationForm({ initial }: Props) {
           onChange={setStatus}
           type="select"
           options={STATUS_OPTIONS}
+        />
+        <Field
+          label="Lane"
+          value={lane}
+          onChange={setLane}
+          type="select"
+          options={LANE_OPTIONS}
         />
         <Field
           label="Sort Order"

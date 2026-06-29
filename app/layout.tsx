@@ -53,8 +53,15 @@ export default function RootLayout({
     sameAs: ["https://instagram.com/driftibo"],
   };
   return (
-    <html lang="en-IN" className={`persona-mil ${fraunces.variable} ${jakarta.variable}`}>
+    <html
+      lang="en-IN"
+      className={`persona-mil ${fraunces.variable} ${jakarta.variable}`}
+      suppressHydrationWarning
+    >
       <body className="grain">
+        {/* Progressive enhancement: mark JS available BEFORE paint so scroll-reveal
+            only hides content when it can actually reveal it (no-JS sees everything). */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}

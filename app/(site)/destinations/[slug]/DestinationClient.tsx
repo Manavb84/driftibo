@@ -85,32 +85,23 @@ export default function DestinationView({
       </Link>
 
       <article style={{ background: "var(--pk-card)", borderRadius: "var(--r-lg)", overflow: "hidden", boxShadow: "var(--pk-shadow)" }}>
-        {/* 1 · HERO */}
-        <header style={{ position: "relative", height: 380, display: "flex", alignItems: "flex-end" }}>
+        {/* 1 · HERO — cinematic, near-full-height with a gradient vignette */}
+        <header className="detail-hero">
           <div
-            className="well bg"
-            style={{
-              position: "absolute",
-              inset: 0,
-              backgroundImage: `url(${heroImageUrl})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
+            className="detail-hero-img"
+            style={{ backgroundImage: `url(${heroImageUrl})` }}
           />
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "linear-gradient(0deg, oklch(0.18 0.05 232 / .62), transparent 58%)",
-            }}
-          />
-          <div style={{ position: "relative", padding: 28, textShadow: "0 2px 18px oklch(0.3 0.06 225 / .6)" }}>
+          <div className="detail-hero-veil" />
+          <div style={{ position: "relative", padding: "32px 28px 36px", textShadow: "0 2px 18px oklch(0.3 0.06 225 / .6)" }}>
             <p className="kicker" style={{ color: "var(--pk-on-ink)" }}>
               {CATALOG_LABEL[place.catalog]} · {region}
             </p>
-            <h1 className="display-xl" style={{ fontSize: "clamp(2.4rem,7vw,3.6rem)", color: "var(--pk-on-ink)" }}>
+            <h1 className="display-xl" style={{ fontSize: "clamp(2.6rem,8vw,4.4rem)", color: "var(--pk-on-ink)" }}>
               {place.name}
             </h1>
+            <p style={{ color: "oklch(1 0 0 / .9)", fontSize: "1rem", maxWidth: "46ch", marginTop: 8 }}>
+              {place.region}
+            </p>
           </div>
         </header>
 

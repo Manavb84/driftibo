@@ -50,6 +50,7 @@ export async function upsertDestination(
     portrait_image_url: input.portraitImageUrl ?? null,
     status: input.status ?? "draft",
     sort_order: input.sortOrder ?? 0,
+    lane: input.lane ?? "india",
     updated_at: new Date().toISOString(),
   };
 
@@ -194,6 +195,7 @@ export async function upsertPackage(
     })),
     portrait_image_url: input.portraitImageUrl ?? null,
     sort_order: input.sortOrder ?? 0,
+    lane: input.lane ?? "india",
     updated_at: new Date().toISOString(),
   };
 

@@ -2,16 +2,32 @@
 
 import { useState } from "react";
 import { track } from "@/lib/analytics";
+import { useIntent } from "./IntentProvider";
+import type { Intent } from "@/lib/intent";
+
+// The price question is lane-aware — no ₹6,800/day anchor abroad (it's an India figure).
+const PRICE_FAQ: Record<Intent, { q: string; a: string }> = {
+  india: {
+    q: "What's included in the ≈ ₹6,800 / person / day price?",
+    a: "The day-rate covers accommodation (verified, not inflated), all ground transfers, and at least one guided activity or site visit per day. Flights are separate — we factor in realistic flight costs when we quote the total, but we don't bundle them into the per-day figure because they vary too much by departure city. You'll get a clear, itemised breakdown on WhatsApp before you commit to anything.",
+  },
+  international: {
+    q: "How is the price set for a trip abroad?",
+    a: "Each trip is quoted all-in per person — stays, ground transfers, any rail or passes, and at least one guided day. International flights and visa fees are quoted separately (they swing too much by city and season to bundle), and we hand you the exact visa checklist. You'll see a clear, itemised breakdown on WhatsApp before you commit — visa-easy lanes first, five-star scenery at three-star prices.",
+  },
+  spiritual: {
+    q: "What's included, and how is the price set?",
+    a: "Each journey is quoted all-in per person — stays near the shrine, transfers, darshan timing where it matters, and a guided day. Trains or flights to the start point are separate. We itemise everything on WhatsApp before you commit, and we handle the logistics so you keep the quiet.",
+  },
+};
 
 const FAQ_ITEMS = [
   {
     q: "How does the surprise destination actually work?",
     a: "You tap through seven quick preferences — terrain, trip vibe, who's coming, how long, comfort level, where you're starting from, and how far you'll go — and the star picks a real destination that fits all of them. You don't type a name or pick from a list. The place is revealed only after the star decides. We then confirm everything over WhatsApp, usually within a few minutes.",
   },
-  {
-    q: "What's included in the ≈ ₹6,800 / person / day price?",
-    a: "The day-rate covers accommodation (verified, not inflated), all ground transfers, and at least one guided activity or site visit per day. Flights are separate — we factor in realistic flight costs when we quote the total, but we don't bundle them into the per-day figure because they vary too much by departure city. You'll get a clear, itemised breakdown on WhatsApp before you commit to anything.",
-  },
+  // index 1 is replaced per-lane at render (see PRICE_FAQ).
+  PRICE_FAQ.india,
   {
     q: "Are the destinations real places I can actually visit?",
     a: "Every single one. We don't invent places. Each destination in our pool has been verified on the ground — we know the guesthouses, the road conditions, the transfer times, the seasonal access windows. If a place isn't accessible in a given month, it won't appear in your spin that month. No phantom destinations, ever.",
@@ -32,6 +48,10 @@ const FAQ_ITEMS = [
 
 export default function HomeFAQ() {
   const [open, setOpen] = useState<number | null>(null);
+  const { intent } = useIntent();
+
+  // Swap the price question for the chosen lane (India default while undecided).
+  const items = FAQ_ITEMS.map((item, i) => (i === 1 ? PRICE_FAQ[intent ?? "india"] : item));
 
   function toggle(i: number) {
     const next = open === i ? null : i;
@@ -42,7 +62,7 @@ export default function HomeFAQ() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQ_ITEMS.map((item) => ({
+    mainEntity: items.map((item) => ({
       "@type": "Question",
       name: item.q,
       acceptedAnswer: { "@type": "Answer", text: item.a },
@@ -70,7 +90,7 @@ export default function HomeFAQ() {
         How Driftibo works
       </h2>
       <div style={{ display: "grid", gap: 4 }}>
-        {FAQ_ITEMS.map((item, i) => (
+        {items.map((item, i) => (
           <div
             key={i}
             style={{
@@ -120,19 +140,21 @@ export default function HomeFAQ() {
                 +
               </span>
             </button>
-            {open === i && (
-              <p
-                style={{
-                  padding: "0 20px 20px",
-                  color: "var(--pk-muted)",
-                  fontSize: "0.95rem",
-                  lineHeight: 1.65,
-                  margin: 0,
-                }}
-              >
-                {item.a}
-              </p>
-            )}
+            <div className={`faq-body${open === i ? " is-open" : ""}`}>
+              <div>
+                <p
+                  style={{
+                    padding: "0 20px 20px",
+                    color: "var(--pk-muted)",
+                    fontSize: "0.95rem",
+                    lineHeight: 1.65,
+                    margin: 0,
+                  }}
+                >
+                  {item.a}
+                </p>
+              </div>
+            </div>
           </div>
         ))}
       </div>

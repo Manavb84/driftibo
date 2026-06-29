@@ -2,9 +2,20 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
 // Refreshes the Supabase auth session cookie on every request so server
-// components see a current session. Standard @supabase/ssr pattern.
+// components see a current session (standard @supabase/ssr pattern), AND mirrors the
+// trip-intent cookie into an `x-driftibo-intent` request header so Server Components
+// can personalize per lane with no hydration gap (see lib/intent-server.ts).
+const INTENT_COOKIE = "driftiboIntent";
+const INTENT_HEADER = "x-driftibo-intent";
+
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  // Carry the intent forward on the *request* (canonical Next.js 15 pattern: clone the
+  // headers, set, and pass via request.headers) so RSCs/pages read it via headers().
+  const requestHeaders = new Headers(request.headers);
+  const intent = request.cookies.get(INTENT_COOKIE)?.value;
+  if (intent) requestHeaders.set(INTENT_HEADER, intent);
+
+  let response = NextResponse.next({ request: { headers: requestHeaders } });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -18,7 +29,7 @@ export async function middleware(request: NextRequest) {
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
+        response = NextResponse.next({ request: { headers: requestHeaders } });
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options),
         );

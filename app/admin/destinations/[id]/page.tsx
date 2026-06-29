@@ -44,6 +44,7 @@ export default async function EditDestinationPage({
     portraitImageUrl: row.portrait_image_url ?? null,
     status: row.status ?? "draft",
     sortOrder: row.sort_order ?? 0,
+    lane: row.lane ?? "india",
   };
 
   return <DestinationForm initial={mapped} />;

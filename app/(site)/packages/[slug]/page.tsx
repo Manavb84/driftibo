@@ -97,6 +97,9 @@ export default async function PackagePage({ params }: Props) {
   if (!pkg) notFound();
 
   const fromPrice = minTierPrice(pkg);
+  const inrFrom = fromPrice != null ? `₹${inr(fromPrice)}` : pkg.rate;
+  // Cross-sell: other trips in the same lane (post-CTA "you might also like").
+  const siblings = (await getPackages(pkg.lane)).filter((p) => p.slug !== pkg.slug).slice(0, 3);
 
   return (
     <>
@@ -135,29 +138,22 @@ export default async function PackagePage({ params }: Props) {
             boxShadow: "var(--pk-shadow)",
           }}
         >
-          {/* HERO */}
-          <header
-            style={{ position: "relative", height: 340, display: "flex", alignItems: "flex-end" }}
-          >
+          {/* HERO — cinematic, near-full-height with a gradient vignette */}
+          <header className="detail-hero">
             <div
-              className={`well bg ${pkg.wellScene} ${pkg.glow}`}
-              style={{
-                position: "absolute",
-                inset: 0,
-                ...(pkg.portraitImageUrl
-                  ? {
-                      backgroundImage: `url(${pkg.portraitImageUrl})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }
-                  : {}),
-              }}
+              className={`detail-hero-img well ${pkg.wellScene} ${pkg.glow}`}
+              style={
+                pkg.portraitImageUrl
+                  ? { backgroundImage: `url(${pkg.portraitImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                  : {}
+              }
               data-label={pkg.photo}
             />
+            <div className="detail-hero-veil" />
             <div
               style={{
                 position: "relative",
-                padding: 28,
+                padding: "32px 28px 36px",
                 textShadow: "0 2px 18px oklch(0.3 0.06 225 / .5)",
               }}
             >
@@ -166,7 +162,7 @@ export default async function PackagePage({ params }: Props) {
               </p>
               <h1
                 className="display-xl"
-                style={{ fontSize: "clamp(2.4rem,7vw,3.6rem)", color: "var(--pk-on-ink)" }}
+                style={{ fontSize: "clamp(2.6rem,8vw,4.4rem)", color: "var(--pk-on-ink)" }}
               >
                 {pkg.name}
               </h1>
@@ -242,6 +238,7 @@ export default async function PackagePage({ params }: Props) {
               <div>
                 <p className="kicker">Choose your level</p>
                 <div
+                  className="tier-grid"
                   style={{
                     display: "grid",
                     gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
@@ -256,13 +253,24 @@ export default async function PackagePage({ params }: Props) {
                         background: "var(--pk-card)",
                         border: "1px solid var(--pk-line-soft)",
                         borderRadius: "var(--r-lg)",
-                        padding: 20,
+                        overflow: "hidden",
                         display: "grid",
                         gap: 12,
                         alignContent: "start",
                       }}
                     >
-                      <div>
+                      {/* Accommodation image — gives every tier a face, not a blank card */}
+                      <div
+                        className={`well ${pkg.wellScene} ${pkg.glow}`}
+                        style={{
+                          height: 150,
+                          ...(pkg.portraitImageUrl
+                            ? { backgroundImage: `url(${pkg.portraitImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                            : {}),
+                        }}
+                        aria-hidden="true"
+                      />
+                      <div style={{ padding: "0 20px" }}>
                         <p
                           className="kicker"
                           style={{ color: "var(--persona-accent,var(--pk-accent-deep))" }}
@@ -276,6 +284,7 @@ export default async function PackagePage({ params }: Props) {
                           per person · {t.nights}
                         </p>
                       </div>
+                      <div style={{ padding: "0 20px 20px", display: "grid", gap: 12 }}>
                       {t.blurb && (
                         <p style={{ fontSize: "0.92rem", color: "var(--pk-text)", lineHeight: 1.5 }}>
                           {t.blurb}
@@ -303,6 +312,7 @@ export default async function PackagePage({ params }: Props) {
                       >
                         Take {t.label} ✦
                       </a>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -319,8 +329,85 @@ export default async function PackagePage({ params }: Props) {
               sub="We'll confirm dates and what's included on chat — then it's yours."
               context={pkg.context}
             />
+
+            {/* POST-CTA CROSS-SELL — more trips in the same lane */}
+            {siblings.length > 0 && (
+              <div>
+                <p className="kicker">More like this</p>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
+                    gap: 16,
+                    marginTop: 12,
+                  }}
+                >
+                  {siblings.map((s, i) => {
+                    const sFrom = minTierPrice(s);
+                    return (
+                      <Link
+                        key={s.slug}
+                        href={`/packages/${s.slug}`}
+                        className="card reveal-target"
+                        style={{ textDecoration: "none", color: "inherit", display: "block", ["--i" as string]: i } as React.CSSProperties}
+                      >
+                        <div
+                          className={`well ${s.wellScene} ${s.glow}`}
+                          style={{
+                            height: 120,
+                            ...(s.portraitImageUrl
+                              ? { backgroundImage: `url(${s.portraitImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                              : {}),
+                          }}
+                          data-label={s.name}
+                        />
+                        <div className="card-pad" style={{ padding: 16 }}>
+                          <p className="kicker">{s.region}</p>
+                          <h3 className="display" style={{ fontSize: "1.15rem", margin: "2px 0 6px" }}>{s.name}</h3>
+                          {sFrom != null && <span className="pill is-on">from ₹{inr(sFrom)}</span>}
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </article>
+
+        {/* STICKY PRICE BAR — the from-price + CTA stay reachable as you scroll the page.
+            paddingRight clears the floating WhatsApp FAB (bottom-right) so the CTA is never
+            obscured or click-blocked on mobile. */}
+        <div style={{ position: "sticky", bottom: 18, zIndex: 40, display: "flex", justifyContent: "center", pointerEvents: "none", marginTop: 28, paddingRight: 76 }}>
+          <div
+            style={{
+              pointerEvents: "auto",
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+              background: "var(--pk-ink)",
+              color: "var(--pk-on-ink)",
+              padding: "10px 12px 10px 22px",
+              borderRadius: "var(--r-pill)",
+              boxShadow: "var(--pk-shadow-lg)",
+              maxWidth: "calc(100% - 16px)",
+            }}
+          >
+            <span style={{ fontFamily: "var(--ui)", fontWeight: 700, fontSize: "0.92rem", whiteSpace: "nowrap" }}>
+              {fromPrice != null ? "From " : ""}{inrFrom}
+              <span style={{ opacity: 0.7, fontWeight: 500 }}> · {pkg.name}</span>
+            </span>
+            <a
+              href={waLink(pkg.context)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-accent btn-sm"
+              style={{ textDecoration: "none", flexShrink: 0 }}
+            >
+              Take this trip ✦
+            </a>
+          </div>
+        </div>
       </main>
     </>
   );

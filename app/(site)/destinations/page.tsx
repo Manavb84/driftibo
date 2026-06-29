@@ -17,7 +17,17 @@ import {
   normalizeIntent,
   type Intent,
 } from "@/lib/intent";
+import { LANE } from "@/lib/lane";
+import { waLink } from "@/lib/site";
+import WhatsAppClose from "@/components/WhatsAppClose";
 import CatalogTabs from "./CatalogTabs";
+
+// A lane's WhatsApp handoff context — keeps the conversion band on-voice per lane.
+const LANE_WA_CONTEXT: Record<Intent, string> = {
+  international: "I'm dreaming of a trip abroad — visa-easy, five-star scenery",
+  india: "I want a surprise trip to one of India's hidden corners",
+  spiritual: "I want a temple trail / pilgrim journey planned for me",
+};
 
 export const metadata: Metadata = {
   title: "Where should your star send you? · Driftibo",
@@ -34,13 +44,6 @@ export const metadata: Metadata = {
 const MONTH_FULL: Record<string, string> = {
   Jan: "January", Feb: "February", Mar: "March", Apr: "April", May: "May", Jun: "June",
   Jul: "July", Aug: "August", Sep: "September", Oct: "October", Nov: "November", Dec: "December",
-};
-
-// Invitational one-liners per intent (not the taxonomy voice).
-const INTENT_BLURB: Record<Intent, string> = {
-  international: "Beyond India — visa-easy escapes that look like abroad because they are.",
-  india: "The names you love and the corners you don't — classics and the offbeat.",
-  spiritual: "Temple trails and pilgrim circuits — the offbeat ones included.",
 };
 
 // catalog → the intent lane it belongs to (for the seasonal grid's kicker).
@@ -114,13 +117,12 @@ function PlaceCard({ p, kicker }: { p: PlaceWithCatalog; kicker?: string }) {
 // A grid of place cards (a section body or an India sub-band body).
 function CardGrid({ places, showIntent }: { places: PlaceWithCatalog[]; showIntent?: boolean }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(210px,1fr))", gap: 20 }}>
-      {places.map((p) => (
-        <PlaceCard
-          key={p.slug}
-          p={p}
-          kicker={showIntent ? INTENT_LABEL[intentOf(p.catalog)] : undefined}
-        />
+    // minmax(150px) keeps a real 2-up on mobile (≈360px) and scales to 4–5 on desktop.
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(150px,1fr))", gap: 16 }}>
+      {places.map((p, i) => (
+        <div key={p.slug} className="reveal-target" style={{ ["--i" as string]: Math.min(i, 6) } as React.CSSProperties}>
+          <PlaceCard p={p} kicker={showIntent ? INTENT_LABEL[intentOf(p.catalog)] : undefined} />
+        </div>
       ))}
     </div>
   );
@@ -183,6 +185,39 @@ function BookableStrip({ places }: { places: PlaceWithCatalog[] }) {
   );
 }
 
+// Full-width WhatsApp conversion band — the "no dead-end" promise on every lane.
+function WaBand({ lane }: { lane: Intent }) {
+  const href = waLink(LANE_WA_CONTEXT[lane]);
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="callout-ink"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 16,
+        flexWrap: "wrap",
+        padding: "22px 26px",
+        textDecoration: "none",
+        margin: "0 -22px",
+      }}
+    >
+      <div style={{ padding: "0 22px" }}>
+        <p className="kicker">Nothing fits? Tell us what you want</p>
+        <p style={{ fontFamily: "var(--display)", fontSize: "clamp(1.3rem,3vw,1.7rem)", color: "var(--pk-on-ink)", marginTop: 2 }}>
+          A real person plans it with you on WhatsApp.
+        </p>
+      </div>
+      <span className="btn btn-accent" style={{ margin: "0 22px", textDecoration: "none", flexShrink: 0 }}>
+        Chat with us ✦
+      </span>
+    </a>
+  );
+}
+
 type Props = { searchParams: Promise<{ intent?: string }> };
 
 export default async function DestinationsPage({ searchParams }: Props) {
@@ -228,41 +263,60 @@ export default async function DestinationsPage({ searchParams }: Props) {
       </h1>
       <p className="lede" style={{ maxWidth: "54ch", marginBottom: 18 }}>
         {validIntent
-          ? INTENT_BLURB[validIntent]
+          ? LANE[validIntent].exploreBlurb
           : `Start with what's glowing right now — the places at their seasonal best this ${MONTH_FULL[month]}. Or pick a lane and see all of it.`}
       </p>
 
       <CatalogTabs tabs={tabs} activeIntent={validIntent} />
 
       {validIntent ? (
-        // ── Selected intent: the FULL lane, bookable floated to the top ──
+        // ── Selected intent: real product first (Ready to book), then a curated
+        //    editorial pick, a WhatsApp conversion band, and the rest of the lane. ──
         <section style={{ marginBottom: 56 }}>
           {(() => {
             const items = inIntent(validIntent);
             const book = items.filter((p) => bookableSlugs.has(p.slug));
             const rest = items.filter((p) => !bookableSlugs.has(p.slug));
+            // Curated editorial picks (info-only is fine) — distinct from the bookable strip.
+            const editorialSet = new Set(LANE[validIntent].editorialSlugs);
+            const editorial = LANE[validIntent].editorialSlugs
+              .map((s) => items.find((p) => p.slug === s))
+              .filter((p): p is PlaceWithCatalog => !!p && !bookableSlugs.has(p.slug));
+            const restMinusEditorial = rest.filter((p) => !editorialSet.has(p.slug));
             return (
-              <div style={{ display: "grid", gap: 36 }}>
-                <SubBand head="Ready to book" places={book} />
+              <div style={{ display: "grid", gap: 40 }}>
+                <SubBand head="Ready to book" blurb="Real trips with tiers and from-prices — pick one and we close it on chat." places={book} />
+                <WaBand lane={validIntent} />
+                {editorial.length > 0 && (
+                  <SubBand head={LANE[validIntent].editorialHead} blurb={LANE[validIntent].editorialBlurb} places={editorial} />
+                )}
                 {validIntent === "india" ? (
                   <>
                     <SubBand
                       head="Classics"
                       blurb={CATALOG_BLURB["india-popular"]}
-                      places={inCatalog("india-popular").filter((p) => !bookableSlugs.has(p.slug))}
+                      places={inCatalog("india-popular").filter((p) => !bookableSlugs.has(p.slug) && !editorialSet.has(p.slug))}
                     />
                     <SubBand
                       head="Offbeat"
                       blurb={CATALOG_BLURB["india-offbeat"]}
-                      places={inCatalog("india-offbeat").filter((p) => !bookableSlugs.has(p.slug))}
+                      places={inCatalog("india-offbeat").filter((p) => !bookableSlugs.has(p.slug) && !editorialSet.has(p.slug))}
                     />
                   </>
                 ) : (
-                  <SubBand head={book.length ? "More to explore" : "Every place"} places={rest} />
+                  <SubBand head="More to explore" blurb="Every place in this lane — info, best seasons and real photos." places={restMinusEditorial} />
                 )}
               </div>
             );
           })()}
+          <div style={{ marginTop: 44 }}>
+            <WhatsAppClose
+              eyebrow="Or skip the browsing"
+              heading="Let a human plan it with you."
+              sub="Tell us your dates and limits on WhatsApp — we send 2–3 options and a full quote, usually within the hour."
+              context={LANE_WA_CONTEXT[validIntent]}
+            />
+          </div>
         </section>
       ) : (
         // ── Default: in-season grid + bookable strip + by-season link ──

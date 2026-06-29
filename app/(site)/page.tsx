@@ -4,12 +4,32 @@ import HeroStage from "@/components/HeroStage";
 import OtherIndiaRotator from "@/components/OtherIndiaRotator";
 import HomeIntent from "@/components/HomeIntent";
 import HomeFAQ from "@/components/HomeFAQ";
+import SocialProof from "@/components/SocialProof";
+import CountUp from "@/components/CountUp";
 import PriceBadge from "@/components/PriceBadge";
 import { getDestinations, getPackages, getOfferings, minTierPrice } from "@/lib/content";
-
-export const metadata: Metadata = { alternates: { canonical: "/" } };
+import { getIntent } from "@/lib/intent-server";
+import { lane as laneOf } from "@/lib/lane";
 
 const inr = (n: number) => n.toLocaleString("en-IN");
+
+// Lane-aware <head>: the chosen lane leads the title/description so SSR + share cards
+// match what the visitor picked (no rupee/India framing on the International lane).
+export async function generateMetadata(): Promise<Metadata> {
+  const intent = await getIntent();
+  const base: Metadata = { alternates: { canonical: "/" } };
+  if (!intent) return base;
+  const titles: Record<string, string> = {
+    international: "Driftibo · Visa-easy escapes beyond India",
+    india: "Driftibo · Surprise travel to India's hidden corners",
+    spiritual: "Driftibo · Temple trails & pilgrim circuits",
+  };
+  return {
+    ...base,
+    title: titles[intent],
+    description: laneOf(intent).heroSubhead,
+  };
+}
 
 // Per-offering chip glyph/sticker for the home grid (the DB carries the copy and the
 // image_url). The card image comes from the offering itself — never a destination scene —
@@ -24,9 +44,15 @@ const SURFACE_STYLE: Record<string, { glyph: string; sticker: string }> = {
 const DEFAULT_SURFACE = { glyph: "✦", sticker: "New lane" };
 
 export default async function Home() {
+  // The lane spine reaches the homepage: pick a lane → hero, "Real places", packages
+  // teaser, value-proof, footer and metadata all reorient. Undecided visitors get the
+  // India default + the chooser; once chosen, the chooser is replaced by social proof.
+  const intent = await getIntent();
+  const effectiveLane = intent ?? "india";
+  const laneData = laneOf(intent);
   const [destinations, packages, offerings] = await Promise.all([
-    getDestinations(),
-    getPackages(),
+    getDestinations(effectiveLane),
+    getPackages(effectiveLane),
     getOfferings(),
   ]);
   // Slice to 4 for the teaser sections; fall back gracefully to empty array
@@ -40,13 +66,15 @@ export default async function Home() {
 
   return (
     <>
-      <HeroStage />
+      <HeroStage intent={intent} />
 
-      {/* DUPE STRIP — rotates 8 "other India" one-liners */}
-      <OtherIndiaRotator />
+      {/* "OTHER INDIA" abroad-vs-India rotator — only honest on the India lane (it argues
+          against going abroad), so it shows only there; other lanes get social proof instead. */}
+      {effectiveLane === "india" && <OtherIndiaRotator />}
 
-      {/* WHAT KIND OF TRIP? — up-front intent entry (3 intents) */}
-      <HomeIntent />
+      {/* Up-front intent entry ONLY while undecided; once a lane is chosen the mid-scroll
+          re-prompt is replaced by trust (SocialProof), per the founder's note. */}
+      {intent === null ? <HomeIntent /> : <SocialProof />}
 
       {/* HOW IT WORKS */}
       <section style={{ maxWidth: 1080, margin: "0 auto", padding: "72px 24px" }}>
@@ -61,7 +89,7 @@ export default async function Home() {
             marginTop: 30,
           }}
         >
-          <div>
+          <div className="reveal-target" style={{ ["--i" as string]: 0 } as React.CSSProperties}>
             <span className="step-num" style={{ fontFamily: "var(--display)", fontSize: "2.1rem" }}>
               01
             </span>
@@ -72,7 +100,7 @@ export default async function Home() {
               Seven taps — terrain, vibe, who&apos;s coming, how long, comfort, where from, how far. No typing, no second-guessing.
             </p>
           </div>
-          <div>
+          <div className="reveal-target" style={{ ["--i" as string]: 1 } as React.CSSProperties}>
             <span className="step-num" style={{ fontFamily: "var(--display)", fontSize: "2.1rem" }}>
               02
             </span>
@@ -83,7 +111,7 @@ export default async function Home() {
               The star draws a real place that fits. No phantom destinations.
             </p>
           </div>
-          <div>
+          <div className="reveal-target" style={{ ["--i" as string]: 2 } as React.CSSProperties}>
             <span className="step-num" style={{ fontFamily: "var(--display)", fontSize: "2.1rem" }}>
               03
             </span>
@@ -103,24 +131,24 @@ export default async function Home() {
         <section style={{ maxWidth: 1080, margin: "0 auto", padding: "8px 24px 64px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 14 }}>
             <div>
-              <p className="kicker">Real places, star-sent</p>
+              <p className="kicker">{laneData.realPlacesKicker}</p>
               <h2 className="display" style={{ fontSize: "clamp(1.6rem,3.4vw,2.2rem)", marginTop: 6 }}>
-                Same soul. A fraction of the price.
+                {laneData.realPlacesHead}
               </h2>
             </div>
-            <Link href="/destinations" className="btn btn-ghost btn-sm">
+            <Link href={`/destinations?intent=${effectiveLane}`} className="btn btn-ghost btn-sm">
               Explore all places →
             </Link>
           </div>
           <div
             style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 18, marginTop: 24 }}
           >
-            {featuredDests.map((dest) => (
+            {featuredDests.map((dest, i) => (
               <Link
                 key={dest.slug}
                 href={`/destinations/${dest.slug}`}
-                className="card"
-                style={{ textDecoration: "none", color: "inherit" }}
+                className="card reveal-target"
+                style={{ textDecoration: "none", color: "inherit", ["--i" as string]: i } as React.CSSProperties}
               >
                 <div
                   className={`well ${dest.scene}`}
@@ -146,12 +174,13 @@ export default async function Home() {
         </section>
       )}
 
-      {/* VALUE-PROOF MOMENT — moved UP, right after the destination proof */}
+      {/* VALUE-PROOF MOMENT — lane-aware. India anchors the ₹6,800/day figure; abroad &
+          spiritual lanes drop the rupee anchor for a qualitative proof (founder note). */}
       <section style={{ background: "var(--pk-panel)", padding: "72px 24px", textAlign: "center" }}>
         <div style={{ maxWidth: 760, margin: "0 auto" }}>
-          <p className="kicker">The calm part nobody shouts</p>
+          <p className="kicker">{laneData.valueProof.kicker}</p>
           <p className="display" style={{ fontSize: "clamp(1.6rem,3.4vw,2.2rem)", margin: "8px 0 24px" }}>
-            Looks like a lakh. Runs at ₹6,800 a day.
+            {laneData.valueProof.head}
           </p>
           <div
             style={{
@@ -180,14 +209,18 @@ export default async function Home() {
                   color: "var(--pk-muted)",
                 }}
               >
-                Looks like a lakh
+                {laneData.valueProof.figure ? "Looks like a lakh" : "What you get"}
               </p>
-              <p style={{ fontFamily: "var(--display)", fontSize: "2rem", lineHeight: 1.05, marginTop: 2 }}>
-                <PriceBadge amount="6,800" unit="/ person / day" />
+              <p style={{ fontFamily: "var(--display)", fontSize: laneData.valueProof.figure ? "2rem" : "1.5rem", lineHeight: 1.05, marginTop: 2 }}>
+                {laneData.valueProof.figure ? (
+                  <CountUp amount={laneData.valueProof.figure} unit={laneData.valueProof.unit} />
+                ) : (
+                  "Everything, handled."
+                )}
               </p>
             </div>
-            <p style={{ fontSize: "0.82rem", color: "var(--pk-muted)", maxWidth: "20ch", textAlign: "right" }}>
-              Stay, transfers, a guided day. Verified, never inflated. The surprise game stays price-free on purpose.
+            <p style={{ fontSize: "0.82rem", color: "var(--pk-muted)", maxWidth: "24ch", textAlign: "right" }}>
+              {laneData.valueProof.note}
             </p>
           </div>
         </div>
@@ -201,7 +234,7 @@ export default async function Home() {
               <div>
                 <p className="kicker">Done-for-you drifts</p>
                 <h2 className="display" style={{ fontSize: "clamp(1.7rem,3.5vw,2.3rem)", marginTop: 6 }}>
-                  Trips, already dreamed up
+                  {laneData.packagesHead}
                 </h2>
               </div>
               <Link href="/packages" className="btn btn-ghost btn-sm">
@@ -211,14 +244,14 @@ export default async function Home() {
             <div
               style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 18, marginTop: 28 }}
             >
-              {featuredPacks.map((pack) => {
+              {featuredPacks.map((pack, i) => {
                 const from = minTierPrice(pack);
                 return (
                   <Link
                     key={pack.slug}
                     href={`/packages/${pack.slug}`}
-                    className="card"
-                    style={{ textDecoration: "none", color: "inherit", display: "block" }}
+                    className="card reveal-target"
+                    style={{ textDecoration: "none", color: "inherit", display: "block", ["--i" as string]: i } as React.CSSProperties}
                   >
                     <div
                       className={`well ${pack.wellScene} ${pack.glow}`}

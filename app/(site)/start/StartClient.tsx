@@ -1,10 +1,10 @@
 "use client";
 
-import IntentChooser from "@/components/IntentChooser";
+import StartTriptych from "@/components/StartTriptych";
 
-// The /start front door — now inside (site) so it carries nav + footer, and the
-// intent picker is the single shared chooser (page mode). Kept as the deep-link /
-// link-in-bio URL; picking routes into Explore focused on the chosen lane.
+// The /start front door — an immersive full-viewport triptych (the redesigned chooser).
+// The IntentProvider suppresses its first-visit modal on /start so the two choosers
+// never stack (see IntentProvider).
 export default function StartClient() {
-  return <IntentChooser mode="page" />;
+  return <StartTriptych />;
 }

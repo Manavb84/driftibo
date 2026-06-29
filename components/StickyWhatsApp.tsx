@@ -3,14 +3,11 @@
 import { waLink } from "@/lib/site";
 import { track } from "@/lib/analytics";
 
-// Mobile-only floating WhatsApp button — hidden on desktop via CSS.
-// Mounted once in app/(site)/layout.tsx. Fires a track event on click.
+// Floating WhatsApp button — now visible on desktop too (the audit flagged WhatsApp
+// unreachable on desktop). Mounted once in app/(site)/layout.tsx; tracks clicks.
 export default function StickyWhatsApp() {
   return (
     <>
-      <style>{`
-        @media (min-width: 640px) { .sticky-wa { display: none !important; } }
-      `}</style>
       <a
         href={waLink("a trip my star sent me")}
         target="_blank"

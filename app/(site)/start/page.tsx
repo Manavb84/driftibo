@@ -1,6 +1,7 @@
-// SERVER component — metadata only. The intent picker is the shared IntentChooser
-// (page mode), rendered by the client island below. Now lives inside app/(site) so
-// it carries nav + footer; kept as the /start deep-link / link-in-bio front door.
+// SERVER component — metadata only. The chooser is the immersive triptych, rendered by
+// StartClient (StartTriptych); IntentProvider suppresses its first-visit overlay on
+// /start so the two never stack. Lives inside app/(site) so it carries nav + footer;
+// kept as the /start deep-link / link-in-bio front door.
 import type { Metadata } from "next";
 import StartClient from "./StartClient";
 

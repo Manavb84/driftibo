@@ -33,6 +33,13 @@ const EVEN_OPTIONS = [
   { value: "true", label: "true" },
 ];
 
+// Lane = the intent this package surfaces under (international | india | spiritual).
+const LANE_OPTIONS = [
+  { value: "india", label: "India" },
+  { value: "international", label: "International" },
+  { value: "spiritual", label: "Spiritual" },
+];
+
 export default function PackageForm({ initial }: PackageFormProps) {
   const [slug, setSlug] = useState(initial?.slug ?? "");
   const [kicker, setKicker] = useState(initial?.kicker ?? "");
@@ -50,6 +57,7 @@ export default function PackageForm({ initial }: PackageFormProps) {
   const [departures, setDepartures] = useState(initial?.departures ?? "");
   const [tiers, setTiers] = useState<Tier[]>(initial?.tiers ?? []);
   const [even, setEven] = useState<string>(initial?.even === true ? "true" : "false");
+  const [lane, setLane] = useState<string>(initial?.lane ?? "india");
   const [sortOrder, setSortOrder] = useState(String(initial?.sortOrder ?? 0));
   const [portraitImageUrl, setPortraitImageUrl] = useState<string | null>(
     initial?.portraitImageUrl ?? null,
@@ -89,6 +97,7 @@ export default function PackageForm({ initial }: PackageFormProps) {
       // Default a tier key from its label if the founder left it blank.
       tiers: tiers.map((t) => ({ ...t, key: t.key || t.label.toLowerCase().replace(/\s+/g, "-") })),
       even: even === "true",
+      lane: lane as Package["lane"],
       sortOrder: Number(sortOrder),
       portraitImageUrl,
     });
@@ -258,6 +267,14 @@ export default function PackageForm({ initial }: PackageFormProps) {
           type="select"
           options={EVEN_OPTIONS}
           hint="Layout: even = image on right"
+        />
+        <Field
+          label="Lane"
+          value={lane}
+          onChange={setLane}
+          type="select"
+          options={LANE_OPTIONS}
+          hint="Which intent this package surfaces under"
         />
         <Field
           label="Sort Order"

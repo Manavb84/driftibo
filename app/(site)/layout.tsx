@@ -1,6 +1,7 @@
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import StickyWhatsApp from "@/components/StickyWhatsApp";
+import ScrollReveal from "@/components/ScrollReveal";
 import { IntentProvider } from "@/components/IntentProvider";
 
 // Public-site chrome: nav + footer + sticky WhatsApp, all inside IntentProvider so
@@ -14,6 +15,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       {children}
       <SiteFooter />
       <StickyWhatsApp />
+      <ScrollReveal />
     </IntentProvider>
   );
 }

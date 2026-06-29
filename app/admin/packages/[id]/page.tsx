@@ -40,6 +40,7 @@ export default async function EditPackagePage({
     tiers: Array.isArray(row.tiers) ? row.tiers : [],
     portraitImageUrl: row.portrait_image_url ?? null,
     sortOrder: row.sort_order ?? 0,
+    lane: row.lane ?? "india",
   };
 
   return <PackageForm initial={mapped} />;

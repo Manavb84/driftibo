@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useIntent } from "@/components/IntentProvider";
+import { normalizeIntent } from "@/lib/intent";
 
 // Real filter bar for Explore — not a scroll-spy. Each pill drives the URL:
 // "In season" clears ?intent (the seasonal default view), an intent pill sets
@@ -18,10 +20,15 @@ export default function CatalogTabs({
   activeIntent?: string;
 }) {
   const router = useRouter();
+  const { setIntent } = useIntent();
   // The leading "In season" pseudo-tab clears the filter; key "" = default view.
   const all: Tab[] = [{ key: "", label: "✦ In season" }, ...tabs];
 
   function go(key: string) {
+    // Sync the nav chip BEFORE navigating so the active lane pill and the chip can't
+    // desync. "In season" (key "") is not a lane, so it leaves the chosen intent as-is.
+    const i = normalizeIntent(key);
+    if (i) setIntent(i);
     router.push(key ? `/destinations?intent=${key}` : "/destinations", {
       scroll: true,
     });

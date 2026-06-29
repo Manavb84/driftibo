@@ -1,15 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useIntent } from "./IntentProvider";
 import { INTENTS, INTENT_LABEL, INTENT_GLYPH, INTENT_LINE, type Intent } from "@/lib/intent";
 
-// The single shared trip-intent chooser. Two modes:
-//   "overlay" — first-visit / "change?" modal, rendered by IntentProvider. Picking
-//               sets the intent and closes; you stay where you are. Skippable.
-//   "page"    — inline on /start (the deep-link / link-in-bio front door). Picking
-//               sets the intent AND routes to /destinations?intent=<intent>.
+// The first-visit / "change your lane?" modal, rendered by IntentProvider. Picking sets
+// the intent and closes; you stay where you are. Skippable. (/start has its own immersive
+// chooser — the triptych — so this is overlay-only now.)
 // Tiles reuse .play-card + .play-card.is-on; nothing here is hand-rolled.
 
 function Tiles({ onPick, picked }: { onPick: (i: Intent) => void; picked: Intent | null }) {
@@ -46,65 +42,13 @@ function Tiles({ onPick, picked }: { onPick: (i: Intent) => void; picked: Intent
   );
 }
 
-export default function IntentChooser({ mode }: { mode: "overlay" | "page" }) {
+export default function IntentChooser() {
   const { intent, setIntent, closeChooser } = useIntent();
-  const router = useRouter();
 
   function pick(i: Intent) {
     setIntent(i); // persists + updates chip + closes overlay
-    if (mode === "page") router.push(`/destinations?intent=${i}`);
   }
 
-  if (mode === "page") {
-    return (
-      <main
-        className="mesh"
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "96px 20px 64px",
-        }}
-      >
-        <div style={{ width: "100%", maxWidth: 640 }}>
-          <div
-            className="glass-panel"
-            style={{ textAlign: "center", marginBottom: 26, borderRadius: "var(--r-lg)", padding: "26px 22px 28px", boxShadow: "var(--pk-shadow-sm)" }}
-          >
-            <span className="seal t-coral breathe" style={{ width: 60, margin: "0 auto" }}>
-              <span className="ring" />
-              <span className="star" />
-            </span>
-            <p className="kicker" style={{ marginTop: 16 }}>
-              Travel by your own star
-            </p>
-            <h1 className="display-mega" style={{ fontSize: "clamp(2.2rem,7vw,3.4rem)", margin: "8px 0", lineHeight: 1 }}>
-              What kind of trip?
-            </h1>
-            <p className="lede" style={{ maxWidth: "44ch", margin: "0 auto", color: "var(--pk-text)" }}>
-              Pick one. We&apos;ll point you straight at the right places — honest briefs, best
-              seasons, real photos.
-            </p>
-          </div>
-
-          <Tiles onPick={pick} picked={intent} />
-
-          <div style={{ textAlign: "center", marginTop: 26, display: "grid", gap: 8 }}>
-            <Link href="/destinations" style={{ fontFamily: "var(--ui)", fontWeight: 600, fontSize: "0.86rem", color: "var(--pk-accent-deep)", textDecoration: "none" }}>
-              Just show me everything →
-            </Link>
-            <Link href="/" style={{ fontSize: "0.8rem", color: "var(--pk-ink)", opacity: 0.85, textDecoration: "none" }}>
-              or back home
-            </Link>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  // ── overlay ──
   return (
     <div
       className="glass-panel"

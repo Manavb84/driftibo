@@ -1,28 +1,37 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getIntent } from "@/lib/intent-server";
 
 const SITE_URL = "https://driftibo.com";
 
-export const metadata: Metadata = {
-  title: "About · Driftibo",
-  description:
-    "Driftibo plans surprise trips to India's hidden corners. You tell the star your limits — we handle everything else, start to finish, on WhatsApp. Real places, honest prices, no overthinking.",
-  alternates: { canonical: `${SITE_URL}/about` },
-  openGraph: {
-    title: "About Driftibo — Surprise travel to India's hidden corners",
-    description:
-      "We pick a real Indian destination that fits your limits, then plan the trip end to end on WhatsApp. No phantom places, no inflated prices.",
-    url: `${SITE_URL}/about`,
-    images: [{ url: `${SITE_URL}/og.jpg`, width: 1200, height: 630, alt: "Driftibo — Travel by your own star" }],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "About Driftibo",
-    description: "Surprise travel to India's hidden corners, planned end to end on WhatsApp.",
-    images: [`${SITE_URL}/og.jpg`],
-  },
-};
+// Lane-aware <head> — the description leads with the chosen lane's promise.
+export async function generateMetadata(): Promise<Metadata> {
+  const intent = await getIntent();
+  const desc: Record<string, string> = {
+    international: "Driftibo plans visa-easy escapes beyond India — five-star scenery, three-star prices. You set the limits; we plan the trip and close it on WhatsApp.",
+    india: "Driftibo plans surprise trips to India's hidden corners. You tell the star your limits — we handle everything else, start to finish, on WhatsApp.",
+    spiritual: "Driftibo plans temple trails and pilgrim circuits — the offbeat ones included. You set the limits; we plan the journey and close it on WhatsApp.",
+  };
+  const description = desc[intent ?? "india"];
+  return {
+    title: "About · Driftibo",
+    description,
+    alternates: { canonical: `${SITE_URL}/about` },
+    openGraph: {
+      title: "About Driftibo — Travel by your own star",
+      description,
+      url: `${SITE_URL}/about`,
+      images: [{ url: `${SITE_URL}/og.jpg`, width: 1200, height: 630, alt: "Driftibo — Travel by your own star" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "About Driftibo",
+      description,
+      images: [`${SITE_URL}/og.jpg`],
+    },
+  };
+}
 
 export default function AboutPage() {
   return (

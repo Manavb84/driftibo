@@ -3,62 +3,45 @@
 import Link from "next/link";
 import { useEffect, useState, type CSSProperties } from "react";
 import { track } from "@/lib/analytics";
+import { useIntent } from "./IntentProvider";
+import { LANE } from "@/lib/lane";
+import type { Intent } from "@/lib/intent";
 
-type Scene = { name: string; tag: string; blurb: string };
-
-const SCENES: Scene[] = [
-  {
-    name: "Chopta",
-    tag: "Mini-Switzerland · Uttarakhand",
-    blurb:
-      "A deodar ridge under the highest Shiva temple on earth — pine, snow, and a sunrise that lines up four Himalayan giants.",
-  },
-  {
-    name: "Spiti",
-    tag: "Looks like Iceland · Himachal",
-    blurb:
-      "Cold high-desert moonland, thousand-year monasteries, and a night sky so dark it feels rude to speak.",
-  },
-  {
-    name: "Ziro",
-    tag: "Rice terraces to rival Bali · Arunachal",
-    blurb:
-      "Apatani paddy mosaics, pine hills, and a green valley that turns into a music festival once a year.",
-  },
-  {
-    name: "Gokarna",
-    tag: "Goa's quieter coast · Karnataka",
-    blurb:
-      "Five quiet beaches strung along a cliff path — the only schedule is the tide and the light going gold.",
-  },
+// Card geometry (positions/rotations) — index-aligned to the active lane's 4 scenes,
+// so swapping lanes re-skins the same cluster without touching layout.
+type Slot = { rot: string; pos: CSSProperties; width: string; delay: string };
+const SLOTS: Slot[] = [
+  { rot: "-6deg", pos: { top: "1%", left: "5%" }, width: "47%", delay: "0s" },
+  { rot: "6deg", pos: { top: "6%", right: "3%" }, width: "43%", delay: "1.1s" },
+  { rot: "5deg", pos: { bottom: "3%", left: "1%" }, width: "45%", delay: "2.2s" },
+  { rot: "-5deg", pos: { bottom: "0%", right: "8%" }, width: "41%", delay: "3.3s" },
 ];
 
-type Card = {
-  scene: string;
-  name: string;
-  rot: string;
-  pos: CSSProperties;
-  width: string;
-  delay: string;
-};
+// `intent` is the SSR-resolved lane (from the cookie, via getIntent); the IntentProvider
+// context takes over once hydrated so a chooser pick re-skins the hero live. Falls back
+// to India for organic, undecided visitors.
+export default function HeroStage({ intent }: { intent?: Intent | null }) {
+  const ctx = useIntent();
+  const active: Intent = ctx.intent ?? intent ?? "india";
+  const laneData = LANE[active];
+  const scenes = laneData.scenes;
 
-const CARDS: Card[] = [
-  { scene: "s-chopta", name: "Chopta", rot: "-6deg", pos: { top: "1%", left: "5%" }, width: "47%", delay: "0s" },
-  { scene: "s-spiti", name: "Spiti", rot: "6deg", pos: { top: "6%", right: "3%" }, width: "43%", delay: "1.1s" },
-  { scene: "s-ziro", name: "Ziro", rot: "5deg", pos: { bottom: "3%", left: "1%" }, width: "45%", delay: "2.2s" },
-  { scene: "s-gokarna", name: "Gokarna", rot: "-5deg", pos: { bottom: "0%", right: "8%" }, width: "41%", delay: "3.3s" },
-];
-
-export default function HeroStage() {
   const [idx, setIdx] = useState(0);
-  const [animate, setAnimate] = useState(false); // name-in only fires after the first advance
+  const [animate, setAnimate] = useState(true); // first name animates in on mount too
   const [spinKey, setSpinKey] = useState(0); // bump → remount the seal → replay the spin
+  const [parallax, setParallax] = useState(0);
 
   // Auto-spin the seal shortly after mount (CSS disables the spin under reduced motion).
   useEffect(() => {
     const t = setTimeout(() => setSpinKey((k) => k + 1), 420);
     return () => clearTimeout(t);
   }, []);
+
+  // When the lane changes, restart on its first scene with the name animating in.
+  useEffect(() => {
+    setIdx(0);
+    setAnimate(true);
+  }, [active]);
 
   // Cross-fade scenes + swap copy every 4.2s, unless the user prefers reduced motion.
   useEffect(() => {
@@ -71,12 +54,38 @@ export default function HeroStage() {
     }
     const iv = setInterval(() => {
       setAnimate(true);
-      setIdx((i) => (i + 1) % SCENES.length);
+      setIdx((i) => (i + 1) % scenes.length);
     }, 4200);
     return () => clearInterval(iv);
+    // `active` in deps so the timer resets on lane change — scene 0 always gets a full slot.
+  }, [active, scenes.length]);
+
+  // Light scroll parallax on the scene layer — only while the hero is on screen.
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+    // rAF-gate so we coalesce a burst of scroll events into one setState per frame.
+    let rafPending = false;
+    const onScroll = () => {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => {
+        rafPending = false;
+        const y = window.scrollY;
+        if (y < window.innerHeight) setParallax(y * 0.18);
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scene = SCENES[idx];
+  const scene = scenes[idx];
 
   return (
     <header
@@ -89,9 +98,19 @@ export default function HeroStage() {
         overflow: "hidden",
       }}
     >
-      {/* cross-fading destination scenes */}
-      {CARDS.map((c, i) => (
-        <div key={c.scene} className={`hero-scene ${c.scene}`} style={{ opacity: i === idx ? 1 : 0 }} />
+      {/* cross-fading destination scenes — real visual-bank photography, ken-burns + parallax */}
+      {scenes.map((s, i) => (
+        <div
+          key={s.name}
+          className="hero-scene"
+          style={{
+            opacity: i === idx ? 1 : 0,
+            backgroundImage: `url(${s.image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            transform: `translateY(${parallax}px) scale(1.08)`,
+          }}
+        />
       ))}
       {/* readability scrim — darkens the copy side, keeps the cards colorful */}
       <div
@@ -100,7 +119,7 @@ export default function HeroStage() {
           inset: 0,
           pointerEvents: "none",
           background:
-            "linear-gradient(96deg, oklch(0.15 0.05 234 / .42) 0%, oklch(0.15 0.05 234 / .28) 32%, transparent 56%)",
+            "linear-gradient(96deg, oklch(0.15 0.05 234 / .58) 0%, oklch(0.15 0.05 234 / .38) 38%, oklch(0.15 0.05 234 / .12) 64%)",
         }}
       />
 
@@ -161,7 +180,7 @@ export default function HeroStage() {
           >
             Stop choosing. Start packing.
           </p>
-          {/* Value-prop subhead */}
+          {/* Value-prop subhead — lane-aware */}
           <p
             style={{
               fontFamily: "var(--ui)",
@@ -173,7 +192,7 @@ export default function HeroStage() {
               marginBottom: 14,
             }}
           >
-            Surprise travel to India&apos;s hidden corners — you tell us your limits, we plan the trip and close it on WhatsApp.
+            {laneData.heroSubhead}
           </p>
           <p
             className="eyebrow"
@@ -184,11 +203,10 @@ export default function HeroStage() {
               marginBottom: 4,
             }}
           >
-            Your star could send you to —
+            {laneData.heroEyebrow}
           </p>
           <h1
             data-hero-name
-            aria-live="polite"
             className="display-mega"
             style={{
               color: "#fff",
@@ -198,7 +216,7 @@ export default function HeroStage() {
               paddingBottom: "0.14em",
             }}
           >
-            <span key={idx} className={animate ? "name-in" : undefined} style={{ display: "inline-block" }}>
+            <span key={`${active}-${idx}`} className={animate ? "name-in" : undefined} style={{ display: "inline-block" }}>
               {scene.name}
             </span>
           </h1>
@@ -252,10 +270,24 @@ export default function HeroStage() {
               Find my kind of trip →
             </Link>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 24 }}>
-            {CARDS.map((c, i) => (
+          {/* Micro-trust line — the human-on-WhatsApp promise, right under the CTAs */}
+          <p
+            style={{
+              fontFamily: "var(--ui)",
+              fontSize: "0.8rem",
+              fontWeight: 500,
+              color: "oklch(1 0 0 / .82)",
+              textShadow: "0 1px 8px oklch(0.2 0.05 232 / .55)",
+              marginTop: 14,
+              maxWidth: "44ch",
+            }}
+          >
+            {laneData.microTrust}
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 20 }}>
+            {scenes.map((s, i) => (
               <span
-                key={c.scene}
+                key={s.name}
                 data-hero-dot
                 style={{
                   width: 24,
@@ -278,60 +310,71 @@ export default function HeroStage() {
           className="hero-card-cluster"
           style={{ flex: "1 1 340px", minWidth: 280, position: "relative", height: "clamp(380px,42vw,500px)" }}
         >
-          {CARDS.map((c, i) => (
-            <div
-              key={c.scene}
-              className={`hero-card hero-float ${c.scene}${i === idx ? " is-current" : ""}`}
-              data-card-idx={i}
-              style={
-                {
-                  "--rot": c.rot,
-                  position: "absolute",
-                  ...c.pos,
-                  width: c.width,
-                  aspectRatio: "3/4",
-                  borderRadius: "var(--r-lg)",
-                  boxShadow: "var(--pk-shadow-lg)",
-                  overflow: "hidden",
-                  display: "flex",
-                  alignItems: "flex-end",
-                  padding: 15,
-                  animationDelay: c.delay,
-                } as CSSProperties
-              }
-            >
+          {scenes.map((s, i) => {
+            const slot = SLOTS[i];
+            return (
               <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: "linear-gradient(0deg, oklch(0.18 0.05 232 / .38), transparent 56%)",
-                }}
-              />
-              <div style={{ position: "relative" }}>
-                <p
+                key={s.name}
+                className={`hero-card hero-float${i === idx ? " is-current" : ""}`}
+                data-card-idx={i}
+                style={
+                  {
+                    "--rot": slot.rot,
+                    position: "absolute",
+                    ...slot.pos,
+                    width: slot.width,
+                    aspectRatio: "3/4",
+                    borderRadius: "var(--r-lg)",
+                    boxShadow: "var(--pk-shadow-lg)",
+                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "flex-end",
+                    padding: 15,
+                    animationDelay: slot.delay,
+                    backgroundImage: `url(${s.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  } as CSSProperties
+                }
+              >
+                <div
                   style={{
-                    fontFamily: "var(--ui)",
-                    fontWeight: 700,
-                    fontSize: "0.54rem",
-                    letterSpacing: "0.16em",
-                    textTransform: "uppercase",
-                    color: "oklch(1 0 0 / .82)",
+                    position: "absolute",
+                    inset: 0,
+                    background: "linear-gradient(0deg, oklch(0.18 0.05 232 / .5), transparent 56%)",
                   }}
-                >
-                  ✦ star-sent
-                </p>
-                <p className="display" style={{ fontSize: "1.2rem", color: "#fff", lineHeight: 1.12 }}>
-                  {c.name}
-                </p>
+                />
+                <div style={{ position: "relative" }}>
+                  <p
+                    style={{
+                      fontFamily: "var(--ui)",
+                      fontWeight: 700,
+                      fontSize: "0.54rem",
+                      letterSpacing: "0.16em",
+                      textTransform: "uppercase",
+                      color: "oklch(1 0 0 / .82)",
+                    }}
+                  >
+                    ✦ star-sent
+                  </p>
+                  <p className="display" style={{ fontSize: "1.2rem", color: "#fff", lineHeight: 1.12 }}>
+                    {s.name}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* RIGHT — swipe carousel (mobile) */}
         <div className="hero-card-strip">
-          {CARDS.map((c) => (
-            <div key={c.scene} className={`well ${c.scene}`} data-label={c.name} />
+          {scenes.map((s) => (
+            <div
+              key={s.name}
+              className="well"
+              data-label={s.name}
+              style={{ backgroundImage: `url(${s.image})`, backgroundSize: "cover", backgroundPosition: "center" }}
+            />
           ))}
         </div>
       </div>

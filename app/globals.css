@@ -271,7 +271,7 @@ body {
 .persona-mil .btn-accent { background: oklch(0.80 0.085 32); color: oklch(0.24 0.03 250); }
 
 /* ════════ HERO — auto-rotating destination stage ════════ */
-.hero-scene { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; will-change: opacity; }
+.hero-scene { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; will-change: opacity, transform; }
 .hero-scene.is-on { opacity: 1; }
 @keyframes heroFloat { 0%,100% { transform: translateY(0) rotate(var(--rot,0deg)); } 50% { transform: translateY(-15px) rotate(var(--rot,0deg)); } }
 @keyframes nameIn { from { opacity: 0; transform: translateY(22px); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
@@ -321,3 +321,57 @@ body {
 /* Step numbers */
 .step-num { color: var(--pk-accent-deep); }
 .persona-mil .step-num { color: oklch(0.64 0.13 32); }
+
+/* ════════ CRAFT LAYER — scroll choreography, ken-burns, motion polish ════════ */
+
+/* Scroll reveal — a single IntersectionObserver (components/ScrollReveal) toggles
+   .revealed on any .reveal-target as it enters view. --i staggers siblings.
+   Hiding is gated behind .js (set synchronously in the root layout) so a no-JS /
+   JS-error visitor sees all content rather than a page of invisible cards. */
+.js .reveal-target {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1);
+  transition-delay: calc(var(--i, 0) * 70ms);
+  will-change: opacity, transform;
+}
+.js .reveal-target.revealed { opacity: 1; transform: none; }
+
+/* Card hover ken-burns — one rule lifts every .card / .play-card image well. The
+   card clips overflow, so the well zooms within its frame. */
+.card .well, .play-card .well { transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.card:hover .well, .play-card:hover .well { transform: scale(1.06); }
+
+/* FAQ smooth height — grid-template-rows 0fr→1fr animates open without measuring. */
+.faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .32s ease; }
+.faq-body.is-open { grid-template-rows: 1fr; }
+.faq-body > div { overflow: hidden; }
+
+/* Nav drawer slide-down */
+@keyframes drawerIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.nav-drawer { animation: drawerIn .22s ease both; }
+
+/* Generic fade (WhatsAppClose reassurance line references this) + count-up wrapper */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.count-up { font-variant-numeric: tabular-nums; }
+
+/* Detail page 100vh cinematic hero */
+.detail-hero { position: relative; min-height: 78vh; display: flex; align-items: flex-end; overflow: hidden; }
+.detail-hero .detail-hero-img { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.detail-hero .detail-hero-veil { position: absolute; inset: 0;
+  background: linear-gradient(0deg, oklch(0.14 0.05 234 / .82) 0%, oklch(0.14 0.05 234 / .3) 46%, oklch(0.14 0.05 234 / .12) 100%); }
+
+/* Package tiers: a grid on desktop, a scroll-snap carousel on mobile (no cramped stack). */
+@media (max-width: 640px) {
+  .tier-grid { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory;
+    gap: 14px; margin: 12px -22px 0; padding: 2px 22px 8px; scrollbar-width: none; }
+  .tier-grid::-webkit-scrollbar { display: none; }
+  .tier-grid > * { flex: 0 0 82%; scroll-snap-align: start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal-target { opacity: 1; transform: none; transition: none; }
+  .card:hover .well, .play-card:hover .well { transform: none; }
+  .nav-drawer { animation: none; }
+  .faq-body { transition: none; }
+}

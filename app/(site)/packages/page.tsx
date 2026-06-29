@@ -1,20 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getPackages, minTierPrice } from "@/lib/content";
+import { getIntent } from "@/lib/intent-server";
+import { lane as laneOf } from "@/lib/lane";
+import { INTENT_LABEL } from "@/lib/intent";
 
-export const metadata: Metadata = {
-  title: "Packages · Driftibo",
-};
+// Lane-aware <head>, consistent with home + about.
+export async function generateMetadata(): Promise<Metadata> {
+  const intent = await getIntent();
+  const titles: Record<string, string> = {
+    international: "Trips abroad · Packages · Driftibo",
+    india: "India packages · Driftibo",
+    spiritual: "Pilgrim journeys · Packages · Driftibo",
+  };
+  return { title: intent ? titles[intent] : "Packages · Driftibo" };
+}
 
 const inr = (n: number) => n.toLocaleString("en-IN");
 
 export default async function PackagesPage() {
-  const PACKS = await getPackages();
+  // Lane-scoped: each intent sees its own trips. Falls back to India when undecided.
+  const intent = await getIntent();
+  const effectiveLane = intent ?? "india";
+  const laneData = laneOf(intent);
+  const PACKS = await getPackages(effectiveLane);
   return (
     <>
       <section style={{ padding: "104px 22px 40px", maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
-        <p className="kicker" style={{ color: "var(--persona-accent,var(--pk-accent-deep))" }}>Done-for-you drifts</p>
-        <h1 className="display-mega" style={{ fontSize: "clamp(2.2rem,7vw,3.4rem)", margin: "6px 0 8px" }}>{PACKS.length} trips, already dreamed up</h1>
+        <p className="kicker" style={{ color: "var(--persona-accent,var(--pk-accent-deep))" }}>Done-for-you drifts{intent ? ` · ${INTENT_LABEL[intent]}` : ""}</p>
+        <h1 className="display-mega" style={{ fontSize: "clamp(2.2rem,7vw,3.4rem)", margin: "6px 0 8px" }}>{laneData.packagesHead}</h1>
         <p className="lede" style={{ maxWidth: "48ch", margin: "0 auto" }}>Not a pricing grid. Finished ideas you can take as-is or bend to your dates — each one with options from budget to luxury. Every card shows a from-price; the full quote comes on chat.</p>
       </section>
 

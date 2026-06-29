@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type CSSProperties } from "react";
 import { useIntent } from "./IntentProvider";
 import { INTENT_LABEL } from "@/lib/intent";
+import { waLink } from "@/lib/site";
+import { track } from "@/lib/analytics";
 
 type NavItem = { href: string; label: string; key: string };
 
@@ -172,11 +174,16 @@ export default function SiteNav() {
               scrollbarWidth: "none",
             }}
           >
-            {NAV.map((l) => (
-              <Link key={l.key} href={l.href} style={{ ...linkBase, ...(l.key === active ? activeAdd : {}) }}>
-                {l.label}
-              </Link>
-            ))}
+            {NAV.map((l) => {
+              // Thread the chosen lane into Explore so the catalogue opens on it.
+              const href =
+                l.key === "destinations" && intent ? `${l.href}?intent=${intent}` : l.href;
+              return (
+                <Link key={l.key} href={href} style={{ ...linkBase, ...(l.key === active ? activeAdd : {}) }}>
+                  {l.label}
+                </Link>
+              );
+            })}
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
@@ -195,6 +202,34 @@ export default function SiteNav() {
                 "Where to?"
               )}
             </button>
+            {/* Persistent desktop WhatsApp entry — the audit flagged it unreachable on desktop.
+                Hidden on mobile (.nav-cta) where StickyWhatsApp already floats. */}
+            <a
+              href={waLink("a trip my star sent me")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="nav-cta"
+              aria-label="Chat on WhatsApp"
+              title="Chat on WhatsApp"
+              onClick={() => track("whatsapp_click", { source: "nav" })}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 36,
+                height: 36,
+                borderRadius: "var(--r-pill)",
+                flexShrink: 0,
+                ...(sky
+                  ? { background: "var(--pk-panel)", color: "var(--pk-ink)", boxShadow: "inset 0 0 0 1px var(--pk-line-soft)" }
+                  : { background: "oklch(1 0 0 / .16)", color: "var(--pk-on-ink)", backdropFilter: "blur(6px)", boxShadow: "inset 0 0 0 1px oklch(1 0 0 / .3)" }),
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.856L.057 23.571a.5.5 0 0 0 .614.614l5.723-1.474A11.947 11.947 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.946 9.946 0 0 1-5.063-1.377l-.363-.214-3.756.967.994-3.643-.236-.376A9.955 9.955 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+              </svg>
+            </a>
             <Link href="/game" className="nav-cta btn btn-primary btn-sm">
               Spin my star
             </Link>
@@ -251,13 +286,35 @@ export default function SiteNav() {
           {NAV.map((l) => (
             <Link
               key={l.key}
-              href={l.href}
+              href={l.key === "destinations" && intent ? `${l.href}?intent=${intent}` : l.href}
               onClick={() => setMenuOpen(false)}
               style={{ ...drawerBase, ...(l.key === active ? drawerActiveAdd : {}) }}
             >
               {l.label}
             </Link>
           ))}
+          {/* The top-bar Spin CTA is hidden on mobile — surface it (and WhatsApp) in the drawer. */}
+          <Link
+            href="/game"
+            onClick={() => setMenuOpen(false)}
+            className="btn btn-primary btn-sm"
+            style={{ marginTop: 12, justifyContent: "center" }}
+          >
+            ✦ Spin my star
+          </Link>
+          <a
+            href={waLink("a trip my star sent me")}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              track("whatsapp_click", { source: "drawer" });
+              setMenuOpen(false);
+            }}
+            className="btn btn-ghost btn-sm"
+            style={{ marginTop: 8, justifyContent: "center" }}
+          >
+            Chat on WhatsApp
+          </a>
         </div>
       )}
     </>

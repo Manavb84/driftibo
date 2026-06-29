@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import type { CSSProperties } from "react";
 import { submitCapture } from "@/lib/actions";
+import { useIntent } from "./IntentProvider";
+import { lane as laneOf } from "@/lib/lane";
 
 const fl: CSSProperties = {
   display: "block",
@@ -120,6 +122,8 @@ function TalkToUs() {
 }
 
 export default function SiteFooter() {
+  const { intent } = useIntent();
+  const laneData = laneOf(intent);
   return (
     <footer className="callout-ink" style={{ borderRadius: 0, padding: "56px 22px 40px" }}>
       <div
@@ -141,7 +145,7 @@ export default function SiteFooter() {
             className="poetry"
             style={{ color: "var(--pk-on-ink)", fontSize: "1.45rem", marginTop: 14, lineHeight: 1.25 }}
           >
-            The best trips aren&apos;t planned. They&apos;re sent.
+            {laneData.footerTagline}
           </p>
           <Link href="/game" className="btn btn-accent btn-sm" style={{ marginTop: 18 }}>
             ✦ Spin my star
@@ -201,7 +205,7 @@ export default function SiteFooter() {
         }}
       >
         <span>© 2026 Driftibo · Travel by your own star</span>
-        <span>Made in India · real corners of it</span>
+        <span>{laneData.footerFineprint}</span>
       </div>
     </footer>
   );

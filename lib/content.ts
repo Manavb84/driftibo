@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { BodyBlock } from "@/lib/blocks";
+import type { Intent } from "@/lib/intent";
 
 export type { BodyBlock };
 
@@ -53,6 +54,7 @@ export type Destination = {
   portraitImageUrl: string | null;
   status: string;
   sortOrder: number;
+  lane: Intent;
 };
 
 export type Article = {
@@ -91,6 +93,7 @@ export type Package = {
   tiers: Tier[];
   portraitImageUrl: string | null;
   sortOrder: number;
+  lane: Intent;
 };
 
 export type Offering = {
@@ -130,6 +133,7 @@ function toDestination(row: any): Destination {
     portraitImageUrl: row.portrait_image_url ?? null,
     status: row.status ?? "draft",
     sortOrder: row.sort_order ?? 0,
+    lane: (row.lane ?? "india") as Intent,
   };
 }
 
@@ -184,6 +188,7 @@ function toPackage(row: any): Package {
     })),
     portraitImageUrl: row.portrait_image_url ?? null,
     sortOrder: row.sort_order ?? 0,
+    lane: (row.lane ?? "india") as Intent,
   };
 }
 
@@ -208,19 +213,24 @@ function toOffering(row: any): Offering {
 
 // ── Cached read helpers ────────────────────────────────────────────────────
 
-export async function getDestinations(): Promise<Destination[]> {
+// Optional `lane` (an Intent) scopes the read to one lane's product — the intent
+// spine reaching commerce. Omit for the full set. The lane is part of the cache key
+// so each lane caches independently.
+export async function getDestinations(lane?: Intent): Promise<Destination[]> {
   return unstable_cache(
     async () => {
       const supabase = publicClient();
-      const { data } = await supabase
+      let q = supabase
         .from("destinations")
         .select("*")
-        .eq("status", "published")
+        .eq("status", "published");
+      if (lane) q = q.eq("lane", lane);
+      const { data } = await q
         .order("sort_order", { ascending: true })
         .order("created_at", { ascending: true });
       return (data ?? []).map(toDestination);
     },
-    ["destinations"],
+    ["destinations", lane ?? "all"],
     { tags: ["destinations"] },
   )();
 }
@@ -292,18 +302,18 @@ export async function getPackage(slug: string): Promise<Package | null> {
   )();
 }
 
-export async function getPackages(): Promise<Package[]> {
+export async function getPackages(lane?: Intent): Promise<Package[]> {
   return unstable_cache(
     async () => {
       const supabase = publicClient();
-      const { data } = await supabase
-        .from("packages")
-        .select("*")
+      let q = supabase.from("packages").select("*");
+      if (lane) q = q.eq("lane", lane);
+      const { data } = await q
         .order("sort_order", { ascending: true })
         .order("created_at", { ascending: true });
       return (data ?? []).map(toPackage);
     },
-    ["packages"],
+    ["packages", lane ?? "all"],
     { tags: ["packages"] },
   )();
 }
