@@ -4,7 +4,6 @@ import HeroStage from "@/components/HeroStage";
 import OtherIndiaRotator from "@/components/OtherIndiaRotator";
 import HomeIntent from "@/components/HomeIntent";
 import HomeFAQ from "@/components/HomeFAQ";
-import SocialProof from "@/components/SocialProof";
 import PriceBadge from "@/components/PriceBadge";
 import { getDestinations, getPackages, getOfferings, minTierPrice } from "@/lib/content";
 
@@ -33,6 +32,11 @@ export default async function Home() {
   // Slice to 4 for the teaser sections; fall back gracefully to empty array
   const featuredDests = destinations.slice(0, 4);
   const featuredPacks = packages.slice(0, 4);
+  // Home shows just two lanes — Surprise + Custom — and points the rest to /offerings.
+  const homeOfferings = (() => {
+    const pick = offerings.filter((o) => o.slug === "/surprise" || o.slug === "/custom");
+    return pick.length >= 2 ? pick : offerings.slice(0, 2);
+  })();
 
   return (
     <>
@@ -47,7 +51,7 @@ export default async function Home() {
       {/* HOW IT WORKS */}
       <section style={{ maxWidth: 1080, margin: "0 auto", padding: "72px 24px" }}>
         <p className="kicker" style={{ textAlign: "center" }}>
-          How the star works
+          Three steps, then you pack
         </p>
         <div
           style={{
@@ -247,8 +251,8 @@ export default async function Home() {
         </section>
       )}
 
-      {/* OFFERINGS GRID — CMS-driven (getOfferings); the 5th "abroad" lane appears here too */}
-      {offerings.length > 0 && (
+      {/* OFFERINGS GRID — just the two headline lanes; the rest live on /offerings */}
+      {homeOfferings.length > 0 && (
         <section style={{ maxWidth: 1080, margin: "0 auto", padding: "72px 24px" }}>
           <p className="kicker" style={{ textAlign: "center" }}>
             When you want a human, not a spin
@@ -259,7 +263,7 @@ export default async function Home() {
           <div
             style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20, marginTop: 28 }}
           >
-            {offerings.map((o) => {
+            {homeOfferings.map((o) => {
               const s = SURFACE_STYLE[o.slug] ?? DEFAULT_SURFACE;
               // Image first; else the offering's own scene token (photo holds an s-*);
               // else the base .well gradient. Same precedence as /offerings.
@@ -315,6 +319,11 @@ export default async function Home() {
               );
             })}
           </div>
+          <p style={{ textAlign: "center", marginTop: 28 }}>
+            <Link href="/offerings" className="btn btn-ghost btn-sm">
+              See all ways to drift →
+            </Link>
+          </p>
         </section>
       )}
 
@@ -355,18 +364,32 @@ export default async function Home() {
         </Link>
       </section>
 
-      {/* SOCIAL PROOF */}
-      <SocialProof />
-
       {/* FAQ */}
       <HomeFAQ />
 
-      <p style={{ textAlign: "center", color: "var(--pk-muted)", fontSize: "0.82rem", padding: "0 24px 48px" }}>
-        Real corners of India ·{" "}
-        <Link href="/go" style={{ color: "var(--pk-accent-deep)", textDecoration: "none" }}>
-          #StarSent
-        </Link>
-      </p>
+      {/* CLOSING CTA — one confident band instead of trailing into an orphan line */}
+      <section style={{ padding: "8px 24px 64px" }}>
+        <div
+          className="callout-ink"
+          style={{
+            maxWidth: 1080,
+            margin: "0 auto",
+            padding: "44px 32px",
+            textAlign: "center",
+            display: "grid",
+            gap: 16,
+            justifyItems: "center",
+          }}
+        >
+          <p className="kicker">Stop choosing</p>
+          <h2 className="display" style={{ fontSize: "clamp(1.9rem,4.2vw,2.8rem)", color: "var(--pk-on-ink)", maxWidth: "18ch" }}>
+            Ready to let your star decide?
+          </h2>
+          <Link href="/game" className="btn btn-accent" style={{ textDecoration: "none" }}>
+            Spin my star ✦
+          </Link>
+        </div>
+      </section>
     </>
   );
 }

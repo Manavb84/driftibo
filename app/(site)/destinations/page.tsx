@@ -4,6 +4,8 @@ import {
   allPlaces,
   images,
   bookableSlugs,
+  currentMonthAbbr,
+  idealInMonth,
   CATALOG_BLURB,
   type Catalog,
   type PlaceWithCatalog,
@@ -11,7 +13,6 @@ import {
 import {
   INTENTS,
   INTENT_LABEL,
-  INTENT_GLYPH,
   INTENT_TO_CATALOGS,
   normalizeIntent,
   type Intent,
@@ -21,13 +22,18 @@ import CatalogTabs from "./CatalogTabs";
 export const metadata: Metadata = {
   title: "Where should your star send you? · Driftibo",
   description:
-    "Browse every place we plan — International, India (classic + offbeat), and Spiritual. Honest briefs, real landmark photos, best months to go. Pricing lives in Packages.",
+    "What's glowing this month, plus every place we plan — International, India (classic + offbeat), and Spiritual. Real landmark photos, best months to go.",
   alternates: { canonical: "/destinations" },
   openGraph: {
     title: "Where should your star send you? · Driftibo",
     description:
-      "Every place we plan, grouped the way you'd choose one — International, India, Spiritual. Honest briefs and real landmark photos.",
+      "What's at its seasonal best right now, and every place we plan — grouped the way you'd choose one.",
   },
+};
+
+const MONTH_FULL: Record<string, string> = {
+  Jan: "January", Feb: "February", Mar: "March", Apr: "April", May: "May", Jun: "June",
+  Jul: "July", Aug: "August", Sep: "September", Oct: "October", Nov: "November", Dec: "December",
 };
 
 // Invitational one-liners per intent (not the taxonomy voice).
@@ -37,6 +43,13 @@ const INTENT_BLURB: Record<Intent, string> = {
   spiritual: "Temple trails and pilgrim circuits — the offbeat ones included.",
 };
 
+// catalog → the intent lane it belongs to (for the seasonal grid's kicker).
+function intentOf(c: Catalog): Intent {
+  if (c === "international") return "international";
+  if (c === "india-spiritual") return "spiritual";
+  return "india";
+}
+
 // Best-season chip text: "Nov–Mar" from first/last best months.
 function seasonChip(months: string[]): string {
   if (!months.length) return "Year-round";
@@ -44,8 +57,9 @@ function seasonChip(months: string[]): string {
   return `${months[0]}–${months[months.length - 1]}`;
 }
 
-// One place card — 3:4 portrait .well, .pill season, .sticker bookable, .kicker region.
-function PlaceCard({ p }: { p: PlaceWithCatalog }) {
+// One place card. `kicker` overrides the region label (used by the seasonal grid
+// to show the intent lane instead, so a mixed grid stays legible).
+function PlaceCard({ p, kicker }: { p: PlaceWithCatalog; kicker?: string }) {
   const [img] = images(p.slug, p.catalog);
   const bookable = bookableSlugs.has(p.slug);
   return (
@@ -74,7 +88,7 @@ function PlaceCard({ p }: { p: PlaceWithCatalog }) {
         )}
       </div>
       <div className="card-pad">
-        <p className="kicker">{p.region.split("·")[0].trim()}</p>
+        <p className="kicker">{kicker ?? p.region.split("·")[0].trim()}</p>
         <h3 className="display" style={{ fontSize: "1.2rem", marginTop: 4 }}>
           {p.name}
         </h3>
@@ -98,13 +112,74 @@ function PlaceCard({ p }: { p: PlaceWithCatalog }) {
 }
 
 // A grid of place cards (a section body or an India sub-band body).
-function CardGrid({ places }: { places: PlaceWithCatalog[] }) {
+function CardGrid({ places, showIntent }: { places: PlaceWithCatalog[]; showIntent?: boolean }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(210px,1fr))", gap: 20 }}>
       {places.map((p) => (
-        <PlaceCard key={p.slug} p={p} />
+        <PlaceCard
+          key={p.slug}
+          p={p}
+          kicker={showIntent ? INTENT_LABEL[intentOf(p.catalog)] : undefined}
+        />
       ))}
     </div>
+  );
+}
+
+// A labelled sub-band inside a filtered lane (e.g. "Ready to book", "Classics").
+function SubBand({
+  head,
+  blurb,
+  places,
+}: {
+  head: string;
+  blurb?: string;
+  places: PlaceWithCatalog[];
+}) {
+  if (!places.length) return null;
+  return (
+    <div>
+      <div style={{ marginBottom: 14 }}>
+        <p className="kicker" style={{ color: "var(--pk-muted)" }}>
+          {head}
+        </p>
+        {blurb && (
+          <p style={{ color: "var(--pk-muted)", fontSize: "0.88rem", maxWidth: "56ch" }}>{blurb}</p>
+        )}
+      </div>
+      <CardGrid places={places} />
+    </div>
+  );
+}
+
+// Horizontal "Bookable now" strip — the 5 places you can actually book today.
+function BookableStrip({ places }: { places: PlaceWithCatalog[] }) {
+  if (!places.length) return null;
+  return (
+    <section style={{ marginBottom: 56 }}>
+      <p className="kicker">Bookable now</p>
+      <h2 className="display" style={{ fontSize: "clamp(1.4rem,3vw,1.9rem)", margin: "2px 0 16px" }}>
+        Ready when you are
+      </h2>
+      <div
+        style={{
+          display: "flex",
+          gap: 18,
+          overflowX: "auto",
+          paddingBottom: 8,
+          margin: "0 -22px",
+          paddingLeft: 22,
+          paddingRight: 22,
+          scrollbarWidth: "none",
+        }}
+      >
+        {places.map((p) => (
+          <div key={p.slug} style={{ flex: "0 0 220px", maxWidth: 220 }}>
+            <PlaceCard p={p} />
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -118,7 +193,8 @@ export default async function DestinationsPage({ searchParams }: Props) {
   const inIntent = (i: Intent) => places.filter((p) => INTENT_TO_CATALOGS[i].includes(p.catalog));
   const inCatalog = (c: Catalog) => places.filter((p) => p.catalog === c);
 
-  // ItemList JSON-LD over all 83 places (honest reference, no offers/prices here).
+  // ItemList JSON-LD over ALL 83 places — stays complete regardless of filter state,
+  // so the canonical /destinations always enumerates the full reference set.
   const itemListJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -132,7 +208,12 @@ export default async function DestinationsPage({ searchParams }: Props) {
     })),
   };
 
-  const tabs = INTENTS.map((i) => ({ key: i, label: INTENT_LABEL[i], count: inIntent(i).length }));
+  const tabs = INTENTS.map((i) => ({ key: i, label: INTENT_LABEL[i] }));
+
+  // ── Default (no intent): season-first curated view ──
+  const month = currentMonthAbbr();
+  const seasonal = validIntent ? [] : idealInMonth(month);
+  const bookablePlaces = places.filter((p) => bookableSlugs.has(p.slug));
 
   return (
     <main style={{ padding: "96px 22px 80px", maxWidth: 1080, margin: "0 auto", minHeight: "100vh" }}>
@@ -145,70 +226,79 @@ export default async function DestinationsPage({ searchParams }: Props) {
       <h1 className="display-mega" style={{ fontSize: "clamp(2.2rem,7vw,3.4rem)", margin: "4px 0 10px" }}>
         Where should your star send you?
       </h1>
-      <p className="lede" style={{ maxWidth: "52ch", marginBottom: 16 }}>
-        Every place we plan — honest briefs, real landmark photos, and the best months to go. Pick a
-        lane below, or just wander. Pricing lives in{" "}
-        <Link href="/packages" style={{ color: "var(--pk-accent-deep)" }}>
-          Packages
-        </Link>
-        .
+      <p className="lede" style={{ maxWidth: "54ch", marginBottom: 18 }}>
+        {validIntent
+          ? INTENT_BLURB[validIntent]
+          : `Start with what's glowing right now — the places at their seasonal best this ${MONTH_FULL[month]}. Or pick a lane and see all of it.`}
       </p>
-      <Link href="/destinations/calendar" className="btn btn-ghost btn-sm">
-        ☼ See what&apos;s in season →
-      </Link>
 
-      <CatalogTabs tabs={tabs} initialIntent={validIntent} />
+      <CatalogTabs tabs={tabs} activeIntent={validIntent} />
 
-      {INTENTS.map((i) => {
-        const intentItems = inIntent(i);
-        if (!intentItems.length) return null;
-        return (
-          <section key={i} id={i} style={{ scrollMarginTop: 124, marginBottom: 64 }}>
-            <div style={{ marginBottom: 22 }}>
-              <p className="kicker">
-                {INTENT_GLYPH[i]} {INTENT_LABEL[i]} · {intentItems.length}
-              </p>
-              <p className="display" style={{ fontSize: "clamp(1.4rem,3vw,1.9rem)", marginTop: 4 }}>
-                {INTENT_LABEL[i]}
-              </p>
-              <p style={{ color: "var(--pk-muted)", fontSize: "0.95rem", maxWidth: "58ch", marginTop: 4 }}>
-                {INTENT_BLURB[i]}
-              </p>
-            </div>
-
-            {i === "india" ? (
-              // India splits into two labeled sub-bands: Classic + Offbeat (the signature).
+      {validIntent ? (
+        // ── Selected intent: the FULL lane, bookable floated to the top ──
+        <section style={{ marginBottom: 56 }}>
+          {(() => {
+            const items = inIntent(validIntent);
+            const book = items.filter((p) => bookableSlugs.has(p.slug));
+            const rest = items.filter((p) => !bookableSlugs.has(p.slug));
+            return (
               <div style={{ display: "grid", gap: 36 }}>
-                {([
-                  ["india-popular", "Classic"],
-                  ["india-offbeat", "Offbeat"],
-                ] as const).map(([cat, label]) => {
-                  const sub = inCatalog(cat);
-                  if (!sub.length) return null;
-                  return (
-                    <div key={cat}>
-                      <div style={{ marginBottom: 14 }}>
-                        <p className="kicker" style={{ color: "var(--pk-muted)" }}>
-                          {label} · {sub.length}
-                        </p>
-                        <p style={{ color: "var(--pk-muted)", fontSize: "0.88rem", maxWidth: "56ch" }}>
-                          {CATALOG_BLURB[cat]}
-                        </p>
-                      </div>
-                      <CardGrid places={sub} />
-                    </div>
-                  );
-                })}
+                <SubBand head="Ready to book" places={book} />
+                {validIntent === "india" ? (
+                  <>
+                    <SubBand
+                      head="Classics"
+                      blurb={CATALOG_BLURB["india-popular"]}
+                      places={inCatalog("india-popular").filter((p) => !bookableSlugs.has(p.slug))}
+                    />
+                    <SubBand
+                      head="Offbeat"
+                      blurb={CATALOG_BLURB["india-offbeat"]}
+                      places={inCatalog("india-offbeat").filter((p) => !bookableSlugs.has(p.slug))}
+                    />
+                  </>
+                ) : (
+                  <SubBand head={book.length ? "More to explore" : "Every place"} places={rest} />
+                )}
               </div>
+            );
+          })()}
+        </section>
+      ) : (
+        // ── Default: in-season grid + bookable strip + by-season link ──
+        <>
+          <section style={{ marginBottom: 56 }}>
+            <p className="kicker">At their best</p>
+            <h2 className="display" style={{ fontSize: "clamp(1.6rem,3.4vw,2.2rem)", margin: "2px 0 8px" }}>
+              In season this {MONTH_FULL[month]}
+            </h2>
+            <p style={{ color: "var(--pk-muted)", fontSize: "0.95rem", maxWidth: "58ch", marginBottom: 18 }}>
+              The places at their seasonal peak right now — dry, comfortable, open. Across every lane.
+            </p>
+            {seasonal.length ? (
+              <CardGrid places={seasonal} showIntent />
             ) : (
-              <CardGrid places={intentItems} />
+              <p style={{ color: "var(--pk-muted)", fontSize: "0.95rem" }}>
+                Shoulder season almost everywhere this month — pick a lane above, or{" "}
+                <Link href="/destinations/calendar" style={{ color: "var(--pk-accent-deep)" }}>
+                  browse by season
+                </Link>
+                .
+              </p>
             )}
           </section>
-        );
-      })}
 
-      <p style={{ textAlign: "center", color: "var(--pk-muted)", fontSize: "0.84rem", marginTop: 8 }}>
-        Reference figures as of June 2026 · seasons and access change — we reconfirm before we quote.{" "}
+          <BookableStrip places={bookablePlaces} />
+
+          <p style={{ color: "var(--pk-muted)", fontSize: "0.9rem", marginBottom: 8 }}>
+            <Link href="/destinations/calendar" style={{ color: "var(--pk-accent-deep)", textDecoration: "none", fontWeight: 600 }}>
+              Browse every place by season →
+            </Link>
+          </p>
+        </>
+      )}
+
+      <p style={{ textAlign: "center", color: "var(--pk-muted)", fontSize: "0.84rem", marginTop: 32 }}>
         <Link href="/start" style={{ color: "var(--pk-accent-deep)", textDecoration: "none" }}>
           Not sure where to start? →
         </Link>

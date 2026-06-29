@@ -127,7 +127,7 @@ export default function LegalTabs() {
       </nav>
       <article id={articleId} style={{ padding: 30, maxWidth: "64ch" }}>
         <h2 className="display" style={{ fontSize: "1.7rem" }}>{doc.title}</h2>
-        <p className="eyebrow">DPDP-aligned · last updated 26 Jun 2026</p>
+        <p className="eyebrow">Last updated 26 Jun 2026</p>
         <div style={{ display: "grid", gap: 4, marginTop: 14 }}>
           {doc.blocks.map((b, idx) => (
             <p key={idx} style={b.isHeading ? headingStyle : bodyStyle}>

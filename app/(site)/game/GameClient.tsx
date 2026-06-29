@@ -46,13 +46,13 @@ type Stage =
 
 // ── Dimension definitions (from DCLogic.DIMS) ───────────────────────────────
 const DIMS = [
-  { key: "terrain", legend: "1 · Terrain",      options: ["Mountains", "Forests", "Deserts & Canyons", "Coast & Islands", "Villages & Culture"] },
-  { key: "vibe",    legend: "2 · Trip vibe",     options: ["Wild", "Slow", "Social", "Spiritual"] },
-  { key: "who",     legend: "3 · Who's coming",  options: ["Solo", "Partner", "Squad", "Family"] },
-  { key: "long",    legend: "4 · How long",      options: ["3–4 days", "5–7 days", "10+ days"] },
-  { key: "comfort", legend: "5 · Comfort",       options: ["Shoestring", "Mid", "Premium"] },
-  { key: "origin",  legend: "6 · Where from",    options: ["North", "West", "South", "East", "Central"] },
-  { key: "reach",   legend: "7 · How far",       options: ["Near", "Far", "Anywhere"] },
+  { key: "terrain", legend: "Terrain",      options: ["Mountains", "Forests", "Deserts & Canyons", "Coast & Islands", "Villages & Culture"] },
+  { key: "vibe",    legend: "Trip vibe",    options: ["Wild", "Slow", "Social", "Spiritual"] },
+  { key: "who",     legend: "Who's coming", options: ["Solo", "Partner", "Squad", "Family"] },
+  { key: "long",    legend: "How long",     options: ["3–4 days", "5–7 days", "10+ days"] },
+  { key: "comfort", legend: "Comfort",      options: ["Shoestring", "Mid", "Premium"] },
+  { key: "origin",  legend: "Where from",   options: ["North", "West", "South", "East", "Central"] },
+  { key: "reach",   legend: "How far",      options: ["Near", "Far", "Anywhere"] },
 ] as const;
 
 type DimKey = (typeof DIMS)[number]["key"];
@@ -378,7 +378,6 @@ export default function GameClient({ destinations }: { destinations: Destination
             <div className="star" />
           </div>
           <p className="poetry" style={{ color: "var(--pk-on-ink)", marginTop: 22, fontSize: "1.3rem" }}>Your star is choosing…</p>
-          <p style={{ color: "oklch(1 0 0 / .6)", fontSize: "0.8rem", marginTop: 4 }}>drawing from the top 5 places that fit your seven</p>
         </div>
       )}
 
@@ -470,10 +469,10 @@ export default function GameClient({ destinations }: { destinations: Destination
               onChange={(e) => setConsent(e.target.checked)}
               style={{ marginTop: 3, accentColor: "var(--pk-ink)" }}
             />
+            {/* DPDP: consent is opt-in (box starts unticked) — enforced in handleSendOtp, not labelled here. */}
             <span>
               I agree Driftibo may contact me about this trip, per the{" "}
-              <Link href="/legal" style={{ color: "var(--pk-accent-deep)" }}>Privacy Notice</Link>.{" "}
-              <em style={{ fontStyle: "normal", color: "var(--pk-accent-deep)", fontWeight: 600 }}>DPDP — not pre-ticked.</em>
+              <Link href="/legal" style={{ color: "var(--pk-accent-deep)" }}>Privacy Notice</Link>.
             </span>
           </label>
           {sendError && (
@@ -677,22 +676,24 @@ export default function GameClient({ destinations }: { destinations: Destination
         </div>
       )}
 
-      {/* ── Restart — full FSM reset ── */}
-      <div style={{ textAlign: "center", marginTop: 30 }}>
-        <button
-          onClick={() => {
-            reset();           // hook: clears digits, errors, sending/verifying
-            setEmail("");
-            setWhatsapp("");
-            setConsent(false);
-            setCountdown(588);
-            go("wizard");
-          }}
-          style={{ background: "none", border: 0, color: "var(--pk-muted)", fontFamily: "var(--ui)", fontWeight: 600, fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}
-        >
-          ✦ Start the game over
-        </button>
-      </div>
+      {/* ── Restart — full FSM reset. Only past the spin, so it never competes with the first CTA. ── */}
+      {idx > ORDER.indexOf("spin") && (
+        <div style={{ textAlign: "center", marginTop: 30 }}>
+          <button
+            onClick={() => {
+              reset();           // hook: clears digits, errors, sending/verifying
+              setEmail("");
+              setWhatsapp("");
+              setConsent(false);
+              setCountdown(588);
+              go("wizard");
+            }}
+            style={{ background: "none", border: 0, color: "var(--pk-muted)", fontFamily: "var(--ui)", fontWeight: 600, fontSize: "0.8rem", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}
+          >
+            ✦ Start the game over
+          </button>
+        </div>
+      )}
 
     </main>
   );

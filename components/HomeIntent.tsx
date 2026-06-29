@@ -19,12 +19,12 @@ export default function HomeIntent() {
   return (
     <section style={{ maxWidth: 1080, margin: "0 auto", padding: "72px 24px" }}>
       <div style={{ textAlign: "center", marginBottom: 30 }}>
-        <p className="kicker">Start here</p>
+        <p className="kicker">Pick your lane</p>
         <h2 className="display" style={{ fontSize: "clamp(1.7rem,3.6vw,2.4rem)", marginTop: 6 }}>
           What kind of trip?
         </h2>
         <p className="lede" style={{ maxWidth: "46ch", margin: "8px auto 0" }}>
-          Pick a lane and the whole site points you at the right places. Change it anytime from the nav.
+          Pick a lane and the whole site points you at the right places.
         </p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 16 }}>

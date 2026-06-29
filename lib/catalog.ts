@@ -112,6 +112,28 @@ export function catalogCounts(): Record<Catalog, number> {
   ) as Record<Catalog, number>;
 }
 
+// Three-letter month abbreviations, index-aligned to Date#getMonth() (0 = Jan).
+export const MONTH_ABBR = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+] as const;
+
+// The current month's abbreviation, e.g. "Jun". Resolves at request time on a
+// dynamic page; freezes at build time on a static one (see destinations/page note).
+export function currentMonthAbbr(): string {
+  return MONTH_ABBR[new Date().getMonth()];
+}
+
+// Every place whose climate is rated "ideal" in month `m` (e.g. "Jun"), tagged with
+// its catalog. The seasonal heartbeat shared by Explore's default view and the
+// calendar — one definition of "in season", reused in both.
+export function idealInMonth(m: string): PlaceWithCatalog[] {
+  return allPlaces().filter((p) => {
+    const c = p.climate.find((x) => x.m === m);
+    return !!c && (c.rate || "").toLowerCase() === "ideal";
+  });
+}
+
 // The 3 committed landmark photos for a place, as public URLs.
 // /visual-bank/<catalog>/<slug>-{1,2,3}.jpg
 export function images(slug: string, catalog: Catalog): [string, string, string] {

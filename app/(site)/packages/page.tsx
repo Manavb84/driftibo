@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import WhatsAppClose from "@/components/WhatsAppClose";
 import { getPackages, minTierPrice } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -84,17 +83,11 @@ export default async function PackagesPage() {
                 </div>
                 <p style={{ fontSize: "0.78rem", color: "var(--pk-muted)", maxWidth: "22ch", textAlign: "right" }}>{p.departures ? p.departures : `${p.nights} · stay, transfers, a guided day. Verified.`}</p>
               </div>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
-                <Link href={`/packages/${p.slug}`} className="btn btn-ghost btn-sm">
-                  See full details →
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <Link href={`/packages/${p.slug}`} className="btn btn-ghost">
+                  See the trip →
                 </Link>
               </div>
-              <WhatsAppClose
-                eyebrow="Take this one"
-                heading={p.cta}
-                sub="We'll confirm dates and what's included on chat — then it's yours."
-                context={p.context}
-              />
             </div>
           </div>
         </section>

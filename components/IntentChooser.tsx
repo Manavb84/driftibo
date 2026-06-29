@@ -85,7 +85,7 @@ export default function IntentChooser({ mode }: { mode: "overlay" | "page" }) {
             </h1>
             <p className="lede" style={{ maxWidth: "44ch", margin: "0 auto", color: "var(--pk-text)" }}>
               Pick one. We&apos;ll point you straight at the right places — honest briefs, best
-              seasons, real photos. No pricing here.
+              seasons, real photos.
             </p>
           </div>
 
@@ -156,8 +156,7 @@ export default function IntentChooser({ mode }: { mode: "overlay" | "page" }) {
             What kind of trip?
           </h2>
           <p className="lede" style={{ maxWidth: "40ch", margin: "0 auto" }}>
-            Pick a lane and the whole site points you at the right places. Change it anytime from the
-            nav.
+            Pick a lane and the whole site points you at the right places.
           </p>
         </div>
 

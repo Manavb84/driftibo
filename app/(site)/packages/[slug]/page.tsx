@@ -277,30 +277,22 @@ export default async function PackagePage({ params }: Props) {
                         </p>
                       </div>
                       {t.blurb && (
-                        <p style={{ fontSize: "0.86rem", color: "var(--pk-text)" }}>{t.blurb}</p>
+                        <p style={{ fontSize: "0.92rem", color: "var(--pk-text)", lineHeight: 1.5 }}>
+                          {t.blurb}
+                        </p>
                       )}
                       {t.inclusions.length > 0 && (
-                        <ul style={{ listStyle: "none", display: "grid", gap: 5, margin: 0, padding: 0 }}>
-                          {t.inclusions.map((x) => (
-                            <li key={x} style={{ fontSize: "0.84rem", display: "flex", gap: 8 }}>
-                              <span style={{ color: "oklch(0.6 0.13 150)", fontWeight: 700 }}>✓</span>
-                              <span>{x}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                      {t.exclusions.length > 0 && (
-                        <ul style={{ listStyle: "none", display: "grid", gap: 5, margin: 0, padding: 0 }}>
-                          {t.exclusions.map((x) => (
-                            <li
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                          {t.inclusions.slice(0, 4).map((x) => (
+                            <span
                               key={x}
-                              style={{ fontSize: "0.84rem", display: "flex", gap: 8, color: "var(--pk-muted)" }}
+                              className="pill"
+                              style={{ cursor: "default", fontSize: "0.72rem" }}
                             >
-                              <span style={{ color: "oklch(0.6 0.16 25)", fontWeight: 700 }}>✗</span>
-                              <span>{x}</span>
-                            </li>
+                              {x}
+                            </span>
                           ))}
-                        </ul>
+                        </div>
                       )}
                       <a
                         href={waLink(`the ${pkg.name} — ${t.label} tier (₹${inr(t.priceINR)}, ${t.nights})`)}
@@ -314,13 +306,6 @@ export default async function PackagePage({ params }: Props) {
                     </div>
                   ))}
                 </div>
-                <p style={{ fontSize: "0.78rem", color: "var(--pk-muted)", marginTop: 12 }}>
-                  Prices are honest per-person estimates, confirmed on chat. See our{" "}
-                  <Link href="/legal#refund" style={{ color: "var(--pk-accent-deep)" }}>
-                    cancellation &amp; refund policy
-                  </Link>
-                  .
-                </p>
               </div>
             )}
 

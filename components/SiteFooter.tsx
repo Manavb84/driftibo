@@ -89,6 +89,7 @@ function TalkToUs() {
               outline: "none",
             }}
           />
+          {/* DPDP: consent is opt-in (box starts unticked) — enforced in code, not labelled in the UI. */}
           <label style={{ display: "flex", gap: 8, fontSize: "0.72rem", color: "var(--pk-on-ink)", opacity: 0.78, lineHeight: 1.45 }}>
             <input
               type="checkbox"
@@ -98,7 +99,7 @@ function TalkToUs() {
             />
             <span>
               I agree Driftibo may contact me, per the{" "}
-              <Link href="/legal#privacy" style={{ color: "var(--pk-accent)" }}>Privacy Notice</Link>. DPDP — not pre-ticked.
+              <Link href="/legal#privacy" style={{ color: "var(--pk-accent)" }}>Privacy Notice</Link>.
             </span>
           </label>
           <button
@@ -167,7 +168,7 @@ export default function SiteFooter() {
             ]}
           />
           <Col
-            title="Read"
+            title="Discover"
             links={[
               ["/destinations", "Destinations"],
               ["/journal", "Journal"],
@@ -178,8 +179,7 @@ export default function SiteFooter() {
           <Col
             title="Legal"
             links={[
-              ["/legal", "Privacy"],
-              ["/legal", "Terms"],
+              ["/legal", "Privacy & terms"],
               ["/legal#refund", "Refund policy"],
             ]}
           />
@@ -200,7 +200,7 @@ export default function SiteFooter() {
           fontSize: "0.76rem",
         }}
       >
-        <span>© 2026 Driftibo · Travel by your own star · #StarSent</span>
+        <span>© 2026 Driftibo · Travel by your own star</span>
         <span>Made in India · real corners of it</span>
       </div>
     </footer>

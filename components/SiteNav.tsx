@@ -189,7 +189,7 @@ export default function SiteNav() {
               <span style={{ opacity: 0.65 }}>✦</span>{" "}
               {intent ? (
                 <>
-                  {INTENT_LABEL[intent]} <span style={{ opacity: 0.55, fontWeight: 600 }}>· change?</span>
+                  {INTENT_LABEL[intent]} <span style={{ opacity: 0.55, fontWeight: 600 }}>✦ not you?</span>
                 </>
               ) : (
                 "Where to?"
@@ -246,7 +246,7 @@ export default function SiteNav() {
             }}
           >
             <span style={{ opacity: 0.7 }}>✦</span>{" "}
-            {intent ? `Trip type: ${INTENT_LABEL[intent]} · change?` : "What kind of trip?"}
+            {intent ? `${INTENT_LABEL[intent]} ✦ not you?` : "What kind of trip?"}
           </button>
           {NAV.map((l) => (
             <Link

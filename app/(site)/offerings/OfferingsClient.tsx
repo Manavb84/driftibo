@@ -2,8 +2,8 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import WhatsAppClose from "@/components/WhatsAppClose";
 import { PERSONA } from "@/lib/persona";
+import { waLink } from "@/lib/site";
 import { submitCapture } from "@/lib/actions";
 import type { Offering } from "@/lib/content";
 
@@ -293,10 +293,10 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
                   onChange={(e) => setConsent(e.target.checked)}
                   style={{ marginTop: 3, accentColor: "var(--pk-ink)" }}
                 />
+                {/* DPDP: consent is opt-in (box starts unticked) — kept in code, not shouted in the UI. */}
                 <span>
                   I agree Driftibo may contact me about this trip via WhatsApp/email, per the{" "}
-                  <Link href="/legal#privacy" style={{ color: "var(--pk-accent-deep)" }}>Privacy Notice</Link>.{" "}
-                  <em style={{ fontStyle: "normal", color: "var(--pk-accent-deep)", fontWeight: 600 }}>DPDP — not pre-ticked.</em>
+                  <Link href="/legal#privacy" style={{ color: "var(--pk-accent-deep)" }}>Privacy Notice</Link>.
                 </span>
               </label>
 
@@ -324,12 +324,18 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
           )}
         </div>
 
-        <WhatsAppClose
-          eyebrow={offering}
-          heading="Send it to a human"
-          sub="We read it, reply in under 60 seconds, and take it from there on chat."
-          context={formContext}
-        />
+        {/* Secondary path — the form is primary; this is the quiet escape hatch. */}
+        <p style={{ textAlign: "center", fontSize: "0.86rem", color: "var(--pk-muted)", marginTop: 2 }}>
+          Rather skip the form?{" "}
+          <a
+            href={waLink(formContext)}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "var(--pk-accent-deep)", fontWeight: 600, textDecoration: "none" }}
+          >
+            WhatsApp us ✦
+          </a>
+        </p>
       </div>
     </main>
   );
