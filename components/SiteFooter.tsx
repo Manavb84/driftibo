@@ -161,6 +161,7 @@ export default function SiteFooter() {
           <Col
             title="Plan"
             links={[
+              ["/start", "What kind of trip?"],
               ["/offerings", "Plan with us"],
               ["/packages", "Packages"],
             ]}

@@ -1,443 +1,297 @@
-"use client";
-
-import { useState } from "react";
+// Info-first detail view for any of the 83 catalogue places. SERVER component —
+// no pricing, no inclusions (those live in /packages for the 5 bookable). Rebuilt to
+// the brand's editorial language: ~10 sections, the Book CTA near the top, and the
+// logistics clutter (climate grid / getting-there / permits / stay / pairs-with /
+// standalone day-trips) deleted or folded into a <details> tray.
 import Link from "next/link";
-import type { Destination } from "@/lib/content";
-import WhatsAppClose from "@/components/WhatsAppClose";
+import type { PlaceWithCatalog } from "@/lib/catalog";
+import { CATALOG_LABEL } from "@/lib/catalog";
 import { waLink } from "@/lib/site";
-import { track } from "@/lib/analytics";
 
-type View = "detail" | "itin";
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="kicker">{title}</p>
+      <div style={{ marginTop: 10 }}>{children}</div>
+    </div>
+  );
+}
 
-// Explore page → the package where you actually pick a tier & price.
-const DEST_TO_PACKAGE: Record<string, string> = {
-  chopta: "temple-ridge",
-  spiti: "cold-desert",
-  ziro: "rice-and-fog",
-  gokarna: "slow-coast",
-  "char-dham": "char-dham-circuit",
-};
+function Bullets({ items }: { items: string[] }) {
+  return (
+    <ul style={{ margin: "0 0 0 18px", display: "grid", gap: 7, fontSize: "0.9rem", color: "var(--pk-muted)" }}>
+      {items.map((x) => (
+        <li key={x} style={{ lineHeight: 1.5 }}>
+          {x}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
-export default function DestinationClient({ dest }: { dest: Destination }) {
-  const packageSlug = DEST_TO_PACKAGE[dest.slug];
-  const [view, setView] = useState<View>("detail");
-  const [copied, setCopied] = useState(false);
+// One prose temperature sentence from the best-month climate — replaces the 12-cell grid.
+function tempSentence(place: PlaceWithCatalog): string | null {
+  if (!place.bestMonths.length) return null;
+  const entries = place.climate.filter((c) => place.bestMonths.includes(c.m));
+  if (!entries.length) return null;
+  const hi = Math.round(entries.reduce((s, c) => s + c.hi, 0) / entries.length);
+  const lo = Math.round(entries.reduce((s, c) => s + c.lo, 0) / entries.length);
+  return `In season, days sit around ${hi}° and nights near ${lo}°.`;
+}
 
-  const context = `${dest.name} (${dest.region}) — the ${dest.dayCount} sample drift`;
-  const waHref = waLink(`I want to drift to ${dest.name} — ${dest.dayCount}`);
+export default function DestinationView({
+  place,
+  images,
+  heroImageUrl,
+  packageSlug,
+}: {
+  place: PlaceWithCatalog;
+  images: string[];
+  heroImageUrl: string;
+  packageSlug: string | null;
+}) {
+  const waHref = waLink(`tell me more about ${place.name} (${place.region.split("·")[0].trim()})`);
+  const temp = tempSentence(place);
+  const gt = place.gettingThere;
+  const hasLogistics = !!(gt.air || gt.rail || gt.road || place.permits || (place.dayTrips && place.dayTrips.length));
 
-  function go(v: View) {
-    setView(v);
-    try {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (_) {}
-  }
-
-  async function handleCopy() {
-    track("share_click", { destination: dest.slug, method: "copy_link" });
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch (_) {}
-  }
-
-  async function handleShare() {
-    track("share_click", { destination: dest.slug, method: "native_or_whatsapp" });
-    const url = window.location.href;
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({ title: dest.name, url });
-        return;
-      } catch (_) {}
-    }
-    // Fallback: open WhatsApp share
-    window.open(waLink(`check out ${dest.name} on Driftibo`), "_blank", "noopener");
-  }
-
-  // ── DETAIL VIEW ───────────────────────────────────────────────────────────
-  if (view === "detail") {
-    return (
-      <main
-        style={{ padding: "96px 22px 72px", maxWidth: 1000, margin: "0 auto", minHeight: "100vh" }}
+  return (
+    <main style={{ padding: "96px 22px 72px", maxWidth: 1000, margin: "0 auto", minHeight: "100vh" }}>
+      <Link
+        href="/destinations"
+        style={{
+          color: "var(--pk-muted)",
+          fontFamily: "var(--ui)",
+          fontWeight: 600,
+          fontSize: "0.84rem",
+          marginBottom: 14,
+          display: "inline-block",
+          textDecoration: "none",
+        }}
       >
-        <Link
-          href="/destinations"
-          style={{
-            background: "none",
-            border: 0,
-            color: "var(--pk-muted)",
-            fontFamily: "var(--ui)",
-            fontWeight: 600,
-            fontSize: "0.84rem",
-            cursor: "pointer",
-            marginBottom: 14,
-            display: "inline-block",
-            textDecoration: "none",
-          }}
-        >
-          ← all destinations
-        </Link>
+        ← all places
+      </Link>
 
-        <article
-          style={{
-            background: "var(--pk-card)",
-            borderRadius: 24,
-            overflow: "hidden",
-            boxShadow: "var(--pk-shadow)",
-          }}
-        >
-          {/* HERO HEADER */}
-          <header
-            style={{ position: "relative", height: 300, display: "flex", alignItems: "flex-end" }}
-          >
-            <div
-              className={`well bg ${dest.scene}`}
-              style={{ position: "absolute", inset: 0, ...(dest.heroImageUrl ? { backgroundImage: `url(${dest.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }}
-            />
-            <div
-              style={{
-                position: "relative",
-                padding: 28,
-                textShadow: "0 2px 18px oklch(0.3 0.06 225 / .5)",
-              }}
-            >
-              <p className="kicker" style={{ color: "var(--pk-on-ink)" }}>
-                {dest.region} · {dest.alt}
-              </p>
-              <h1
-                className="display-xl"
-                style={{
-                  fontSize: "clamp(2.4rem,7vw,3.6rem)",
-                  color: "var(--pk-on-ink)",
-                }}
-              >
-                {dest.name}
-              </h1>
-            </div>
-          </header>
-
-          {/* BODY */}
-          <div style={{ padding: 30, display: "grid", gap: 24 }}>
-            <p className="lede" style={{ maxWidth: "60ch" }}>
-              {dest.lede}
+      <article style={{ background: "var(--pk-card)", borderRadius: "var(--r-lg)", overflow: "hidden", boxShadow: "var(--pk-shadow)" }}>
+        {/* 1 · HERO */}
+        <header style={{ position: "relative", height: 380, display: "flex", alignItems: "flex-end" }}>
+          <div
+            className="well bg"
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: `url(${heroImageUrl})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(0deg, oklch(0.18 0.05 232 / .62), transparent 58%)",
+            }}
+          />
+          <div style={{ position: "relative", padding: 28, textShadow: "0 2px 18px oklch(0.3 0.06 225 / .6)" }}>
+            <p className="kicker" style={{ color: "var(--pk-on-ink)" }}>
+              {CATALOG_LABEL[place.catalog]} · {place.region.split("·")[0].trim()}
             </p>
+            <h1 className="display-xl" style={{ fontSize: "clamp(2.4rem,7vw,3.6rem)", color: "var(--pk-on-ink)" }}>
+              {place.name}
+            </h1>
+          </div>
+        </header>
 
-            {/* CATCHES + NUMBERS */}
+        {/* BODY */}
+        <div style={{ padding: 30, display: "grid", gap: 28 }}>
+          {/* 2 · PITCH */}
+          <p className="lede" style={{ maxWidth: "62ch" }}>
+            {place.pitch}
+          </p>
+
+          {/* 3 · GO IN — best months + why-go (two-col band, no climate grid) */}
+          {(place.bestMonths.length > 0 || place.whyGo) && (
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
-                gap: 24,
+                gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr)",
+                gap: 26,
+                background: "var(--pk-panel)",
+                borderRadius: "var(--r-md)",
+                padding: 22,
               }}
             >
-              <div>
-                <p className="kicker">The catches</p>
-                <ul
-                  style={{
-                    margin: "10px 0 0 18px",
-                    fontSize: "0.9rem",
-                    color: "var(--pk-muted)",
-                    display: "grid",
-                    gap: 6,
-                  }}
-                >
-                  {dest.catches.map((x) => (
-                    <li key={x}>{x}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <p className="kicker">Real numbers</p>
-                <ul
-                  style={{
-                    margin: "10px 0 0 18px",
-                    fontSize: "0.9rem",
-                    color: "var(--pk-muted)",
-                    display: "grid",
-                    gap: 6,
-                  }}
-                >
-                  {dest.numbers.map((x) => (
-                    <li key={x}>{x}</li>
-                  ))}
-                </ul>
-              </div>
+              {place.bestMonths.length > 0 && (
+                <div>
+                  <p className="kicker">Go in</p>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+                    {place.bestMonths.map((m) => (
+                      <span key={m} className="pill is-on">
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+                  {temp && (
+                    <p style={{ fontSize: "0.84rem", color: "var(--pk-muted)", marginTop: 10, lineHeight: 1.55 }}>
+                      {temp}
+                    </p>
+                  )}
+                </div>
+              )}
+              {place.whyGo && (
+                <div>
+                  <p className="kicker">Why go</p>
+                  <p style={{ fontSize: "0.95rem", color: "var(--pk-text)", lineHeight: 1.65, marginTop: 10 }}>
+                    {place.whyGo}
+                  </p>
+                </div>
+              )}
             </div>
+          )}
 
-            {/* PRICE BADGE */}
+          {/* 4 · BOOK CTA (5 bookable only) — near the top, as a dark callout */}
+          {packageSlug && (
             <div
+              className="callout-ink"
               style={{
+                padding: "22px 24px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 gap: 16,
                 flexWrap: "wrap",
-                background: "var(--pk-panel)",
-                borderRadius: 16,
-                padding: "18px 20px",
               }}
             >
               <div>
-                <p
-                  style={{
-                    fontFamily: "var(--ui)",
-                    fontWeight: 700,
-                    fontSize: "0.62rem",
-                    letterSpacing: "0.16em",
-                    textTransform: "uppercase",
-                    color: "var(--pk-muted)",
-                  }}
-                >
-                  Looks like a lakh
+                <p className="kicker">We package this one</p>
+                <p style={{ fontFamily: "var(--display)", fontSize: "1.35rem", color: "var(--pk-on-ink)", marginTop: 4 }}>
+                  Ready to book {place.name}?
                 </p>
-                <p style={{ fontFamily: "var(--display)", fontSize: "1.7rem" }}>
-                  {dest.rate}{" "}
-                  <span style={{ fontSize: "0.78rem", color: "var(--pk-muted)" }}>
-                    / person / day
-                  </span>
+                <p style={{ fontSize: "0.86rem", color: "var(--pk-on-ink)", opacity: 0.78, marginTop: 2 }}>
+                  See tiers, inclusions and from-prices.
                 </p>
               </div>
-              <p
-                style={{
-                  fontSize: "0.8rem",
-                  color: "var(--pk-muted)",
-                  maxWidth: "24ch",
-                  textAlign: "right",
-                }}
-              >
-                Stay, transfers, a guided day. Verified, never inflated.
-              </p>
-            </div>
-
-            {/* INCLUSIONS / EXCLUSIONS — data-driven ✓/✗ */}
-            {(dest.inclusions.length > 0 || dest.exclusions.length > 0) && (
-              <div
-                style={{
-                  background: "var(--pk-panel)",
-                  borderRadius: 16,
-                  padding: 20,
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
-                  gap: 20,
-                }}
-              >
-                {dest.inclusions.length > 0 && (
-                  <div>
-                    <p className="kicker">What&apos;s included</p>
-                    <ul style={{ listStyle: "none", margin: "10px 0 0", padding: 0, display: "grid", gap: 6 }}>
-                      {dest.inclusions.map((x) => (
-                        <li key={x} style={{ fontSize: "0.86rem", display: "flex", gap: 8 }}>
-                          <span style={{ color: "oklch(0.6 0.13 150)", fontWeight: 700 }}>✓</span>
-                          <span>{x}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {dest.exclusions.length > 0 && (
-                  <div>
-                    <p className="kicker">Not included</p>
-                    <ul style={{ listStyle: "none", margin: "10px 0 0", padding: 0, display: "grid", gap: 6 }}>
-                      {dest.exclusions.map((x) => (
-                        <li key={x} style={{ fontSize: "0.86rem", display: "flex", gap: 8, color: "var(--pk-muted)" }}>
-                          <span style={{ color: "oklch(0.6 0.16 25)", fontWeight: 700 }}>✗</span>
-                          <span>{x}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* See the priced package options */}
-            {packageSlug && (
-              <Link
-                href={`/packages/${packageSlug}`}
-                className="btn btn-primary btn-sm"
-                style={{ justifySelf: "start", textDecoration: "none" }}
-              >
-                See package options &amp; prices →
+              <Link href={`/packages/${packageSlug}`} className="btn btn-accent" style={{ textDecoration: "none" }}>
+                See the package →
               </Link>
-            )}
-
-            {/* MOOD ITINERARY */}
-            <div
-              style={{ background: "var(--pk-panel)", borderRadius: 16, padding: 22 }}
-            >
-              <p className="kicker">Mood itinerary</p>
-              <p className="poetry" style={{ fontSize: "1.2rem", marginTop: 6 }}>
-                {dest.mood}
-              </p>
             </div>
+          )}
 
-            {/* CTA BUTTONS — WhatsApp is primary */}
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <a
-                href={waHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-accent"
-                onClick={() => track("destination_whatsapp_click", { destination: dest.slug })}
-              >
-                Chat on WhatsApp ✦
-              </a>
-              <button
-                onClick={() => go("itin")}
-                className="btn btn-ghost"
-              >
-                See the full itinerary →
-              </button>
-            </div>
-          </div>
-        </article>
-      </main>
-    );
-  }
-
-  // ── ITINERARY VIEW ────────────────────────────────────────────────────────
-  return (
-    <main
-      style={{ padding: "96px 22px 72px", maxWidth: 1000, margin: "0 auto", minHeight: "100vh" }}
-    >
-      <button
-        onClick={() => go("detail")}
-        style={{
-          background: "none",
-          border: 0,
-          color: "var(--pk-muted)",
-          fontFamily: "var(--ui)",
-          fontWeight: 600,
-          fontSize: "0.84rem",
-          cursor: "pointer",
-          marginBottom: 14,
-        }}
-      >
-        ← back to {dest.name}
-      </button>
-
-      <article
-        style={{
-          background: "var(--pk-card)",
-          borderRadius: 24,
-          overflow: "hidden",
-          boxShadow: "var(--pk-shadow)",
-          maxWidth: 720,
-          margin: "0 auto",
-        }}
-      >
-        {/* ITINERARY HERO */}
-        <header
-          style={{ position: "relative", height: 240, display: "flex", alignItems: "flex-end" }}
-        >
-          <div
-            className={`well bg ${dest.scene}`}
-            style={{ position: "absolute", inset: 0, ...(dest.heroImageUrl ? { backgroundImage: `url(${dest.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }}
-          />
-          <div
-            style={{
-              position: "relative",
-              padding: 26,
-              textShadow: "0 2px 18px oklch(0.3 0.06 225 / .5)",
-            }}
-          >
-            <p className="kicker" style={{ color: "var(--pk-on-ink)" }}>
-              {dest.dayCount} · sample drift · {dest.region}
-            </p>
-            <h1
-              className="display-xl"
-              style={{
-                fontSize: "clamp(2.2rem,6vw,3.2rem)",
-                color: "var(--pk-on-ink)",
-              }}
-            >
-              {dest.name}
-            </h1>
-          </div>
-        </header>
-
-        {/* ITINERARY BODY */}
-        <div style={{ padding: 28, display: "grid", gap: 22 }}>
-          {/* SHARE ACTIONS */}
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={handleShare}
-            >
-              Share · IG Story
-            </button>
-            <a
-              className="btn btn-sm"
-              href={waHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                background: "oklch(0.72 0.13 150)",
-                color: "oklch(0.22 0.05 150)",
-              }}
-              onClick={() => track("destination_whatsapp_click", { destination: dest.slug, source: "itinerary" })}
-            >
-              WhatsApp
-            </a>
-            <button className="btn btn-ghost btn-sm" onClick={handleCopy}>
-              {copied ? "Copied ✓" : "Copy link"}
-            </button>
-          </div>
-
-          {/* DAY BY DAY */}
-          {dest.days.map((day) => (
-            <div key={day.d} style={{ display: "flex", gap: 18 }}>
-              <span
+          {/* 5 · LANDMARK PHOTOS (4:3) */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 12 }}>
+            {images.map((src, i) => (
+              <div
+                key={src}
+                className="well"
                 style={{
-                  fontFamily: "var(--ui)",
-                  fontWeight: 700,
-                  fontSize: "0.7rem",
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "var(--pk-accent-deep)",
-                  minWidth: 60,
-                  paddingTop: 4,
+                  aspectRatio: "4/3",
+                  borderRadius: "var(--r-md)",
+                  backgroundImage: `url(${src})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
                 }}
-              >
-                {day.d}
-              </span>
-              <div>
-                <h3 className="display" style={{ fontSize: "1.2rem" }}>
-                  {day.t}
-                </h3>
-                <p style={{ color: "var(--pk-muted)", fontSize: "0.9rem", marginTop: 4 }}>
-                  {day.p}
-                </p>
-              </div>
-            </div>
-          ))}
-
-          {/* HONEST CATCHES */}
-          <div style={{ background: "var(--pk-panel)", borderRadius: 16, padding: 20 }}>
-            <p className="kicker">The honest catches</p>
-            <ul
-              style={{
-                margin: "10px 0 0 18px",
-                fontSize: "0.875rem",
-                display: "grid",
-                gap: 6,
-              }}
-            >
-              {dest.catches.map((x) => (
-                <li key={x}>{x}</li>
-              ))}
-            </ul>
+                role="img"
+                aria-label={`${place.name} — view ${i + 1}`}
+              />
+            ))}
           </div>
 
-          {/* WHATSAPP CLOSE */}
-          <WhatsAppClose
-            variant="ink"
-            eyebrow="Like this drift?"
-            heading="Make it yours"
-            sub="We'll tune the dates and what's included on chat — no rate card here."
-            context={context}
-          />
+          {/* 6 · WHAT TO SEE / WHAT TO DO (≤4 each) */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 24 }}>
+            {place.sights.length > 0 && (
+              <Section title="What to see">
+                <Bullets items={place.sights.slice(0, 4)} />
+              </Section>
+            )}
+            {place.activities.length > 0 && (
+              <Section title="What to do">
+                <Bullets items={place.activities.slice(0, 4)} />
+              </Section>
+            )}
+          </div>
+
+          {/* 7 · GOOD TO KNOW (catches, ≤3) */}
+          {place.catches.length > 0 && (
+            <div style={{ background: "var(--pk-panel)", borderRadius: "var(--r-md)", padding: 20 }}>
+              <p className="kicker">Good to know</p>
+              <ul style={{ margin: "10px 0 0 18px", display: "grid", gap: 7, fontSize: "0.88rem", color: "var(--pk-muted)" }}>
+                {place.catches.slice(0, 3).map((x) => (
+                  <li key={x} style={{ lineHeight: 1.55 }}>
+                    {x}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* 8 · TRAYS — ready-made plans + folded logistics (getting-there, permits, day-trips) */}
+          {(place.itineraries["3"] || place.itineraries["5"] || place.itineraries["7"]) && (
+            <Section title="Ready-made plans">
+              <div style={{ display: "grid", gap: 8 }}>
+                {(["3", "5", "7"] as const).map((d) => {
+                  const days = place.itineraries[d];
+                  if (!days || !days.length) return null;
+                  return (
+                    <details key={d} style={{ background: "var(--pk-panel)", borderRadius: 12, padding: "12px 16px" }}>
+                      <summary style={{ cursor: "pointer", fontFamily: "var(--display)", fontSize: "1.05rem", listStyle: "revert" }}>
+                        {d}-day plan
+                      </summary>
+                      <ul style={{ margin: "10px 0 0 18px", display: "grid", gap: 6, fontSize: "0.88rem", color: "var(--pk-muted)" }}>
+                        {days.map((line) => (
+                          <li key={line} style={{ lineHeight: 1.55 }}>
+                            {line}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  );
+                })}
+              </div>
+            </Section>
+          )}
+
+          {hasLogistics && (
+            <details style={{ background: "var(--pk-panel)", borderRadius: 12, padding: "12px 16px" }}>
+              <summary style={{ cursor: "pointer", fontFamily: "var(--display)", fontSize: "1.05rem", listStyle: "revert" }}>
+                Getting there, permits & day trips
+              </summary>
+              <div style={{ display: "grid", gap: 14, marginTop: 12, fontSize: "0.88rem", color: "var(--pk-muted)", lineHeight: 1.6 }}>
+                {(gt.air || gt.rail || gt.road) && (
+                  <div style={{ display: "grid", gap: 6 }}>
+                    {gt.air && <p><b style={{ color: "var(--pk-text)" }}>By air —</b> {gt.air}</p>}
+                    {gt.rail && <p><b style={{ color: "var(--pk-text)" }}>By rail —</b> {gt.rail}</p>}
+                    {gt.road && <p><b style={{ color: "var(--pk-text)" }}>By road —</b> {gt.road}</p>}
+                    <p style={{ fontStyle: "italic" }}>On a Driftibo trip we handle the transfers.</p>
+                  </div>
+                )}
+                {place.permits && (
+                  <p><b style={{ color: "var(--pk-text)" }}>Permits & entry —</b> {place.permits}</p>
+                )}
+                {place.dayTrips && place.dayTrips.length > 0 && (
+                  <div>
+                    <p style={{ color: "var(--pk-text)", fontWeight: 600, marginBottom: 6 }}>Day trips nearby</p>
+                    <Bullets items={place.dayTrips} />
+                  </div>
+                )}
+              </div>
+            </details>
+          )}
+
+          {/* 9 · WHATSAPP + WHEN TO GO */}
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <a href={waHref} target="_blank" rel="noopener noreferrer" className="btn btn-accent">
+              Plan {place.name} on WhatsApp ✦
+            </a>
+            <Link href="/destinations/calendar" className="btn btn-ghost">
+              When to go →
+            </Link>
+          </div>
+
+          {/* 10 · DISCLAIMER */}
+          <p style={{ fontSize: "0.76rem", color: "var(--pk-muted)" }}>
+            Typical figures as of June 2026 — climate, permits and seasonal access change. We reconfirm
+            every detail before we quote.
+          </p>
         </div>
       </article>
     </main>

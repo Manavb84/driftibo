@@ -1,77 +1,101 @@
-// SERVER component — exports metadata + renders the client island.
-// The three-view state (overview/itinerary) lives in DestinationClient.tsx ("use client").
+// SERVER component — info-first detail page for ALL 83 catalogue places.
+// Pricing/inclusions were removed from Explore; the 5 bookable places link out to
+// their /packages/<slug>. Catalogue data is the source of truth; for the 5 bookable
+// we merge the Supabase hero image when it exists.
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getDestination, getDestinations } from "@/lib/content";
-import DestinationClient from "./DestinationClient";
+import {
+  getPlace,
+  allPlaces,
+  images,
+  bookableSlugs,
+  DEST_TO_PACKAGE,
+  CATALOG_LABEL,
+} from "@/lib/catalog";
+import { getDestination } from "@/lib/content";
+import DestinationView from "./DestinationClient";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  return (await getDestinations()).map((d) => ({ slug: d.slug }));
+export function generateStaticParams() {
+  return allPlaces().map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const dest = await getDestination(slug);
-  if (!dest) return {};
-  const image = dest.heroImageUrl ?? dest.portraitImageUrl ?? "/og.jpg";
+  const place = getPlace(slug);
+  if (!place) return {};
+  const image = images(slug, place.catalog)[0];
+  const title = `${place.name} · ${CATALOG_LABEL[place.catalog]} · Driftibo`;
   return {
-    title: `${dest.name} · Destinations · Driftibo`,
-    description: dest.lede,
-    alternates: { canonical: `/destinations/${dest.slug}` },
+    title,
+    description: place.pitch,
+    alternates: { canonical: `/destinations/${place.slug}` },
     openGraph: {
-      title: `${dest.name} · Driftibo`,
-      description: dest.lede,
+      title: `${place.name} · Driftibo`,
+      description: place.pitch,
       images: [image],
       type: "website",
-      url: `/destinations/${dest.slug}`,
+      url: `/destinations/${place.slug}`,
     },
-    twitter: { card: "summary_large_image", title: `${dest.name} · Driftibo`, description: dest.lede, images: [image] },
-  };
-}
-
-// TouristDestination structured data for rich results.
-function destinationJsonLd(dest: NonNullable<Awaited<ReturnType<typeof getDestination>>>) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "TouristDestination",
-    name: dest.name,
-    description: dest.lede,
-    ...(dest.heroImageUrl ? { image: dest.heroImageUrl } : {}),
-    ...(dest.region ? { address: { "@type": "PostalAddress", addressRegion: dest.region, addressCountry: "IN" } } : {}),
-    url: `https://driftibo.com/destinations/${dest.slug}`,
-  };
-}
-
-function destinationBreadcrumb(dest: NonNullable<Awaited<ReturnType<typeof getDestination>>>) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://driftibo.com" },
-      { "@type": "ListItem", position: 2, name: "Destinations", item: "https://driftibo.com/destinations" },
-      { "@type": "ListItem", position: 3, name: dest.name, item: `https://driftibo.com/destinations/${dest.slug}` },
-    ],
+    twitter: {
+      card: "summary_large_image",
+      title: `${place.name} · Driftibo`,
+      description: place.pitch,
+      images: [image],
+    },
   };
 }
 
 export default async function DestinationPage({ params }: Props) {
   const { slug } = await params;
-  const dest = await getDestination(slug);
-  if (!dest) notFound();
+  const place = getPlace(slug);
+  if (!place) notFound();
+
+  const bookable = bookableSlugs.has(slug);
+  // Merge Supabase hero image for the 5 bookable; everyone else uses landmark photo 1.
+  const sup = bookable ? await getDestination(slug) : null;
+  const imgs = images(slug, place.catalog);
+  const heroImageUrl = sup?.heroImageUrl ?? imgs[0];
+  const packageSlug = bookable ? DEST_TO_PACKAGE[slug] ?? null : null;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    name: place.name,
+    description: place.pitch,
+    image: heroImageUrl,
+    address: { "@type": "PostalAddress", addressRegion: place.region },
+    url: `https://driftibo.com/destinations/${place.slug}`,
+  };
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://driftibo.com" },
+      { "@type": "ListItem", position: 2, name: "Explore", item: "https://driftibo.com/destinations" },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: place.name,
+        item: `https://driftibo.com/destinations/${place.slug}`,
+      },
+    ],
+  };
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(destinationJsonLd(dest)) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(destinationBreadcrumb(dest)) }}
+      <DestinationView
+        place={place}
+        images={imgs}
+        heroImageUrl={heroImageUrl}
+        packageSlug={packageSlug}
       />
-      <DestinationClient dest={dest} />
     </>
   );
 }

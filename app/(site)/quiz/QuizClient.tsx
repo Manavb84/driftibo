@@ -231,7 +231,7 @@ export default function QuizClient() {
     textAlign: "left",
     background: "var(--pk-card)",
     border: "1px solid var(--pk-line-soft)",
-    borderRadius: 18,
+    borderRadius: "var(--r-lg)",
     padding: 18,
     display: "flex",
     flexDirection: "column",
@@ -256,10 +256,9 @@ export default function QuizClient() {
   const msg = `Hi Driftibo ✦ — my travel soul is ${arch.name} and my star leans toward ${arch.place}. Send my card?`;
   const waHref = `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(msg)}`;
 
-  // tint string from source is like "filter:hue-rotate(0deg)" or "filter:hue-rotate(150deg) saturate(1.1)"
-  // extract the filter value
-  const archFilter = arch.tint.startsWith("filter:") ? arch.tint.slice("filter:".length).trim() : undefined;
-  const archTintStyle: React.CSSProperties = archFilter ? { filter: archFilter } : {};
+  // The matched archetype's real place photo (all four heroes exist), with a soft
+  // dark scrim baked in so the white card text stays readable over the image.
+  const archHero = `/images/${arch.place.toLowerCase()}-hero.jpg`;
 
   return (
     <main
@@ -418,7 +417,7 @@ export default function QuizClient() {
           <div
             style={{
               position: "relative",
-              borderRadius: 24,
+              borderRadius: "var(--r-lg)",
               overflow: "hidden",
               boxShadow: "var(--pk-shadow-lg)",
               color: "#fff",
@@ -427,7 +426,13 @@ export default function QuizClient() {
           >
             <div
               className="well bg"
-              style={{ position: "absolute", inset: 0, ...archTintStyle }}
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `linear-gradient(180deg, oklch(0.22 0.05 240 / .15), oklch(0.18 0.05 240 / .5)), url(${archHero})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
             />
             <div style={{ position: "relative", padding: "32px 28px" }}>
               <div
@@ -452,17 +457,7 @@ export default function QuizClient() {
                   #StarSent
                 </span>
               </div>
-              <p
-                style={{
-                  fontFamily: "var(--ui)",
-                  fontWeight: 700,
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  fontSize: "0.66rem",
-                  opacity: 0.9,
-                  marginTop: 26,
-                }}
-              >
+              <p className="kicker" style={{ marginTop: 26, opacity: 0.9, color: "#fff" }}>
                 You are
               </p>
               <h2
@@ -497,7 +492,7 @@ export default function QuizClient() {
                   WebkitBackdropFilter: "blur(6px)",
                   border: "1px solid oklch(1 0 0 / .3)",
                   padding: "8px 14px",
-                  borderRadius: 99,
+                  borderRadius: "var(--r-pill)",
                   fontWeight: 600,
                   fontSize: "0.78rem",
                   textShadow: "none",

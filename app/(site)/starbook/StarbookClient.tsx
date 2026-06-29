@@ -1,5 +1,9 @@
 "use client";
 
+// PARKED: not imported anywhere — page.tsx renders StarbookComingSoon instead.
+// This is the full Starbook (sign-in + stamps + badges + Star Drop), preserved
+// for revival once the collection concept is made genuinely relevant.
+
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -160,7 +164,7 @@ export default function StarbookClient({ user, stamps }: Props) {
       </div>
 
       {/* ── 2. Starbook callout-ink card ── */}
-      <div className="callout-ink" style={{ borderRadius: 22, padding: 28 }}>
+      <div className="callout-ink" style={{ borderRadius: "var(--r-lg)", padding: 28 }}>
         {!user ? (
           /* ── Sign-in panel ── */
           <div style={{ maxWidth: 400, margin: "0 auto" }}>
@@ -410,7 +414,7 @@ export default function StarbookClient({ user, stamps }: Props) {
               key={badge.name}
               style={{
                 background: "var(--pk-card)",
-                borderRadius: 16,
+                borderRadius: "var(--r-md)",
                 padding: 18,
                 boxShadow: "var(--pk-shadow-sm)",
                 textAlign: "center",
@@ -528,10 +532,9 @@ export default function StarbookClient({ user, stamps }: Props) {
       {/* ── 5. Star Drop section ── */}
       <div
         id="star-drop"
+        className="callout-ink"
         style={{
-          background:
-            "linear-gradient(150deg,oklch(0.44 0.06 224),oklch(0.34 0.06 228))",
-          borderRadius: 22,
+          borderRadius: "var(--r-lg)",
           padding: 32,
           display: "flex",
           justifyContent: "space-between",

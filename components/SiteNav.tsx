@@ -3,22 +3,26 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type CSSProperties } from "react";
+import { useIntent } from "./IntentProvider";
+import { INTENT_LABEL } from "@/lib/intent";
 
 type NavItem = { href: string; label: string; key: string };
 
+// Explore (the catalogue) leads — games are an add-on, so Play sits after the
+// book-a-trip surfaces (Explore → Plan with us → Packages), not first.
 const NAV: NavItem[] = [
-  { href: "/play", label: "Play", key: "play" },
-  { href: "/packages", label: "Packages", key: "packages" },
   { href: "/destinations", label: "Explore", key: "destinations" },
   { href: "/offerings", label: "Plan with us", key: "offerings" },
+  { href: "/packages", label: "Packages", key: "packages" },
+  { href: "/play", label: "Play", key: "play" },
   { href: "/journal", label: "Journal", key: "journal" },
-  { href: "/starbook", label: "Starbook", key: "starbook" },
   { href: "/about", label: "About", key: "about" },
 ];
 
 export default function SiteNav() {
   const pathname = usePathname();
   const active = (pathname || "/").replace(/^\//, "").split("/")[0];
+  const { intent, openChooser } = useIntent();
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -91,6 +95,36 @@ export default function SiteNav() {
       : { background: "oklch(1 0 0 / .16)", color: "var(--pk-on-ink)", backdropFilter: "blur(6px)" }),
   };
 
+  // Trip-intent chip — lifted verbatim from the old persona nav; adapts to the
+  // transparent/solid sky state. Opens the chooser to switch intent anytime.
+  const chipStyle: CSSProperties = {
+    cursor: "pointer",
+    border: 0,
+    fontFamily: "var(--ui)",
+    fontWeight: 700,
+    fontSize: "0.74rem",
+    padding: "7px 12px",
+    borderRadius: 99,
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 5,
+    ...(sky
+      ? {
+          background: "var(--pk-panel)",
+          color: "var(--pk-text)",
+          boxShadow: "inset 0 0 0 1px var(--pk-line-soft)",
+        }
+      : {
+          // Transparent-nav state sits over hero imagery that can be light or dark —
+          // an ink-tinted scrim + ring + text-shadow keeps the chip legible either way.
+          background: "oklch(0.30 0.05 225 / .35)",
+          color: "var(--pk-on-ink)",
+          backdropFilter: "blur(6px)",
+          boxShadow: "inset 0 0 0 1px oklch(1 0 0 / .3)",
+          textShadow: "0 1px 8px oklch(0.30 0.05 225 / .55)",
+        }),
+  };
+
   return (
     <>
       <nav style={navStyle}>
@@ -146,6 +180,21 @@ export default function SiteNav() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+            <button
+              onClick={openChooser}
+              title="Change your trip type"
+              className="nav-cta"
+              style={chipStyle}
+            >
+              <span style={{ opacity: 0.65 }}>✦</span>{" "}
+              {intent ? (
+                <>
+                  {INTENT_LABEL[intent]} <span style={{ opacity: 0.55, fontWeight: 600 }}>· change?</span>
+                </>
+              ) : (
+                "Where to?"
+              )}
+            </button>
             <Link href="/game" className="nav-cta btn btn-primary btn-sm">
               Spin my star
             </Link>
@@ -179,6 +228,26 @@ export default function SiteNav() {
             gap: 2,
           }}
         >
+          <button
+            onClick={() => {
+              setMenuOpen(false);
+              openChooser();
+            }}
+            style={{
+              ...drawerBase,
+              textAlign: "left",
+              background: "none",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              color: "var(--pk-accent-deep)",
+              fontWeight: 700,
+            }}
+          >
+            <span style={{ opacity: 0.7 }}>✦</span>{" "}
+            {intent ? `Trip type: ${INTENT_LABEL[intent]} · change?` : "What kind of trip?"}
+          </button>
           {NAV.map((l) => (
             <Link
               key={l.key}

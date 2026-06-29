@@ -17,7 +17,7 @@ export default function LegalPage() {
         Questions?{" "}
         <a
           href="mailto:privacy@driftibo.com"
-          style={{ color: "var(--pk-accent-deep)", textDecoration: "none" }}
+          style={{ color: "var(--pk-ink)", textDecoration: "none" }}
         >
           privacy@driftibo.com
         </a>{" "}

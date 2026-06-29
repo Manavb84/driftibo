@@ -97,15 +97,8 @@ export default async function Page({
       <article>
         <Link
           href="/journal"
-          style={{
-            color: "var(--pk-muted)",
-            fontFamily: "var(--ui)",
-            fontWeight: 600,
-            fontSize: "0.84rem",
-            display: "inline-block",
-            marginBottom: 16,
-            textDecoration: "none",
-          }}
+          className="btn btn-ghost btn-sm"
+          style={{ marginBottom: 16 }}
         >
           ← the journal
         </Link>
@@ -115,9 +108,8 @@ export default async function Page({
         </p>
 
         <h1
-          className="display"
+          className="display-xl"
           style={{
-            fontSize: "clamp(2rem,5vw,3rem)",
             maxWidth: "20ch",
             margin: "6px 0 8px",
           }}
@@ -125,7 +117,7 @@ export default async function Page({
           {article.title}
         </h1>
 
-        <p className="eyebrow" style={{ fontSize: "1.15rem" }}>
+        <p className="lede">
           {article.dek}
         </p>
 
@@ -155,7 +147,7 @@ export default async function Page({
           className={`well ${article.scene}`}
           style={{
             aspectRatio: "16/9",
-            borderRadius: 18,
+            borderRadius: "var(--r-lg)",
             margin: "18px 0 24px",
             ...(article.heroImageUrl
               ? { backgroundImage: `url(${article.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }

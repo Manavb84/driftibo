@@ -23,12 +23,12 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://driftibo.com"),
   title: "Driftibo · Travel by your own star",
   description:
-    "Driftibo sends you to real Indian places that look like abroad — six taps, no destination choice. Chopta = mini-Switzerland. Spiti = Iceland. Zero visa.",
+    "Stop choosing. Start packing. Surprise travel, hand-planned: you set the limits, your star picks a real place, and we close it on WhatsApp. Seven taps, no destination choice — India's hidden corners and visa-easy escapes beyond.",
   icons: { icon: "/favicon.svg" },
   openGraph: {
     title: "Driftibo · Travel by your own star",
     description:
-      "The best trips aren't planned. They're sent. Six taps — terrain, vibe, budget — and your star draws a real Indian place.",
+      "The best trips aren't planned. They're sent. Seven taps — terrain, vibe, budget — and your star draws a real place to go.",
     images: ["/og.jpg"],
     type: "website",
   },
@@ -49,7 +49,7 @@ export default function RootLayout({
     url: "https://driftibo.com",
     logo: "https://driftibo.com/favicon.svg",
     description:
-      "Driftibo sends you to real Indian places that look like abroad — six taps, no destination choice.",
+      "Driftibo plans surprise trips to real places — India's hidden corners and easy escapes abroad — and closes them on WhatsApp. You set the limits; your star picks.",
     sameAs: ["https://instagram.com/driftibo"],
   };
   return (

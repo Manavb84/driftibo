@@ -6,11 +6,11 @@ import { getOfferings } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Offerings · Driftibo",
   description:
-    "Four ways to be sent: Surprise me, Custom & honeymoon, Concierge, Corporate offsites. Pick a lane — everything closes on WhatsApp.",
+    "Five ways to be sent: Surprise me, Custom & honeymoon, Concierge, Corporate offsites, and Beyond India. Pick a lane — everything closes on WhatsApp.",
   openGraph: {
     title: "Offerings · Driftibo",
     description:
-      "Four ways to be sent: Surprise me, Custom & honeymoon, Concierge, Corporate offsites. Pick a lane — everything closes on WhatsApp.",
+      "Five ways to be sent: Surprise me, Custom & honeymoon, Concierge, Corporate offsites, and Beyond India. Pick a lane — everything closes on WhatsApp.",
   },
 };
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { SITE } from "@/lib/site";
+import type { Destination, Article } from "@/lib/content";
 
 // ─── types ────────────────────────────────────────────────────────────────────
 type Terrain = "Mountains" | "Coast" | "Desert" | "Culture";
@@ -11,6 +12,7 @@ interface Suggestion {
   region: string;
   place: string;
   line: string;
+  slug: string; // → /destinations/<slug> info page (all four now exist in the catalogue)
 }
 
 // ─── data (faithful to source SUG map) ─────────────────────────────────────────
@@ -19,21 +21,25 @@ const SUG: Record<Terrain, Suggestion> = {
     region: "Uttarakhand",
     place: "Chopta",
     line: "Mini-Switzerland under Tungnath ridge.",
+    slug: "chopta",
   },
   Coast: {
     region: "Karnataka",
     place: "Gokarna",
     line: "Goa’s quieter coast — five cliff beaches.",
+    slug: "gokarna",
   },
   Desert: {
     region: "Himachal",
     place: "Spiti",
     line: "Iceland greys, monastery silence.",
+    slug: "spiti",
   },
   Culture: {
     region: "Karnataka",
     place: "Hampi",
     line: "Boulder temples, an empire in ruins.",
+    slug: "hampi",
   },
 };
 
@@ -48,7 +54,7 @@ const linkPrimaryStyle: React.CSSProperties = {
   textDecoration: "none",
   background: "var(--pk-ink)",
   color: "var(--pk-on-ink)",
-  borderRadius: 16,
+  borderRadius: "var(--r-md)",
   padding: "16px 20px",
   boxShadow: "var(--pk-shadow-sm)",
 };
@@ -61,7 +67,7 @@ const linkStyle: React.CSSProperties = {
   textDecoration: "none",
   color: "var(--pk-text)",
   background: "var(--pk-card)",
-  borderRadius: 16,
+  borderRadius: "var(--r-md)",
   padding: "16px 20px",
   boxShadow: "var(--pk-shadow-sm)",
 };
@@ -73,23 +79,28 @@ const jrowStyle: React.CSSProperties = {
   textDecoration: "none",
   color: "var(--pk-text)",
   background: "var(--pk-card)",
-  borderRadius: 14,
+  borderRadius: "var(--r-md)",
   padding: 10,
   boxShadow: "var(--pk-shadow-sm)",
 };
 
-// ─── portrait images for terrain suggestions ───────────────────────────────────
-const PLACE_PORTRAIT: Record<string, string> = {
-  Chopta: "chopta-portrait",
-  Gokarna: "gokarna-portrait",
-  Spiti: "spiti-portrait",
-};
-
 // ─── component ────────────────────────────────────────────────────────────────
-export default function GoClient() {
+export default function GoClient({
+  destinations,
+  articles,
+}: {
+  destinations: Destination[];
+  articles: Article[];
+}) {
   const [pick, setPick] = useState<Terrain | null>(null);
 
+  // Terrain suggestion portrait + journal thumbs come from the live catalogue, so they
+  // scale with it (a place we add gets its real portrait; Hampi has no place → gradient).
+  const portraitByName = new Map(destinations.map((d) => [d.name, d.portraitImageUrl]));
+  const journal = articles.slice(0, 2);
+
   const sug = pick ? SUG[pick] : null;
+  const sugPortrait = sug ? portraitByName.get(sug.place) ?? null : null;
 
   const sugWaLink = sug
     ? `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(
@@ -105,7 +116,7 @@ export default function GoClient() {
           <span className="ring" />
           <span className="star" />
         </span>
-        <h1 className="display" style={{ fontSize: "1.7rem", marginTop: 12 }}>
+        <h1 className="display-mega" style={{ fontSize: "clamp(1.9rem,7vw,2.6rem)", marginTop: 12 }}>
           @driftibo
         </h1>
         <p className="poetry" style={{ color: "var(--pk-muted)" }}>
@@ -121,7 +132,7 @@ export default function GoClient() {
             <span style={{ fontFamily: "var(--display)", fontSize: "1.2rem" }}>
               ✦ Spin my star
             </span>
-            <span style={{ fontSize: "0.78rem", opacity: 0.7 }}>the 6-tap surprise game</span>
+            <span style={{ fontSize: "0.78rem", opacity: 0.7 }}>the 7-tap surprise game</span>
           </span>
           <span style={{ fontSize: "1.1rem" }}>→</span>
         </Link>
@@ -197,8 +208,8 @@ export default function GoClient() {
                 style={{
                   width: 64,
                   flexShrink: 0,
-                  ...(PLACE_PORTRAIT[sug.place] ? {
-                    backgroundImage: `url(/images/${PLACE_PORTRAIT[sug.place]}.jpg)`,
+                  ...(sugPortrait ? {
+                    backgroundImage: `url(${sugPortrait})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   } : {}),
@@ -230,6 +241,21 @@ export default function GoClient() {
             >
               ✦ Send {sug.place} on WhatsApp
             </a>
+            <Link
+              href={`/destinations/${sug.slug}`}
+              style={{
+                display: "block",
+                textAlign: "center",
+                marginTop: 10,
+                fontFamily: "var(--ui)",
+                fontWeight: 600,
+                fontSize: "0.82rem",
+                color: "var(--pk-accent-deep)",
+                textDecoration: "none",
+              }}
+            >
+              See the full {sug.place} brief →
+            </Link>
           </>
         )}
       </div>
@@ -257,24 +283,26 @@ export default function GoClient() {
         From the journal
       </p>
       <div style={{ display: "grid", gap: 10 }}>
-        <Link href="/journal" style={jrowStyle}>
-          <div
-            className="well"
-            style={{ width: 54, height: 54, borderRadius: 12, flexShrink: 0, backgroundImage: "url(/images/chopta-portrait.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
-          />
-          <span style={{ fontFamily: "var(--display)", fontSize: "1rem", lineHeight: 1.2 }}>
-            9 places in India that look like Switzerland
-          </span>
-        </Link>
-        <Link href="/journal" style={jrowStyle}>
-          <div
-            className="well"
-            style={{ width: 54, height: 54, borderRadius: 12, flexShrink: 0, backgroundImage: "url(/images/spiti-portrait.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
-          />
-          <span style={{ fontFamily: "var(--display)", fontSize: "1rem", lineHeight: 1.2 }}>
-            Why we stopped letting people choose
-          </span>
-        </Link>
+        {journal.map((a) => (
+          <Link key={a.id} href={`/journal/${a.slug}`} style={jrowStyle}>
+            <div
+              className={`well ${a.scene}`}
+              style={{
+                width: 54,
+                height: 54,
+                borderRadius: 12,
+                flexShrink: 0,
+                ...(a.heroImageUrl
+                  ? { backgroundImage: `url(${a.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                  : {}),
+              }}
+              data-label=""
+            />
+            <span style={{ fontFamily: "var(--display)", fontSize: "1rem", lineHeight: 1.2 }}>
+              {a.title}
+            </span>
+          </Link>
+        ))}
       </div>
     </main>
   );

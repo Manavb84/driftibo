@@ -38,7 +38,7 @@ export default function AboutPage() {
     >
       <section
         className="callout-ink"
-        style={{ borderRadius: 24, padding: "clamp(32px,6vw,52px)", display: "grid", gap: 16 }}
+        style={{ borderRadius: "var(--r-md)", padding: "clamp(32px,6vw,52px)", display: "grid", gap: 16 }}
       >
         <span className="seal t-ink" style={{ width: 64 }}>
           <span className="ring"></span>
@@ -57,11 +57,11 @@ export default function AboutPage() {
         >
           The best trips aren&apos;t planned. They&apos;re sent.
         </h1>
-        <p style={{ color: "oklch(1 0 0 / .82)", maxWidth: "56ch", fontSize: "1.08rem" }}>
+        <p className="lede" style={{ color: "var(--pk-on-ink)", maxWidth: "56ch" }}>
           You don&apos;t need more options. You need permission to stop choosing. Tell the star your limits — it sends you
           somewhere real, and you&apos;re proud you obeyed.
         </p>
-        <p className="poetry" style={{ color: "var(--pk-accent)", fontSize: "1.35rem" }}>
+        <p className="poetry" style={{ color: "var(--pk-on-ink)", fontSize: "1.35rem" }}>
           Don&apos;t decide. Just go where your star sends you.
         </p>
       </section>
@@ -100,7 +100,7 @@ export default function AboutPage() {
       <section
         style={{
           background: "var(--pk-card)",
-          borderRadius: 20,
+          borderRadius: "var(--r-md)",
           boxShadow: "var(--pk-shadow-sm)",
           padding: "clamp(24px,5vw,36px)",
         }}

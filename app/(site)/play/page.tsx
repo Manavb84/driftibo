@@ -33,7 +33,7 @@ export default function PlayPage() {
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto 48px" }}>
-          <p className="kicker" style={{ color: "oklch(0.86 0.09 32)" }}>
+          <p className="kicker" style={{ color: "var(--pk-accent)" }}>
             Every road in is a game
           </p>
           <h1
@@ -62,7 +62,7 @@ export default function PlayPage() {
           {/* 01 · Star Game */}
           <Link href="/game" className="play-card">
             <div
-              className="well bg s-dusk"
+              className="well bg s-game-spin"
               style={{
                 height: 158,
                 display: "flex",
@@ -84,7 +84,7 @@ export default function PlayPage() {
                   WebkitBackdropFilter: "blur(4px)",
                   backdropFilter: "blur(4px)",
                   padding: "5px 10px",
-                  borderRadius: 99,
+                  borderRadius: "var(--r-pill)",
                 }}
               >
                 Surprise me
@@ -114,7 +114,7 @@ export default function PlayPage() {
                 Star Game
               </h3>
               <p style={{ color: "var(--pk-muted)", fontSize: "0.92rem" }}>
-                Tap six limits — never a destination. Your star draws a real
+                Tap seven limits — never a destination. Your star draws a real
                 place that fits and closes it on WhatsApp.
               </p>
               <span className="play-go">Spin it →</span>
@@ -124,7 +124,7 @@ export default function PlayPage() {
           {/* 02 · Dream My Trip */}
           <Link href="/dream" className="play-card">
             <div
-              className="well bg s-ziro"
+              className="well bg s-game-dream"
               style={{
                 height: 158,
                 display: "flex",
@@ -146,7 +146,7 @@ export default function PlayPage() {
                   WebkitBackdropFilter: "blur(4px)",
                   backdropFilter: "blur(4px)",
                   padding: "5px 10px",
-                  borderRadius: 99,
+                  borderRadius: "var(--r-pill)",
                 }}
               >
                 Conjure it
@@ -186,7 +186,7 @@ export default function PlayPage() {
           {/* 03 · Vibe Quiz */}
           <Link href="/quiz" className="play-card">
             <div
-              className="well bg s-gokarna"
+              className="well bg s-game-quiz"
               style={{
                 height: 158,
                 display: "flex",
@@ -208,7 +208,7 @@ export default function PlayPage() {
                   WebkitBackdropFilter: "blur(4px)",
                   backdropFilter: "blur(4px)",
                   padding: "5px 10px",
-                  borderRadius: 99,
+                  borderRadius: "var(--r-pill)",
                 }}
               >
                 Know thyself
@@ -245,10 +245,10 @@ export default function PlayPage() {
             </div>
           </Link>
 
-          {/* 04 · Starbook */}
+          {/* 04 · Starbook — star-filled night sky; page is a "Coming soon" placeholder */}
           <Link href="/starbook" className="play-card">
             <div
-              className="well bg s-chopta"
+              className="well bg s-starbook"
               style={{
                 height: 158,
                 display: "flex",
@@ -257,24 +257,47 @@ export default function PlayPage() {
                 padding: 18,
               }}
             >
-              <span
+              <div
                 style={{
-                  alignSelf: "flex-start",
-                  fontFamily: "var(--ui)",
-                  fontWeight: 800,
-                  fontSize: "0.62rem",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "oklch(0.99 0.01 20)",
-                  background: "oklch(0.28 0.05 250 / .42)",
-                  WebkitBackdropFilter: "blur(4px)",
-                  backdropFilter: "blur(4px)",
-                  padding: "5px 10px",
-                  borderRadius: 99,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  gap: 8,
                 }}
               >
-                Collect it
-              </span>
+                <span
+                  style={{
+                    fontFamily: "var(--ui)",
+                    fontWeight: 800,
+                    fontSize: "0.62rem",
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "oklch(0.99 0.01 20)",
+                    background: "oklch(0.28 0.05 250 / .42)",
+                    WebkitBackdropFilter: "blur(4px)",
+                    backdropFilter: "blur(4px)",
+                    padding: "5px 10px",
+                    borderRadius: "var(--r-pill)",
+                  }}
+                >
+                  Collect it
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--ui)",
+                    fontWeight: 800,
+                    fontSize: "0.62rem",
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "oklch(0.2 0.04 280)",
+                    background: "oklch(0.92 0.06 90)",
+                    padding: "5px 10px",
+                    borderRadius: "var(--r-pill)",
+                  }}
+                >
+                  Soon
+                </span>
+              </div>
               <span
                 className="display"
                 style={{

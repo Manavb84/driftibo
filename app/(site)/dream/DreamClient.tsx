@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { PERSONA } from "@/lib/persona";
 import { submitCapture } from "@/lib/actions";
 import WhatsAppClose from "@/components/WhatsAppClose";
+import type { Destination } from "@/lib/content";
 
 // ─── types ────────────────────────────────────────────────────────────────────
 type Stage = "input" | "dreaming" | "result";
@@ -22,16 +23,7 @@ function PillGroup({
 }) {
   return (
     <>
-      <p
-        style={{
-          fontFamily: "var(--ui)",
-          fontWeight: 700,
-          fontSize: "0.7rem",
-          letterSpacing: "0.14em",
-          textTransform: "uppercase",
-          margin: "24px 0 10px",
-        }}
-      >
+      <p className="kicker" style={{ margin: "24px 0 10px" }}>
         {label}
       </p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 9 }}>
@@ -65,7 +57,7 @@ function BudgetTiers({
     fontWeight: 700,
     fontSize: "0.85rem",
     padding: 13,
-    borderRadius: 14,
+    borderRadius: "var(--r-md)",
     cursor: "pointer",
     transition: "transform .16s ease",
     borderWidth: 1,
@@ -129,8 +121,11 @@ function BudgetTiers({
 }
 
 // ─── main component ────────────────────────────────────────────────────────────
-export default function DreamClient() {
+export default function DreamClient({ destinations }: { destinations: Destination[] }) {
   const persona = PERSONA;
+  // The reveal gallery is drawn from the live catalogue (first four published places),
+  // not a hardcoded set — so it grows with the DB and never names a place we dropped.
+  const gallery = destinations.slice(0, 4);
 
   const [stage, setStage] = useState<Stage>("input");
   const [energy, setEnergy] = useState("Wild & remote");
@@ -241,21 +236,8 @@ export default function DreamClient() {
 
           <button
             onClick={dream}
-            style={{
-              marginTop: 28,
-              width: "100%",
-              fontFamily: "var(--ui)",
-              fontWeight: 800,
-              fontSize: "1.05rem",
-              cursor: "pointer",
-              border: 0,
-              borderRadius: "var(--persona-radius)",
-              padding: 18,
-              color: "#fff",
-              background:
-                "linear-gradient(120deg, oklch(0.62 0.12 200), var(--persona-accent))",
-              boxShadow: "0 12px 36px oklch(0.62 0.10 32 / .4)",
-            }}
+            className="btn btn-accent btn-lg"
+            style={{ marginTop: 28, width: "100%", justifyContent: "center" }}
           >
             ✦ Dream it for me
           </button>
@@ -371,14 +353,14 @@ export default function DreamClient() {
                 A hint of where
               </p>
               <h2
-                className="display-mega"
+                className="display"
                 style={{
                   fontSize: "clamp(2rem,8vw,3.2rem)",
                   color: "#fff",
                   margin: "4px 0 8px",
                 }}
               >
-                A quiet alpine ridge.
+                A real place, dreamed for you.
               </h2>
               <p
                 style={{
@@ -387,8 +369,8 @@ export default function DreamClient() {
                   maxWidth: "40ch",
                 }}
               >
-                Deodar forest and a temple in the clouds — a night-train from
-                you.{" "}
+                A real corner of India that matches your energy — close to your
+                budget, far from the crowds.{" "}
                 <em style={{ fontStyle: "italic" }}>
                   We&apos;ll name it on WhatsApp.
                 </em>
@@ -405,43 +387,24 @@ export default function DreamClient() {
               background: "var(--pk-panel)",
             }}
           >
-            <div
-              className="well"
-              style={{ aspectRatio: "1", borderRadius: 10, backgroundImage: "url(/images/chopta-portrait.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
-            />
-            <div
-              className="well"
-              style={{
-                aspectRatio: "1",
-                borderRadius: 10,
-                filter: "hue-rotate(-18deg)",
-                backgroundImage: "url(/images/spiti-portrait.jpg)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
-            <div
-              className="well"
-              style={{
-                aspectRatio: "1",
-                borderRadius: 10,
-                filter: "hue-rotate(14deg) saturate(1.2)",
-                backgroundImage: "url(/images/ziro-portrait.jpg)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
-            <div
-              className="well"
-              style={{
-                aspectRatio: "1",
-                borderRadius: 10,
-                filter: "hue-rotate(-32deg)",
-                backgroundImage: "url(/images/gokarna-portrait.jpg)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
+            {gallery.map((d) => (
+              <div
+                key={d.id}
+                className={`well ${d.scene}`}
+                style={{
+                  aspectRatio: "1",
+                  borderRadius: 10,
+                  ...(d.portraitImageUrl
+                    ? {
+                        backgroundImage: `url(${d.portraitImageUrl})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }
+                    : {}),
+                }}
+                data-label=""
+              />
+            ))}
           </div>
 
           <div style={{ padding: 24, display: "grid", gap: 18 }}>
@@ -493,7 +456,7 @@ export default function DreamClient() {
               eyebrow="Make it real"
               heading="Want us to make it real?"
               sub="We name the place, lock the dates, and send the full itinerary on chat."
-              context="the alpine ridge you dreamed up for me on Dream My Trip"
+              context="the place you dreamed up for me on Dream My Trip"
             />
 
             <button

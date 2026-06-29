@@ -28,9 +28,10 @@ export default function StickyWhatsApp() {
           justifyContent: "center",
           width: 54,
           height: 54,
-          borderRadius: "50%",
-          background: "#25D366",
-          boxShadow: "0 4px 16px rgba(0,0,0,0.22)",
+          borderRadius: "var(--r-pill)",
+          // Branded, not WhatsApp-green: ink disc with a coral ring. Glyph kept.
+          background: "var(--pk-ink)",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.22), inset 0 0 0 2px var(--pk-accent)",
           textDecoration: "none",
           transition: "transform .18s ease, box-shadow .18s ease",
         }}

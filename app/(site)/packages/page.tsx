@@ -47,7 +47,7 @@ export default async function PackagesPage() {
             <div
               className={`well ${p.wellScene} ${p.glow}`}
               style={{
-                borderRadius: 24,
+                borderRadius: "var(--r-lg)",
                 aspectRatio: "4/5",
                 minHeight: 340,
                 order: i % 2 ? 2 : 0,
@@ -57,7 +57,7 @@ export default async function PackagesPage() {
             />
             <div>
               <p className="kicker">{p.kicker}</p>
-              <h2 className="display-mega" style={{ fontSize: "clamp(2rem,6vw,3rem)", margin: "4px 0 6px" }}>{p.name}</h2>
+              <h2 className="display" style={{ fontSize: "clamp(2rem,6vw,3rem)", margin: "4px 0 6px" }}>{p.name}</h2>
               <p className="poetry" style={{ color: "var(--pk-muted)", fontSize: "1.1rem" }}>{p.region}</p>
               <p style={{ color: "var(--pk-text)", fontSize: "1rem", margin: "16px 0", maxWidth: "46ch" }}>{p.blurb}</p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 18 }}>
@@ -73,7 +73,7 @@ export default async function PackagesPage() {
                   gap: 16,
                   flexWrap: "wrap",
                   background: "var(--pk-panel)",
-                  borderRadius: 16,
+                  borderRadius: "var(--r-md)",
                   padding: "16px 20px",
                   marginBottom: 18,
                 }}

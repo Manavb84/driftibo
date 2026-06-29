@@ -1,28 +1,12 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
-import StarbookClient from "./StarbookClient";
+import StarbookComingSoon from "./StarbookComingSoon";
+// StarbookClient.tsx is parked (unimported) — the full collection/badges/Star-Drop
+// implementation is preserved on disk for revival once the concept is made relevant.
 
 export const metadata: Metadata = {
   title: "Starbook · Driftibo",
 };
-export const dynamic = "force-dynamic";
 
-export default async function Page() {
-  let user = null;
-  let stamps: Array<{ slug: string; label: string }> = [];
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user: u },
-    } = await supabase.auth.getUser();
-    user = u ?? null;
-    if (user) {
-      const { data } = await supabase
-        .from("starbook_stamps")
-        .select("*")
-        .eq("user_id", user.id);
-      stamps = data ?? [];
-    }
-  } catch {}
-  return <StarbookClient user={user} stamps={stamps} />;
+export default function Page() {
+  return <StarbookComingSoon />;
 }

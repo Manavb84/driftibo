@@ -63,7 +63,7 @@ export default async function Page() {
           <div
             className={`well ${featured.scene}`}
             style={{
-              aspectRatio: "16/7",
+              aspectRatio: "16/9",
               ...(featured.heroImageUrl
                 ? { backgroundImage: `url(${featured.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
                 : {}),
@@ -102,7 +102,7 @@ export default async function Page() {
             <div
               className={`well ${article.scene}`}
               style={{
-                aspectRatio: "4/3",
+                aspectRatio: "16/9",
                 ...(article.heroImageUrl
                   ? { backgroundImage: `url(${article.heroImageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
                   : {}),

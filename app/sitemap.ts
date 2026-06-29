@@ -1,20 +1,18 @@
 import type { MetadataRoute } from "next";
-import { getDestinations, getArticles, getPackages } from "@/lib/content";
+import { getArticles, getPackages } from "@/lib/content";
+import { allPlaces } from "@/lib/catalog";
 
 const BASE = "https://driftibo.com";
 
 // Static, publicly-indexable routes (admin/api excluded via robots.ts).
 const STATIC_PATHS = [
-  "", "/play", "/game", "/quiz", "/dream", "/starbook",
-  "/destinations", "/packages", "/offerings", "/journal", "/about", "/legal", "/go",
+  "", "/start", "/play", "/game", "/quiz", "/dream", "/starbook",
+  "/destinations", "/destinations/calendar",
+  "/packages", "/offerings", "/journal", "/about", "/legal", "/go",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [destinations, articles, packages] = await Promise.all([
-    getDestinations(),
-    getArticles(),
-    getPackages(),
-  ]);
+  const [articles, packages] = await Promise.all([getArticles(), getPackages()]);
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_PATHS.map((p) => ({
     url: `${BASE}${p}`,
@@ -22,8 +20,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: p === "" ? 1 : 0.7,
   }));
 
-  const destEntries: MetadataRoute.Sitemap = destinations.map((d) => ({
-    url: `${BASE}/destinations/${d.slug}`,
+  // All 83 catalogue detail pages (includes the 5 bookable).
+  const destEntries: MetadataRoute.Sitemap = allPlaces().map((p) => ({
+    url: `${BASE}/destinations/${p.slug}`,
     changeFrequency: "monthly",
     priority: 0.6,
   }));

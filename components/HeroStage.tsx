@@ -148,6 +148,19 @@ export default function HeroStage() {
               Travel by your own star
             </p>
           </div>
+          {/* Brand punch */}
+          <p
+            style={{
+              fontFamily: "var(--display)",
+              fontWeight: 600,
+              fontSize: "clamp(1.2rem,2.8vw,1.6rem)",
+              color: "#fff",
+              textShadow: "0 1px 12px oklch(0.2 0.05 232 / .6)",
+              marginBottom: 12,
+            }}
+          >
+            Stop choosing. Start packing.
+          </p>
           {/* Value-prop subhead */}
           <p
             style={{
@@ -163,9 +176,8 @@ export default function HeroStage() {
             Surprise travel to India&apos;s hidden corners — you tell us your limits, we plan the trip and close it on WhatsApp.
           </p>
           <p
+            className="eyebrow"
             style={{
-              fontFamily: "var(--display)",
-              fontStyle: "italic",
               fontSize: "clamp(1.05rem,2.4vw,1.35rem)",
               color: "oklch(0.98 0.01 210 / .92)",
               textShadow: "0 1px 12px oklch(0.2 0.05 232 / .55)",
@@ -226,7 +238,7 @@ export default function HeroStage() {
               ✦ Spin my star
             </Link>
             <Link
-              href="/dream"
+              href="/start"
               className="btn btn-lg"
               style={{
                 color: "#fff",
@@ -235,9 +247,9 @@ export default function HeroStage() {
                 backdropFilter: "blur(8px)",
                 boxShadow: "inset 0 0 0 1px oklch(1 0 0 / .38)",
               }}
-              onClick={() => track("home_cta_click", { cta: "dream_my_trip" })}
+              onClick={() => track("home_cta_click", { cta: "find_my_kind_of_trip" })}
             >
-              Dream My Trip →
+              Find my kind of trip →
             </Link>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 24 }}>
@@ -248,7 +260,7 @@ export default function HeroStage() {
                 style={{
                   width: 24,
                   height: 4,
-                  borderRadius: 99,
+                  borderRadius: "var(--r-pill)",
                   background: "#fff",
                   opacity: i === idx ? 1 : 0.35,
                   transition: "opacity .4s ease",
@@ -278,7 +290,7 @@ export default function HeroStage() {
                   ...c.pos,
                   width: c.width,
                   aspectRatio: "3/4",
-                  borderRadius: 22,
+                  borderRadius: "var(--r-lg)",
                   boxShadow: "var(--pk-shadow-lg)",
                   overflow: "hidden",
                   display: "flex",
@@ -308,7 +320,7 @@ export default function HeroStage() {
                 >
                   ✦ star-sent
                 </p>
-                <p style={{ fontFamily: "var(--display)", fontSize: "1.2rem", color: "#fff", lineHeight: 1.12 }}>
+                <p className="display" style={{ fontSize: "1.2rem", color: "#fff", lineHeight: 1.12 }}>
                   {c.name}
                 </p>
               </div>

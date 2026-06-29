@@ -4,7 +4,7 @@ import GameClient from "./GameClient";
 
 export const metadata: Metadata = {
   title: "The Star Game · Driftibo",
-  description: "Six taps. Zero typing. Tell your star your limits — it picks a real place that fits. Free reveal, no email yet.",
+  description: "Seven taps. Zero typing. Tell your star your limits — it picks a real place that fits. Free reveal, no email yet.",
 };
 
 export default async function GamePage() {

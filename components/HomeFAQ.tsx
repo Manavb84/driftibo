@@ -6,7 +6,7 @@ import { track } from "@/lib/analytics";
 const FAQ_ITEMS = [
   {
     q: "How does the surprise destination actually work?",
-    a: "You tap through six quick preferences — terrain type, vibe, group size, trip length, and budget range — and the star picks a real Indian destination that fits all of them. You don't type a name or pick from a list. The place is revealed only after the star decides. We then confirm everything over WhatsApp, usually within a few minutes.",
+    a: "You tap through seven quick preferences — terrain, trip vibe, who's coming, how long, comfort level, where you're starting from, and how far you'll go — and the star picks a real destination that fits all of them. You don't type a name or pick from a list. The place is revealed only after the star decides. We then confirm everything over WhatsApp, usually within a few minutes.",
   },
   {
     q: "What's included in the ≈ ₹6,800 / person / day price?",

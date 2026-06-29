@@ -63,6 +63,33 @@ const ROWS = [
     prompt: `Travel mood: a calm premium boutique-stay terrace at dusk — lanterns, linen, a view of layered hills, quiet luxury and care. Warm refined light, no identifiable landmark. ${NO}` },
   { out: 'offering-corporate', aspect: '16:9 wide',
     prompt: `Travel mood: a group offsite feeling — a wide deck or bonfire clearing at twilight in the hills, string lights, warm communal glow, layered ranges behind. No faces, no identifiable landmark. ${NO}` },
+  // ── Char Dham pilgrimage circuit (Garhwal Himalaya — a temple circuit, NOT a meadow) ──
+  { out: 'char-dham-hero', aspect: '16:9 wide',
+    prompt: `Char Dham pilgrimage, Garhwal Himalaya, Uttarakhand — the stone Kedarnath temple on its glacial valley floor beneath the snow-capped Kedarnath peak, a snowmelt river over grey moraine, deodar forest on the lower slopes, clear cold high-altitude light. A Himalayan pilgrimage circuit, not a meadow. ${NO}` },
+  { out: 'char-dham-portrait', aspect: '3:4 vertical',
+    prompt: `Vertical travel photograph of the stone Kedarnath temple with its carved spire, standing on the glacial valley floor beneath the towering snow-capped Kedarnath peak, Garhwal Himalaya. Prayer flags, grey moraine and a snowmelt river, deodar slopes below, crisp thin-air light. Sacred and austere. ${NO}` },
+  // ── Surprise-abroad lane (international mood, no identifiable Indian landmark) ──
+  { out: 'offering-abroad', aspect: '16:9 wide',
+    prompt: `Travel mood, international departure feeling — a sleek airport gate window at golden hour, a jet on the apron and a far unfamiliar coastline beyond, the calm sense of being sent somewhere beyond India. No identifiable landmark, no faces, no text. ${NO}` },
+  // ── Game-brand frames (concrete photographic moods, no identifiable place) — for the play hubs ──
+  { out: 'game-spin', aspect: '16:10 wide',
+    prompt: `Long-exposure night-sky photograph — star trails wheeling around a single bright pole star over a deep indigo horizon with a faint warm amber afterglow low down. No land features, no people, no text. Dreamy cosmic mood. ${NO}` },
+  { out: 'game-quiz', aspect: '16:10 wide',
+    prompt: `Macro photograph of overlapping translucent watercolour washes — pine green, sea blue, warm sand and saffron bleeding into wet paper, soft daylight, gentle grain. No landmark, no faces, no text. ${NO}` },
+  { out: 'game-dream', aspect: '16:10 wide',
+    prompt: `Photograph of thick dawn fog drifting over faint layered hill silhouettes, soft pastel pink-and-blue sky, a single faint star, ethereal and weightless. No identifiable place, no faces, no text. ${NO}` },
+  // ── Starbook — a star-filled night sky for the "passport" feature ──
+  { out: 'starbook', aspect: '16:10 wide',
+    prompt: `Astrophotography of the Milky Way arching over a faint dark horizon — deep indigo fading to violet, thousands of scattered bright stars and a few standout bright ones like a constellation, the soft dusty band of the galaxy overhead. No identifiable place, no people, no text. Crisp, calm, real night-sky photograph. ${NO}` },
+  // ── Variety: one extra wide per core place (different vantage / time-of-day than the hero) ──
+  { out: 'chopta-detail', aspect: '16:9 wide', ref: CHOPTA_REF,
+    prompt: `Chopta, Uttarakhand — bright midday wide of the rolling Bugyal meadow and a grazing trail winding through deodar pines toward the Tungnath ridge, scattered cumulus over snow peaks, fresh green light. A different hour from the golden dawn hero. ${NO}` },
+  { out: 'spiti-detail', aspect: '16:9 wide',
+    prompt: `Spiti Valley, Himachal — late-afternoon warm light on the Dhankar monastery perched on ochre cliffs above the Spiti river confluence, prayer flags, vast cold ranges. A different vantage from the Key Monastery hero. ${NO}` },
+  { out: 'ziro-detail', aspect: '16:9 wide',
+    prompt: `Ziro Valley, Arunachal — golden-hour wide of an Apatani village among pine groves, bamboo houses and terraced paddies glowing warm, low hills behind. A different hour from the misty-morning hero. ${NO}` },
+  { out: 'gokarna-detail', aspect: '16:9 wide',
+    prompt: `Gokarna coast, Karnataka at bright midday — a red-laterite cliff headland trail above a turquoise Arabian Sea cove, coconut palms, sunlit rock and clear blue sky. A different hour from the golden-sunset hero. ${NO}` },
 ]
 
 const filter = process.argv[2]

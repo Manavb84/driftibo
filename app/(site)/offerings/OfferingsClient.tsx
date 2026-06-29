@@ -91,7 +91,7 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
     width: "100%",
     marginTop: 6,
     padding: "11px 13px",
-    borderRadius: 10,
+    borderRadius: "var(--r-sm)",
     border: "1px solid var(--pk-line)",
     background: "var(--pk-paper)",
     fontFamily: "var(--ui)",
@@ -130,10 +130,8 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
           return (
             <article
               key={o.name}
+              className="card"
               style={{
-                background: "var(--pk-card)",
-                borderRadius: 20,
-                overflow: "hidden",
                 transition: "box-shadow .18s ease,transform .18s ease",
                 boxShadow: isOn
                   ? "0 0 0 2px var(--pk-accent), var(--pk-shadow)"
@@ -178,7 +176,7 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
                     setOffering(o.name);
                     scrollToForm();
                   }}
-                  className={isOn ? "btn btn-accent btn-sm" : "btn btn-primary btn-sm"}
+                  className={isOn ? "btn btn-ghost btn-sm" : "btn btn-primary btn-sm"}
                 >
                   {isOn ? "Selected ✦" : "Start"}
                 </button>
@@ -215,7 +213,7 @@ export default function OfferingsClient({ offers }: { offers: Offering[] }) {
               style={{
                 padding: "20px",
                 background: "var(--pk-panel)",
-                borderRadius: 12,
+                borderRadius: "var(--r-md)",
                 textAlign: "center",
               }}
             >

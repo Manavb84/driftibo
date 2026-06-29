@@ -130,7 +130,7 @@ export default async function PackagePage({ params }: Props) {
         <article
           style={{
             background: "var(--pk-card)",
-            borderRadius: 24,
+            borderRadius: "var(--r-lg)",
             overflow: "hidden",
             boxShadow: "var(--pk-shadow)",
           }}
@@ -199,7 +199,7 @@ export default async function PackagePage({ params }: Props) {
                 gap: 16,
                 flexWrap: "wrap",
                 background: "var(--pk-panel)",
-                borderRadius: 16,
+                borderRadius: "var(--r-md)",
                 padding: "18px 20px",
               }}
             >
@@ -255,7 +255,7 @@ export default async function PackagePage({ params }: Props) {
                       style={{
                         background: "var(--pk-card)",
                         border: "1px solid var(--pk-line-soft)",
-                        borderRadius: 18,
+                        borderRadius: "var(--r-lg)",
                         padding: 20,
                         display: "grid",
                         gap: 12,
@@ -306,7 +306,7 @@ export default async function PackagePage({ params }: Props) {
                         href={waLink(`the ${pkg.name} — ${t.label} tier (₹${inr(t.priceINR)}, ${t.nights})`)}
                         target="_blank"
                         rel="noopener"
-                        className="btn btn-accent btn-sm"
+                        className="btn btn-primary btn-sm"
                         style={{ justifyContent: "center", textDecoration: "none" }}
                       >
                         Take {t.label} ✦

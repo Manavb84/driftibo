@@ -9,6 +9,7 @@ import { track } from "@/lib/analytics";
 import { submitCapture, addStarbookStamp } from "@/lib/actions";
 import WhatsAppClose from "@/components/WhatsAppClose";
 import type { Destination } from "@/lib/content";
+import { placeImage } from "@/lib/images";
 
 // The star "routes" to a real published destination from the user's terrain pick
 // (vibe breaks the Forests tie). Not ML — an honest deterministic map over whatever
@@ -49,9 +50,9 @@ const DIMS = [
   { key: "vibe",    legend: "2 · Trip vibe",     options: ["Wild", "Slow", "Social", "Spiritual"] },
   { key: "who",     legend: "3 · Who's coming",  options: ["Solo", "Partner", "Squad", "Family"] },
   { key: "long",    legend: "4 · How long",      options: ["3–4 days", "5–7 days", "10+ days"] },
-  { key: "comfort", legend: "5 · Comfort (internal)", options: ["Shoestring", "Mid", "Premium"] },
+  { key: "comfort", legend: "5 · Comfort",       options: ["Shoestring", "Mid", "Premium"] },
   { key: "origin",  legend: "6 · Where from",    options: ["North", "West", "South", "East", "Central"] },
-  { key: "reach",   legend: "+ How far",          options: ["Near", "Far", "Anywhere"] },
+  { key: "reach",   legend: "7 · How far",       options: ["Near", "Far", "Anywhere"] },
 ] as const;
 
 type DimKey = (typeof DIMS)[number]["key"];
@@ -61,7 +62,7 @@ type Sel = Record<DimKey, string>;
 const ORDER: Stage[] = ["wizard", "spin", "reveal", "tease", "gate", "otp", "itinload", "itin", "report"];
 const RAIL_STEPS: Stage[] = ["wizard", "spin", "reveal", "tease", "itin"];
 const LABELS: Record<Stage, string> = {
-  wizard:   "Step 1 · your six",
+  wizard:   "Step 1 · your seven",
   spin:     "The spin",
   reveal:   "The reveal",
   tease:    "The tease",
@@ -281,7 +282,12 @@ export default function GameClient({ destinations }: { destinations: Destination
   const revName = dest?.name ?? "your place";
   const revSub = dest ? `${dest.region} · ${dest.lookLike}` : "";
   const revPhoto = dest?.name ?? "";
-  const revImage = dest?.heroImageUrl ?? dest?.portraitImageUrl ?? null;
+  // The reveal/itinerary lead with a place's reveal-or-secondary shot (not the same hero
+  // used on lists); the 9:16 report frames prefer a tall story shot. Both fall back to hero.
+  const revImage =
+    (dest && placeImage(dest.slug, "reveal", "detail")) ?? dest?.heroImageUrl ?? dest?.portraitImageUrl ?? null;
+  const storyImage =
+    (dest && placeImage(dest.slug, "story", "reveal", "detail")) ?? revImage;
   const days = dest?.days ?? [];
 
   return (
@@ -312,7 +318,7 @@ export default function GameClient({ destinations }: { destinations: Destination
       {stage === "wizard" && (
         <div>
           <p className="kicker" style={{ textAlign: "center" }}>Tell your star your limits — not where to go</p>
-          <h1 className="display" style={{ fontSize: "clamp(1.9rem,5vw,2.7rem)", textAlign: "center", margin: "6px 0 4px" }}>Six taps. Zero typing.</h1>
+          <h1 className="display" style={{ fontSize: "clamp(1.9rem,5vw,2.7rem)", textAlign: "center", margin: "6px 0 4px" }}>Seven taps. Zero typing.</h1>
           <p className="lede" style={{ textAlign: "center", marginBottom: 24 }}>Tap one in each — your star needs them all.</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 16 }}>
             {DIMS.map((dim) => (
@@ -322,7 +328,7 @@ export default function GameClient({ destinations }: { destinations: Destination
                 aria-labelledby={`dim-${dim.key}`}
                 style={{
                   background: "var(--pk-card)",
-                  borderRadius: 18,
+                  borderRadius: "var(--r-lg)",
                   padding: 20,
                   boxShadow: "var(--pk-shadow-sm)",
                   display: "flex",
@@ -362,7 +368,7 @@ export default function GameClient({ destinations }: { destinations: Destination
 
       {/* ░░ SPIN ░░ */}
       {stage === "spin" && (
-        <div style={{ borderRadius: 24, display: "grid", placeItems: "center", padding: "72px 24px", textAlign: "center", background: "linear-gradient(165deg,oklch(0.46 0.06 222),oklch(0.34 0.06 227))" }}>
+        <div style={{ borderRadius: "var(--r-lg)", display: "grid", placeItems: "center", padding: "72px 24px", textAlign: "center", background: "linear-gradient(165deg,oklch(0.46 0.06 222),oklch(0.34 0.06 227))" }}>
           <div className="seal t-ink spinning" style={{ width: 150 }}>
             <div className="ring" />
             <span className="card-pt pn">N</span>
@@ -372,7 +378,7 @@ export default function GameClient({ destinations }: { destinations: Destination
             <div className="star" />
           </div>
           <p className="poetry" style={{ color: "var(--pk-on-ink)", marginTop: 22, fontSize: "1.3rem" }}>Your star is choosing…</p>
-          <p style={{ color: "oklch(1 0 0 / .6)", fontSize: "0.8rem", marginTop: 4 }}>drawing from the top 5 places that fit your six</p>
+          <p style={{ color: "oklch(1 0 0 / .6)", fontSize: "0.8rem", marginTop: 4 }}>drawing from the top 5 places that fit your seven</p>
         </div>
       )}
 
@@ -550,7 +556,7 @@ export default function GameClient({ destinations }: { destinations: Destination
 
       {/* ░░ ITINERARY ░░ */}
       {stage === "itin" && (
-        <article className="pop" style={{ background: "var(--pk-card)", borderRadius: 24, overflow: "hidden", boxShadow: "var(--pk-shadow)", maxWidth: 680, margin: "0 auto" }}>
+        <article className="pop" style={{ background: "var(--pk-card)", borderRadius: "var(--r-lg)", overflow: "hidden", boxShadow: "var(--pk-shadow)", maxWidth: 680, margin: "0 auto" }}>
           <header style={{ position: "relative", height: 240, display: "flex", alignItems: "flex-end" }}>
             <div className={`well bg ${dest?.scene ?? ""}`} style={{ position: "absolute", inset: 0, ...(revImage ? { backgroundImage: `url(${revImage})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }} />
             <div style={{ position: "relative", padding: 24, textShadow: "0 2px 18px oklch(0.3 0.06 225 / .5)" }}>
@@ -569,7 +575,7 @@ export default function GameClient({ destinations }: { destinations: Destination
               </div>
             ))}
             {dest && dest.catches.length > 0 && (
-              <div style={{ background: "var(--pk-panel)", borderRadius: 16, padding: 20 }}>
+              <div style={{ background: "var(--pk-panel)", borderRadius: "var(--r-md)", padding: 20 }}>
                 <p className="kicker">The honest catches</p>
                 <ul style={{ margin: "10px 0 0 18px", fontSize: "0.875rem", display: "grid", gap: 6 }}>
                   {dest.catches.map((c, i) => (
@@ -632,14 +638,14 @@ export default function GameClient({ destinations }: { destinations: Destination
           <p className="kicker" style={{ textAlign: "center", margin: "36px 0 14px" }}>IG Story · 3-frame template (9:16)</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }}>
             <div style={{ position: "relative", aspectRatio: "9/16", borderRadius: 16, overflow: "hidden", boxShadow: "var(--pk-shadow)", display: "grid", placeItems: "center", textAlign: "center" }}>
-              <div className={`well bg ${dest?.scene ?? ""}`} style={{ position: "absolute", inset: 0, ...(revImage ? { backgroundImage: `url(${revImage})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }} />
+              <div className={`well bg ${dest?.scene ?? ""}`} style={{ position: "absolute", inset: 0, ...(storyImage ? { backgroundImage: `url(${storyImage})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }} />
               <div style={{ position: "relative", padding: 14, textShadow: "0 2px 12px oklch(0.28 0.06 225 / .5)" }}>
                 <p style={{ fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", fontSize: "0.6rem", color: "#fff" }}>I didn&apos;t pick this.</p>
                 <h3 className="display" style={{ color: "#fff", fontSize: "1.5rem" }}>My star did.</h3>
               </div>
             </div>
             <div style={{ position: "relative", aspectRatio: "9/16", borderRadius: 16, overflow: "hidden", boxShadow: "var(--pk-shadow)", display: "grid", placeItems: "center", textAlign: "center" }}>
-              <div className={`well bg ${dest?.scene ?? ""}`} style={{ position: "absolute", inset: 0, ...(revImage ? { backgroundImage: `url(${revImage})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }} />
+              <div className={`well bg ${dest?.scene ?? ""}`} style={{ position: "absolute", inset: 0, ...(storyImage ? { backgroundImage: `url(${storyImage})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }} />
               <div style={{ position: "relative", padding: 14, textShadow: "0 2px 12px oklch(0.28 0.06 225 / .5)" }}>
                 <p style={{ fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", fontSize: "0.6rem", color: "#fff" }}>It sent me to</p>
                 <h3 className="display" style={{ color: "#fff", fontSize: "1.8rem" }}>{revName}</h3>
