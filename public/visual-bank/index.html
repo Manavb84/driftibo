@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driftibo · Visual Bank</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: oklch(0.18 0.03 230); color: oklch(0.95 0.01 230); }
+  header { padding: 34px 28px 18px; border-bottom: 1px solid oklch(0.32 0.04 230); }
+  h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: -0.02em; }
+  header p { margin: 0; color: oklch(0.74 0.03 220); font-size: 14px; }
+  main { padding: 8px 28px 64px; max-width: 1500px; margin: 0 auto; }
+  section { padding-top: 30px; }
+  .sec-head { display: flex; align-items: baseline; gap: 12px; position: sticky; top: 0;
+    background: oklch(0.18 0.03 230); padding: 10px 0; z-index: 2; border-bottom: 1px solid oklch(0.3 0.04 230); }
+  h2 { margin: 0; font-size: 19px; color: oklch(0.86 0.07 70); }
+  .count { color: oklch(0.6 0.03 220); font-size: 13px; }
+  .place { padding: 18px 0; border-bottom: 1px solid oklch(0.26 0.03 230); }
+  .place h3 { margin: 0 0 12px; font-size: 16px; font-weight: 600; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  figure { margin: 0; background: oklch(0.24 0.03 230); border-radius: 10px; overflow: hidden;
+    border: 1px solid oklch(0.3 0.03 230); }
+  figure img, figure .missing { display: block; width: 100%; aspect-ratio: var(--ar, 16 / 9);
+    object-fit: cover; background: oklch(0.22 0.02 230); }
+  .missing { display: grid; place-items: center; color: oklch(0.55 0.05 30);
+    font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; }
+  figcaption { display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    padding: 8px 11px; font-size: 12.5px; }
+  .lm { color: oklch(0.9 0.01 230); }
+  .ar { color: oklch(0.62 0.03 220); font-variant-numeric: tabular-nums; }
+  a { text-decoration: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Driftibo · Visual Bank</h1>
+  <p>83 destinations · 249 landmark frames · 249 rendered. Click any frame to open full-size. Each place: 3 recognizable landmarks, all <strong>16:9 masters</strong> — crop to 4:5 / 9:16 / 1:1 per post.</p>
+</header>
+<main>
+<section>
+      <div class="sec-head"><h2>International</h2><span class="count">25 places</span></div>
+      <article class="place">
+        <h3>Thailand</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/thailand-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/thailand-1.jpg" alt="Wat Arun (Temple of Dawn), Bangkok"></a>
+            <figcaption><span class="lm">Wat Arun (Temple of Dawn), Bangkok</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/thailand-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/thailand-2.jpg" alt="Phi Phi Leh limestone karsts, Krabi, Andaman Sea"></a>
+            <figcaption><span class="lm">Phi Phi Leh limestone karsts, Krabi, Andaman Sea</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/thailand-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/thailand-3.jpg" alt="Wat Phra That Doi Suthep, Chiang Mai"></a>
+            <figcaption><span class="lm">Wat Phra That Doi Suthep, Chiang Mai</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Bali (Indonesia)</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/bali-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/bali-1.jpg" alt="Tanah Lot Temple"></a>
+            <figcaption><span class="lm">Tanah Lot Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/bali-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/bali-2.jpg" alt="Tegallalang Rice Terraces"></a>
+            <figcaption><span class="lm">Tegallalang Rice Terraces</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/bali-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/bali-3.jpg" alt="Pura Luhur Uluwatu"></a>
+            <figcaption><span class="lm">Pura Luhur Uluwatu</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Vietnam</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/vietnam-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/vietnam-1.jpg" alt="Ha Long Bay limestone karsts, Quang Ninh province"></a>
+            <figcaption><span class="lm">Ha Long Bay limestone karsts, Quang Ninh province</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/vietnam-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/vietnam-2.jpg" alt="Hoi An Ancient Town lantern street, Quang Nam province"></a>
+            <figcaption><span class="lm">Hoi An Ancient Town lantern street, Quang Nam province</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/vietnam-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/vietnam-3.jpg" alt="Mu Cang Chai terraced rice paddies, Yen Bai province"></a>
+            <figcaption><span class="lm">Mu Cang Chai terraced rice paddies, Yen Bai province</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Maldives</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/maldives-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/maldives-1.jpg" alt="Overwater water villas, North Malé Atoll"></a>
+            <figcaption><span class="lm">Overwater water villas, North Malé Atoll</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/maldives-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/maldives-2.jpg" alt="White coral sandbank, South Malé Atoll"></a>
+            <figcaption><span class="lm">White coral sandbank, South Malé Atoll</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/maldives-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/maldives-3.jpg" alt="Traditional Maldivian dhoni wooden boat, Addu Atoll"></a>
+            <figcaption><span class="lm">Traditional Maldivian dhoni wooden boat, Addu Atoll</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Sri Lanka</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/sri-lanka-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/sri-lanka-1.jpg" alt="Sigiriya Rock Fortress"></a>
+            <figcaption><span class="lm">Sigiriya Rock Fortress</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/sri-lanka-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/sri-lanka-2.jpg" alt="Nine Arch Bridge (Demodara), Ella"></a>
+            <figcaption><span class="lm">Nine Arch Bridge (Demodara), Ella</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/sri-lanka-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/sri-lanka-3.jpg" alt="Stilt Fishermen, Koggala, Southern Coast"></a>
+            <figcaption><span class="lm">Stilt Fishermen, Koggala, Southern Coast</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Dubai (UAE)</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/dubai-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/dubai-1.jpg" alt="Burj Khalifa, Downtown Dubai"></a>
+            <figcaption><span class="lm">Burj Khalifa, Downtown Dubai</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/dubai-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/dubai-2.jpg" alt="Burj Al Arab, Jumeirah Beach"></a>
+            <figcaption><span class="lm">Burj Al Arab, Jumeirah Beach</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/dubai-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/dubai-3.jpg" alt="Dubai Creek with traditional dhows, Al Fahidi Historic District"></a>
+            <figcaption><span class="lm">Dubai Creek with traditional dhows, Al Fahidi Historic District</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Bhutan</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/bhutan-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/bhutan-1.jpg" alt="Paro Taktsang (Tiger's Nest Monastery)"></a>
+            <figcaption><span class="lm">Paro Taktsang (Tiger's Nest Monastery)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/bhutan-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/bhutan-2.jpg" alt="Punakha Dzong"></a>
+            <figcaption><span class="lm">Punakha Dzong</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/bhutan-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/bhutan-3.jpg" alt="Dochula Pass — 108 Druk Wangyal Chortens"></a>
+            <figcaption><span class="lm">Dochula Pass — 108 Druk Wangyal Chortens</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Singapore</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/singapore-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/singapore-1.jpg" alt="Marina Bay Sands &amp; CBD Skyline"></a>
+            <figcaption><span class="lm">Marina Bay Sands &amp; CBD Skyline</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/singapore-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/singapore-2.jpg" alt="Supertree Grove, Gardens by the Bay"></a>
+            <figcaption><span class="lm">Supertree Grove, Gardens by the Bay</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/singapore-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/singapore-3.jpg" alt="Merlion Fountain, Merlion Park"></a>
+            <figcaption><span class="lm">Merlion Fountain, Merlion Park</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Switzerland</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/switzerland-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/switzerland-1.jpg" alt="Matterhorn, Zermatt"></a>
+            <figcaption><span class="lm">Matterhorn, Zermatt</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/switzerland-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/switzerland-2.jpg" alt="Kapellbrücke (Chapel Bridge) and Wasserturm, Lucerne"></a>
+            <figcaption><span class="lm">Kapellbrücke (Chapel Bridge) and Wasserturm, Lucerne</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/switzerland-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/switzerland-3.jpg" alt="Grindelwald valley and Eiger–Mönch–Jungfrau massif, Bernese Oberland"></a>
+            <figcaption><span class="lm">Grindelwald valley and Eiger–Mönch–Jungfrau massif, Bernese Oberland</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Italy</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/italy-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/italy-1.jpg" alt="The Colosseum, Rome"></a>
+            <figcaption><span class="lm">The Colosseum, Rome</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/italy-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/italy-2.jpg" alt="Grand Canal, Venice"></a>
+            <figcaption><span class="lm">Grand Canal, Venice</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/italy-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/italy-3.jpg" alt="Positano, Amalfi Coast"></a>
+            <figcaption><span class="lm">Positano, Amalfi Coast</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Turkey (Türkiye)</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/turkey-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/turkey-1.jpg" alt="Göreme Valley, Cappadocia"></a>
+            <figcaption><span class="lm">Göreme Valley, Cappadocia</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/turkey-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/turkey-2.jpg" alt="Hagia Sophia (Ayasofya), Sultanahmet, Istanbul"></a>
+            <figcaption><span class="lm">Hagia Sophia (Ayasofya), Sultanahmet, Istanbul</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/turkey-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/turkey-3.jpg" alt="Pamukkale travertine terraces, southwestern Turkey"></a>
+            <figcaption><span class="lm">Pamukkale travertine terraces, southwestern Turkey</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Japan</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/japan-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/japan-1.jpg" alt="Chureito Pagoda with Mt Fuji, Fujiyoshida, Yamanashi"></a>
+            <figcaption><span class="lm">Chureito Pagoda with Mt Fuji, Fujiyoshida, Yamanashi</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/japan-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/japan-2.jpg" alt="Fushimi Inari-taisha torii gate tunnel, Kyoto"></a>
+            <figcaption><span class="lm">Fushimi Inari-taisha torii gate tunnel, Kyoto</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/japan-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/japan-3.jpg" alt="Tokyo skyline from Shinjuku at blue hour"></a>
+            <figcaption><span class="lm">Tokyo skyline from Shinjuku at blue hour</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Egypt</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/egypt-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/egypt-1.jpg" alt="Pyramids of Giza &amp; the Great Sphinx"></a>
+            <figcaption><span class="lm">Pyramids of Giza &amp; the Great Sphinx</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/egypt-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/egypt-2.jpg" alt="Abu Simbel Great Temple facade"></a>
+            <figcaption><span class="lm">Abu Simbel Great Temple facade</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/egypt-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/egypt-3.jpg" alt="Great Hypostyle Hall, Karnak Temple"></a>
+            <figcaption><span class="lm">Great Hypostyle Hall, Karnak Temple</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Georgia</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/georgia-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/georgia-1.jpg" alt="Gergeti Trinity Church (Tsminda Sameba), Kazbegi"></a>
+            <figcaption><span class="lm">Gergeti Trinity Church (Tsminda Sameba), Kazbegi</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/georgia-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/georgia-2.jpg" alt="Old Tbilisi — Narikala Fortress and Abanotubani sulfur bath domes"></a>
+            <figcaption><span class="lm">Old Tbilisi — Narikala Fortress and Abanotubani sulfur bath domes</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/georgia-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/georgia-3.jpg" alt="Ushguli Svan defensive towers, Upper Svaneti"></a>
+            <figcaption><span class="lm">Ushguli Svan defensive towers, Upper Svaneti</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Azerbaijan</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/azerbaijan-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/azerbaijan-1.jpg" alt="Flame Towers, Baku"></a>
+            <figcaption><span class="lm">Flame Towers, Baku</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/azerbaijan-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/azerbaijan-2.jpg" alt="Maiden Tower (Qız Qalası), Baku Old City"></a>
+            <figcaption><span class="lm">Maiden Tower (Qız Qalası), Baku Old City</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/azerbaijan-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/azerbaijan-3.jpg" alt="Heydar Aliyev Center, Baku"></a>
+            <figcaption><span class="lm">Heydar Aliyev Center, Baku</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Uzbekistan</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/uzbekistan-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/uzbekistan-1.jpg" alt="Registan Square, Samarkand"></a>
+            <figcaption><span class="lm">Registan Square, Samarkand</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/uzbekistan-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/uzbekistan-2.jpg" alt="Kalon Minaret, Bukhara"></a>
+            <figcaption><span class="lm">Kalon Minaret, Bukhara</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/uzbekistan-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/uzbekistan-3.jpg" alt="Kalta Minor and Itchan Kala, Khiva"></a>
+            <figcaption><span class="lm">Kalta Minor and Itchan Kala, Khiva</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Albania</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/albania-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/albania-1.jpg" alt="Berat Old Town — City of a Thousand Windows"></a>
+            <figcaption><span class="lm">Berat Old Town — City of a Thousand Windows</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/albania-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/albania-2.jpg" alt="Albanian Ionian Riviera — Himara Bay"></a>
+            <figcaption><span class="lm">Albanian Ionian Riviera — Himara Bay</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/albania-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/albania-3.jpg" alt="Valbona Valley — Albanian Alps (Prokletije)"></a>
+            <figcaption><span class="lm">Valbona Valley — Albanian Alps (Prokletije)</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Montenegro</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/montenegro-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/montenegro-1.jpg" alt="Bay of Kotor (Boka Kotorska) with the medieval walled old town"></a>
+            <figcaption><span class="lm">Bay of Kotor (Boka Kotorska) with the medieval walled old town</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/montenegro-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/montenegro-2.jpg" alt="Sveti Stefan fortified island village"></a>
+            <figcaption><span class="lm">Sveti Stefan fortified island village</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/montenegro-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/montenegro-3.jpg" alt="Black Lake (Crno jezero), Durmitor National Park"></a>
+            <figcaption><span class="lm">Black Lake (Crno jezero), Durmitor National Park</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Kyrgyzstan</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/kyrgyzstan-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/kyrgyzstan-1.jpg" alt="Song-Köl Lake with yurt camp"></a>
+            <figcaption><span class="lm">Song-Köl Lake with yurt camp</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/kyrgyzstan-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/kyrgyzstan-2.jpg" alt="Tash Rabat Caravanserai"></a>
+            <figcaption><span class="lm">Tash Rabat Caravanserai</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/kyrgyzstan-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/kyrgyzstan-3.jpg" alt="Ala-Kul glacial lake in the Terskey Alatau"></a>
+            <figcaption><span class="lm">Ala-Kul glacial lake in the Terskey Alatau</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Laos</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/laos-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/laos-1.jpg" alt="Pha That Luang (Great Stupa), Vientiane"></a>
+            <figcaption><span class="lm">Pha That Luang (Great Stupa), Vientiane</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/laos-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/laos-2.jpg" alt="Mekong River at Luang Prabang with Wat Xieng Thong rooflines"></a>
+            <figcaption><span class="lm">Mekong River at Luang Prabang with Wat Xieng Thong rooflines</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/laos-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/laos-3.jpg" alt="Kuang Si Falls, Luang Prabang Province"></a>
+            <figcaption><span class="lm">Kuang Si Falls, Luang Prabang Province</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Palawan (Philippines)</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/palawan-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/palawan-1.jpg" alt="El Nido Big Lagoon, Bacuit Archipelago"></a>
+            <figcaption><span class="lm">El Nido Big Lagoon, Bacuit Archipelago</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/palawan-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/palawan-2.jpg" alt="Puerto Princesa Subterranean River cave entrance"></a>
+            <figcaption><span class="lm">Puerto Princesa Subterranean River cave entrance</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/palawan-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/palawan-3.jpg" alt="Kayangan Lake, Coron, Busuanga Island"></a>
+            <figcaption><span class="lm">Kayangan Lake, Coron, Busuanga Island</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Oman</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/oman-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/oman-1.jpg" alt="Sultan Qaboos Grand Mosque, Muscat"></a>
+            <figcaption><span class="lm">Sultan Qaboos Grand Mosque, Muscat</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/oman-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/oman-2.jpg" alt="Sharqiyah Sands (Wahiba Sands), eastern Oman"></a>
+            <figcaption><span class="lm">Sharqiyah Sands (Wahiba Sands), eastern Oman</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/oman-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/oman-3.jpg" alt="Wadi Shab canyon pools, Al Sharqiyah"></a>
+            <figcaption><span class="lm">Wadi Shab canyon pools, Al Sharqiyah</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Jordan</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/jordan-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/jordan-1.jpg" alt="Petra – The Treasury (Al-Khazneh) through the Siq"></a>
+            <figcaption><span class="lm">Petra – The Treasury (Al-Khazneh) through the Siq</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/jordan-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/jordan-2.jpg" alt="Wadi Rum – the red sandstone valley and its monolithic rock towers"></a>
+            <figcaption><span class="lm">Wadi Rum – the red sandstone valley and its monolithic rock towers</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/jordan-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/jordan-3.jpg" alt="Dead Sea – salt-crystal shoreline at the world's lowest point"></a>
+            <figcaption><span class="lm">Dead Sea – salt-crystal shoreline at the world's lowest point</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Slovenia</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/slovenia-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/slovenia-1.jpg" alt="Lake Bled with Bled Island Church and Bled Castle"></a>
+            <figcaption><span class="lm">Lake Bled with Bled Island Church and Bled Castle</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/slovenia-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/slovenia-2.jpg" alt="Ljubljana Triple Bridge (Tromostovje) and Ljubljana Castle"></a>
+            <figcaption><span class="lm">Ljubljana Triple Bridge (Tromostovje) and Ljubljana Castle</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/slovenia-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/slovenia-3.jpg" alt="Soča River turquoise gorge, Triglav National Park"></a>
+            <figcaption><span class="lm">Soča River turquoise gorge, Triglav National Park</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Ha Giang Loop (Vietnam)</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="international/ha-giang-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/ha-giang-1.jpg" alt="Mã Pí Lèng Pass &amp; Nho Que River gorge"></a>
+            <figcaption><span class="lm">Mã Pí Lèng Pass &amp; Nho Que River gorge</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/ha-giang-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/ha-giang-2.jpg" alt="Lung Cu Flag Tower, Dragon Mountain"></a>
+            <figcaption><span class="lm">Lung Cu Flag Tower, Dragon Mountain</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="international/ha-giang-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="international/ha-giang-3.jpg" alt="Quan Ba Twin Mountains (Nui Doi), Heaven Gate viewpoint"></a>
+            <figcaption><span class="lm">Quan Ba Twin Mountains (Nui Doi), Heaven Gate viewpoint</span></figcaption>
+          </figure></div>
+      </article>
+    </section>
+<section>
+      <div class="sec-head"><h2>India · Popular</h2><span class="count">20 places</span></div>
+      <article class="place">
+        <h3>Goa</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/goa-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/goa-1.jpg" alt="Basilica of Bom Jesus, Old Goa"></a>
+            <figcaption><span class="lm">Basilica of Bom Jesus, Old Goa</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/goa-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/goa-2.jpg" alt="Fort Aguada and Portuguese lighthouse, Sinquerim headland"></a>
+            <figcaption><span class="lm">Fort Aguada and Portuguese lighthouse, Sinquerim headland</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/goa-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/goa-3.jpg" alt="Palolem Beach crescent bay, South Goa"></a>
+            <figcaption><span class="lm">Palolem Beach crescent bay, South Goa</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Kerala Backwaters</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/kerala-backwaters-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/kerala-backwaters-1.jpg" alt="Kettuvallam houseboat on the Alleppey (Alappuzha) backwater canal"></a>
+            <figcaption><span class="lm">Kettuvallam houseboat on the Alleppey (Alappuzha) backwater canal</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/kerala-backwaters-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/kerala-backwaters-2.jpg" alt="Chinese fishing nets (Cheena Vala) at Fort Kochi waterfront"></a>
+            <figcaption><span class="lm">Chinese fishing nets (Cheena Vala) at Fort Kochi waterfront</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/kerala-backwaters-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/kerala-backwaters-3.jpg" alt="Narrow coir-village waterway near Kumarakom, Kerala backwaters"></a>
+            <figcaption><span class="lm">Narrow coir-village waterway near Kumarakom, Kerala backwaters</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Munnar</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/munnar-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/munnar-1.jpg" alt="Munnar tea estates"></a>
+            <figcaption><span class="lm">Munnar tea estates</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/munnar-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/munnar-2.jpg" alt="Eravikulam National Park, Rajamala — Anamudi peak and Nilgiri Tahr"></a>
+            <figcaption><span class="lm">Eravikulam National Park, Rajamala — Anamudi peak and Nilgiri Tahr</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/munnar-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/munnar-3.jpg" alt="Attukal Waterfalls, Munnar"></a>
+            <figcaption><span class="lm">Attukal Waterfalls, Munnar</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Rajasthan (Jaipur–Udaipur–Jaisalmer)</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/rajasthan-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/rajasthan-1.jpg" alt="Hawa Mahal, Jaipur"></a>
+            <figcaption><span class="lm">Hawa Mahal, Jaipur</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/rajasthan-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/rajasthan-2.jpg" alt="Amber Fort, Jaipur"></a>
+            <figcaption><span class="lm">Amber Fort, Jaipur</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/rajasthan-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/rajasthan-3.jpg" alt="Jaisalmer Fort rising above the Thar Desert"></a>
+            <figcaption><span class="lm">Jaisalmer Fort rising above the Thar Desert</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Manali</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/manali-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/manali-1.jpg" alt="Hadimba Devi Temple (Dhungri Temple)"></a>
+            <figcaption><span class="lm">Hadimba Devi Temple (Dhungri Temple)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/manali-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/manali-2.jpg" alt="Rohtang Pass"></a>
+            <figcaption><span class="lm">Rohtang Pass</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/manali-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/manali-3.jpg" alt="Solang Valley"></a>
+            <figcaption><span class="lm">Solang Valley</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Shimla</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/shimla-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/shimla-1.jpg" alt="Christ Church on The Ridge, Shimla"></a>
+            <figcaption><span class="lm">Christ Church on The Ridge, Shimla</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/shimla-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/shimla-2.jpg" alt="Kalka-Shimla Heritage Toy Train on a stone arch viaduct"></a>
+            <figcaption><span class="lm">Kalka-Shimla Heritage Toy Train on a stone arch viaduct</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/shimla-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/shimla-3.jpg" alt="Jakhu Temple and the Hanuman statue, Jakhu Hill, Shimla"></a>
+            <figcaption><span class="lm">Jakhu Temple and the Hanuman statue, Jakhu Hill, Shimla</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Kashmir Valley</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/kashmir-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/kashmir-1.jpg" alt="Dal Lake, Srinagar"></a>
+            <figcaption><span class="lm">Dal Lake, Srinagar</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/kashmir-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/kashmir-2.jpg" alt="Nishat Bagh Mughal Garden, Srinagar"></a>
+            <figcaption><span class="lm">Nishat Bagh Mughal Garden, Srinagar</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/kashmir-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/kashmir-3.jpg" alt="Gulmarg alpine meadow and Apharwat Peak"></a>
+            <figcaption><span class="lm">Gulmarg alpine meadow and Apharwat Peak</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Ladakh (Leh)</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/ladakh-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/ladakh-1.jpg" alt="Pangong Tso"></a>
+            <figcaption><span class="lm">Pangong Tso</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/ladakh-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/ladakh-2.jpg" alt="Thiksey Monastery"></a>
+            <figcaption><span class="lm">Thiksey Monastery</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/ladakh-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/ladakh-3.jpg" alt="Hunder Sand Dunes, Nubra Valley"></a>
+            <figcaption><span class="lm">Hunder Sand Dunes, Nubra Valley</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Andaman Islands</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/andaman-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/andaman-1.jpg" alt="Radhanagar Beach (Beach No. 7), Havelock Island (Swaraj Dweep)"></a>
+            <figcaption><span class="lm">Radhanagar Beach (Beach No. 7), Havelock Island (Swaraj Dweep)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/andaman-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/andaman-2.jpg" alt="Cellular Jail (Kala Pani), Port Blair"></a>
+            <figcaption><span class="lm">Cellular Jail (Kala Pani), Port Blair</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/andaman-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/andaman-3.jpg" alt="Natural Bridge limestone arch, Neil Island (Shaheed Dweep)"></a>
+            <figcaption><span class="lm">Natural Bridge limestone arch, Neil Island (Shaheed Dweep)</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Coorg</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/coorg-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/coorg-1.jpg" alt="Coffee estate hillsides, Kodagu"></a>
+            <figcaption><span class="lm">Coffee estate hillsides, Kodagu</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/coorg-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/coorg-2.jpg" alt="Abbey Falls, Madikeri"></a>
+            <figcaption><span class="lm">Abbey Falls, Madikeri</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/coorg-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/coorg-3.jpg" alt="Namdroling Monastery (Golden Temple), Bylakuppe"></a>
+            <figcaption><span class="lm">Namdroling Monastery (Golden Temple), Bylakuppe</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Rishikesh</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/rishikesh-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/rishikesh-1.jpg" alt="Laxman Jhula suspension bridge with Trayambakeshwar temple"></a>
+            <figcaption><span class="lm">Laxman Jhula suspension bridge with Trayambakeshwar temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/rishikesh-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/rishikesh-2.jpg" alt="Triveni Ghat evening Ganga aarti"></a>
+            <figcaption><span class="lm">Triveni Ghat evening Ganga aarti</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/rishikesh-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/rishikesh-3.jpg" alt="White-water rafting on the Ganga through the Garhwal valley at Shivpuri"></a>
+            <figcaption><span class="lm">White-water rafting on the Ganga through the Garhwal valley at Shivpuri</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Darjeeling</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/darjeeling-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/darjeeling-1.jpg" alt="Kanchenjunga from Tiger Hill at sunrise"></a>
+            <figcaption><span class="lm">Kanchenjunga from Tiger Hill at sunrise</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/darjeeling-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/darjeeling-2.jpg" alt="Darjeeling Himalayan Railway toy train on Batasia Loop"></a>
+            <figcaption><span class="lm">Darjeeling Himalayan Railway toy train on Batasia Loop</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/darjeeling-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/darjeeling-3.jpg" alt="Darjeeling terraced tea estate"></a>
+            <figcaption><span class="lm">Darjeeling terraced tea estate</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Agra</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/agra-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/agra-1.jpg" alt="Taj Mahal"></a>
+            <figcaption><span class="lm">Taj Mahal</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/agra-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/agra-2.jpg" alt="Agra Fort — Amar Singh Gate"></a>
+            <figcaption><span class="lm">Agra Fort — Amar Singh Gate</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/agra-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/agra-3.jpg" alt="Buland Darwaza, Fatehpur Sikri"></a>
+            <figcaption><span class="lm">Buland Darwaza, Fatehpur Sikri</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Mussoorie</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/mussoorie-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/mussoorie-1.jpg" alt="Kempty Falls"></a>
+            <figcaption><span class="lm">Kempty Falls</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/mussoorie-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/mussoorie-2.jpg" alt="Gun Hill Ropeway"></a>
+            <figcaption><span class="lm">Gun Hill Ropeway</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/mussoorie-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/mussoorie-3.jpg" alt="Mussoorie Ridgeline from Camel's Back Road"></a>
+            <figcaption><span class="lm">Mussoorie Ridgeline from Camel's Back Road</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Nainital</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/nainital-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/nainital-1.jpg" alt="Naini Lake"></a>
+            <figcaption><span class="lm">Naini Lake</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/nainital-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/nainital-2.jpg" alt="Naina Devi Temple"></a>
+            <figcaption><span class="lm">Naina Devi Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/nainital-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/nainital-3.jpg" alt="Snow View Point (Sher-ka-Danda ridge)"></a>
+            <figcaption><span class="lm">Snow View Point (Sher-ka-Danda ridge)</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Ooty</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/ooty-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/ooty-1.jpg" alt="Nilgiri Mountain Railway (Toy Train)"></a>
+            <figcaption><span class="lm">Nilgiri Mountain Railway (Toy Train)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/ooty-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/ooty-2.jpg" alt="Ooty Lake"></a>
+            <figcaption><span class="lm">Ooty Lake</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/ooty-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/ooty-3.jpg" alt="Nilgiri Tea Estates"></a>
+            <figcaption><span class="lm">Nilgiri Tea Estates</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Puducherry</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/pondicherry-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/pondicherry-1.jpg" alt="Matrimandir, Auroville"></a>
+            <figcaption><span class="lm">Matrimandir, Auroville</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/pondicherry-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/pondicherry-2.jpg" alt="French Quarter White Town — Rue Dumas colonial street"></a>
+            <figcaption><span class="lm">French Quarter White Town — Rue Dumas colonial street</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/pondicherry-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/pondicherry-3.jpg" alt="Goubert Avenue Promenade — Rock Beach seafront"></a>
+            <figcaption><span class="lm">Goubert Avenue Promenade — Rock Beach seafront</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Gangtok &amp; East Sikkim</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/gangtok-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/gangtok-1.jpg" alt="Tsomgo Lake (Changu Lake)"></a>
+            <figcaption><span class="lm">Tsomgo Lake (Changu Lake)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/gangtok-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/gangtok-2.jpg" alt="Rumtek Monastery"></a>
+            <figcaption><span class="lm">Rumtek Monastery</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/gangtok-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/gangtok-3.jpg" alt="Nathula Pass border post"></a>
+            <figcaption><span class="lm">Nathula Pass border post</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>McLeodganj &amp; Dharamshala</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/mcleodganj-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/mcleodganj-1.jpg" alt="Tsuglagkhang Complex (Namgyal Monastery / Dalai Lama Temple), McLeodganj"></a>
+            <figcaption><span class="lm">Tsuglagkhang Complex (Namgyal Monastery / Dalai Lama Temple), McLeodganj</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/mcleodganj-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/mcleodganj-2.jpg" alt="Triund Ridge meadow and Dhauladhar snow escarpment above McLeodganj"></a>
+            <figcaption><span class="lm">Triund Ridge meadow and Dhauladhar snow escarpment above McLeodganj</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/mcleodganj-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/mcleodganj-3.jpg" alt="Bhagsu Waterfall (Bhagsunag), McLeodganj"></a>
+            <figcaption><span class="lm">Bhagsu Waterfall (Bhagsunag), McLeodganj</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Shillong &amp; Meghalaya</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-popular/shillong-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/shillong-1.jpg" alt="Double-Decker Living Root Bridge, Nongriat, Cherrapunji"></a>
+            <figcaption><span class="lm">Double-Decker Living Root Bridge, Nongriat, Cherrapunji</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/shillong-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/shillong-2.jpg" alt="Nohkalikai Falls, Cherrapunji (Sohra)"></a>
+            <figcaption><span class="lm">Nohkalikai Falls, Cherrapunji (Sohra)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-popular/shillong-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-popular/shillong-3.jpg" alt="Umngot River at Dawki"></a>
+            <figcaption><span class="lm">Umngot River at Dawki</span></figcaption>
+          </figure></div>
+      </article>
+    </section>
+<section>
+      <div class="sec-head"><h2>India · Offbeat</h2><span class="count">20 places</span></div>
+      <article class="place">
+        <h3>Chopta</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/chopta-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/chopta-1.jpg" alt="Tungnath Temple"></a>
+            <figcaption><span class="lm">Tungnath Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/chopta-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/chopta-2.jpg" alt="Chandrashila Peak Himalayan panorama"></a>
+            <figcaption><span class="lm">Chandrashila Peak Himalayan panorama</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/chopta-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/chopta-3.jpg" alt="Chopta rhododendron forest trail to Tungnath"></a>
+            <figcaption><span class="lm">Chopta rhododendron forest trail to Tungnath</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Spiti</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/spiti-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/spiti-1.jpg" alt="Ki Monastery"></a>
+            <figcaption><span class="lm">Ki Monastery</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/spiti-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/spiti-2.jpg" alt="Chandratal Lake"></a>
+            <figcaption><span class="lm">Chandratal Lake</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/spiti-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/spiti-3.jpg" alt="Dhankar Monastery"></a>
+            <figcaption><span class="lm">Dhankar Monastery</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Ziro</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/ziro-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/ziro-1.jpg" alt="Ziro Valley paddy-cum-pisciculture terraces"></a>
+            <figcaption><span class="lm">Ziro Valley paddy-cum-pisciculture terraces</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/ziro-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/ziro-2.jpg" alt="Hong village Apatani bamboo-and-timber stilt houses"></a>
+            <figcaption><span class="lm">Hong village Apatani bamboo-and-timber stilt houses</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/ziro-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/ziro-3.jpg" alt="Kile Pakho ridge pine forest above Ziro valley"></a>
+            <figcaption><span class="lm">Kile Pakho ridge pine forest above Ziro valley</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Gokarna</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/gokarna-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/gokarna-1.jpg" alt="Mahabaleshwara Temple gopuram"></a>
+            <figcaption><span class="lm">Mahabaleshwara Temple gopuram</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/gokarna-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/gokarna-2.jpg" alt="Om Beach from the northern headland"></a>
+            <figcaption><span class="lm">Om Beach from the northern headland</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/gokarna-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/gokarna-3.jpg" alt="Kudle Beach at first light"></a>
+            <figcaption><span class="lm">Kudle Beach at first light</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Dzükou Valley</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/dzukou-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/dzukou-1.jpg" alt="Dzükou lily meadow (Lilium mackliniae bloom)"></a>
+            <figcaption><span class="lm">Dzükou lily meadow (Lilium mackliniae bloom)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/dzukou-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/dzukou-2.jpg" alt="Dzükou Valley bowl panorama"></a>
+            <figcaption><span class="lm">Dzükou Valley bowl panorama</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/dzukou-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/dzukou-3.jpg" alt="Bamboo forest trail into Dzükou Valley"></a>
+            <figcaption><span class="lm">Bamboo forest trail into Dzükou Valley</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Gurez Valley</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/gurez-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/gurez-1.jpg" alt="Habba Khatoon Peak"></a>
+            <figcaption><span class="lm">Habba Khatoon Peak</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/gurez-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/gurez-2.jpg" alt="Kishanganga River through Gurez Valley floor"></a>
+            <figcaption><span class="lm">Kishanganga River through Gurez Valley floor</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/gurez-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/gurez-3.jpg" alt="Traditional Dard Shin wooden houses, Dawar village"></a>
+            <figcaption><span class="lm">Traditional Dard Shin wooden houses, Dawar village</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Gandikota</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/gandikota-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/gandikota-1.jpg" alt="Penna River Gorge"></a>
+            <figcaption><span class="lm">Penna River Gorge</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/gandikota-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/gandikota-2.jpg" alt="Gandikota Fort battlements"></a>
+            <figcaption><span class="lm">Gandikota Fort battlements</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/gandikota-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/gandikota-3.jpg" alt="Ranganatha Swamy Temple"></a>
+            <figcaption><span class="lm">Ranganatha Swamy Temple</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Mechuka</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/mechuka-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/mechuka-1.jpg" alt="Mechuka Valley panorama with Yargyap Chu and Eastern Himalayan peaks"></a>
+            <figcaption><span class="lm">Mechuka Valley panorama with Yargyap Chu and Eastern Himalayan peaks</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/mechuka-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/mechuka-2.jpg" alt="Samten Yongcha Monastery (Mechuka Gompa)"></a>
+            <figcaption><span class="lm">Samten Yongcha Monastery (Mechuka Gompa)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/mechuka-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/mechuka-3.jpg" alt="Yargyap Chu rattan suspension bridge"></a>
+            <figcaption><span class="lm">Yargyap Chu rattan suspension bridge</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Sandakphu</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/sandakphu-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/sandakphu-1.jpg" alt="Sleeping Buddha panorama — Kanchenjunga, Everest, Lhotse &amp; Makalu skyline from Sandakphu summit"></a>
+            <figcaption><span class="lm">Sleeping Buddha panorama — Kanchenjunga, Everest, Lhotse &amp; Makalu skyline from Sandakphu summit</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/sandakphu-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/sandakphu-2.jpg" alt="Ancient rhododendron forest trail on the Singalila Ridge near Sandakphu"></a>
+            <figcaption><span class="lm">Ancient rhododendron forest trail on the Singalila Ridge near Sandakphu</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/sandakphu-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/sandakphu-3.jpg" alt="Singalila Ridge crest trail above Sandakphu with Kangchenjunga massif"></a>
+            <figcaption><span class="lm">Singalila Ridge crest trail above Sandakphu with Kangchenjunga massif</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Lahaul</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/lahaul-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/lahaul-1.jpg" alt="Chandratal Lake"></a>
+            <figcaption><span class="lm">Chandratal Lake</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/lahaul-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/lahaul-2.jpg" alt="Kardang Monastery"></a>
+            <figcaption><span class="lm">Kardang Monastery</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/lahaul-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/lahaul-3.jpg" alt="Sissu Waterfall"></a>
+            <figcaption><span class="lm">Sissu Waterfall</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Nongriat</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/nongriat-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/nongriat-1.jpg" alt="Umshiang Double Decker Living Root Bridge"></a>
+            <figcaption><span class="lm">Umshiang Double Decker Living Root Bridge</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/nongriat-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/nongriat-2.jpg" alt="Rainbow Falls (beyond Nongriat)"></a>
+            <figcaption><span class="lm">Rainbow Falls (beyond Nongriat)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/nongriat-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/nongriat-3.jpg" alt="3,500-step stone stairway descent from Tyrna to Nongriat"></a>
+            <figcaption><span class="lm">3,500-step stone stairway descent from Tyrna to Nongriat</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Jibhi</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/jibhi-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/jibhi-1.jpg" alt="Chehni Kothi (Chehni Tower)"></a>
+            <figcaption><span class="lm">Chehni Kothi (Chehni Tower)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/jibhi-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/jibhi-2.jpg" alt="Jibhi Waterfall"></a>
+            <figcaption><span class="lm">Jibhi Waterfall</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/jibhi-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/jibhi-3.jpg" alt="Serolsar Lake near Jalori Pass"></a>
+            <figcaption><span class="lm">Serolsar Lake near Jalori Pass</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Munsiyari</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/munsiyari-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/munsiyari-1.jpg" alt="Panchachuli Peaks from Munsiyari"></a>
+            <figcaption><span class="lm">Panchachuli Peaks from Munsiyari</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/munsiyari-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/munsiyari-2.jpg" alt="Birthi Falls"></a>
+            <figcaption><span class="lm">Birthi Falls</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/munsiyari-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/munsiyari-3.jpg" alt="Khaliya Top Bugyal"></a>
+            <figcaption><span class="lm">Khaliya Top Bugyal</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Mawlynnong</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/mawlynnong-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/mawlynnong-1.jpg" alt="Living Root Bridge, Mawlynnong"></a>
+            <figcaption><span class="lm">Living Root Bridge, Mawlynnong</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/mawlynnong-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/mawlynnong-2.jpg" alt="Bamboo Skywalk overlook, Mawlynnong"></a>
+            <figcaption><span class="lm">Bamboo Skywalk overlook, Mawlynnong</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/mawlynnong-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/mawlynnong-3.jpg" alt="Village lane with hanging bamboo dustbins, Mawlynnong"></a>
+            <figcaption><span class="lm">Village lane with hanging bamboo dustbins, Mawlynnong</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Tawang</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/tawang-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/tawang-1.jpg" alt="Tawang Monastery (Galden Namgyal Lhatse)"></a>
+            <figcaption><span class="lm">Tawang Monastery (Galden Namgyal Lhatse)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/tawang-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/tawang-2.jpg" alt="Sela Pass &amp; Sela Lake"></a>
+            <figcaption><span class="lm">Sela Pass &amp; Sela Lake</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/tawang-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/tawang-3.jpg" alt="Shungetser Lake (Madhuri Lake)"></a>
+            <figcaption><span class="lm">Shungetser Lake (Madhuri Lake)</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Wayanad</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/wayanad-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/wayanad-1.jpg" alt="Chembra Peak — Heart-Shaped Lake (Hridaya Thadakam)"></a>
+            <figcaption><span class="lm">Chembra Peak — Heart-Shaped Lake (Hridaya Thadakam)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/wayanad-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/wayanad-2.jpg" alt="Banasura Sagar Dam"></a>
+            <figcaption><span class="lm">Banasura Sagar Dam</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/wayanad-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/wayanad-3.jpg" alt="Edakkal Caves — prehistoric petroglyphs, Ambukuthi Hills"></a>
+            <figcaption><span class="lm">Edakkal Caves — prehistoric petroglyphs, Ambukuthi Hills</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Khajjiar</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/khajjiar-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/khajjiar-1.jpg" alt="Khajjiar saucer meadow and glacial lake with floating peat island"></a>
+            <figcaption><span class="lm">Khajjiar saucer meadow and glacial lake with floating peat island</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/khajjiar-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/khajjiar-2.jpg" alt="Khajji Nag Temple"></a>
+            <figcaption><span class="lm">Khajji Nag Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/khajjiar-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/khajjiar-3.jpg" alt="Ancient deodar cedar forest, Khajjiar"></a>
+            <figcaption><span class="lm">Ancient deodar cedar forest, Khajjiar</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Hampi</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/hampi-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/hampi-1.jpg" alt="Virupaksha Temple gopuram"></a>
+            <figcaption><span class="lm">Virupaksha Temple gopuram</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/hampi-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/hampi-2.jpg" alt="Stone Chariot at Vittala Temple"></a>
+            <figcaption><span class="lm">Stone Chariot at Vittala Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/hampi-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/hampi-3.jpg" alt="Hampi boulder landscape with Tungabhadra River"></a>
+            <figcaption><span class="lm">Hampi boulder landscape with Tungabhadra River</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Kanatal</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/kanatal-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/kanatal-1.jpg" alt="Surkanda Devi Temple"></a>
+            <figcaption><span class="lm">Surkanda Devi Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/kanatal-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/kanatal-2.jpg" alt="Tehri Lake (Tehri Dam reservoir)"></a>
+            <figcaption><span class="lm">Tehri Lake (Tehri Dam reservoir)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/kanatal-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/kanatal-3.jpg" alt="Kodia Forest rhododendron trail"></a>
+            <figcaption><span class="lm">Kodia Forest rhododendron trail</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Lansdowne</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-offbeat/lansdowne-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/lansdowne-1.jpg" alt="Tip-in-Top (Tiffin Top) viewpoint"></a>
+            <figcaption><span class="lm">Tip-in-Top (Tiffin Top) viewpoint</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/lansdowne-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/lansdowne-2.jpg" alt="St. Mary's Church (1895), Lansdowne cantonment"></a>
+            <figcaption><span class="lm">St. Mary's Church (1895), Lansdowne cantonment</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-offbeat/lansdowne-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-offbeat/lansdowne-3.jpg" alt="Bhim Pakora balancing boulders"></a>
+            <figcaption><span class="lm">Bhim Pakora balancing boulders</span></figcaption>
+          </figure></div>
+      </article>
+    </section>
+<section>
+      <div class="sec-head"><h2>India · Spiritual</h2><span class="count">18 places</span></div>
+      <article class="place">
+        <h3>Char Dham (Kedarnath–Badrinath–Gangotri–Yamunotri)</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/char-dham-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/char-dham-1.jpg" alt="Kedarnath Temple"></a>
+            <figcaption><span class="lm">Kedarnath Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/char-dham-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/char-dham-2.jpg" alt="Badrinath Temple below Nilkantha Peak"></a>
+            <figcaption><span class="lm">Badrinath Temple below Nilkantha Peak</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/char-dham-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/char-dham-3.jpg" alt="Gangotri Temple and the Bhagirathi River"></a>
+            <figcaption><span class="lm">Gangotri Temple and the Bhagirathi River</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Varanasi (Kashi)</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/varanasi-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/varanasi-1.jpg" alt="Dashashwamedh Ghat Ganga Aarti"></a>
+            <figcaption><span class="lm">Dashashwamedh Ghat Ganga Aarti</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/varanasi-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/varanasi-2.jpg" alt="Varanasi ghat skyline at sunrise from the Ganga"></a>
+            <figcaption><span class="lm">Varanasi ghat skyline at sunrise from the Ganga</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/varanasi-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/varanasi-3.jpg" alt="Kashi Vishwanath Temple golden shikhara"></a>
+            <figcaption><span class="lm">Kashi Vishwanath Temple golden shikhara</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Rishikesh &amp; Haridwar</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/rishikesh-haridwar-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/rishikesh-haridwar-1.jpg" alt="Laxman Jhula suspension bridge, Rishikesh"></a>
+            <figcaption><span class="lm">Laxman Jhula suspension bridge, Rishikesh</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/rishikesh-haridwar-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/rishikesh-haridwar-2.jpg" alt="Har Ki Pauri Ghat evening Ganga Aarti, Haridwar"></a>
+            <figcaption><span class="lm">Har Ki Pauri Ghat evening Ganga Aarti, Haridwar</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/rishikesh-haridwar-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/rishikesh-haridwar-3.jpg" alt="The Ganga at Rishikesh with ashrams and Shivalik foothills"></a>
+            <figcaption><span class="lm">The Ganga at Rishikesh with ashrams and Shivalik foothills</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Amritsar — Golden Temple</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/amritsar-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/amritsar-1.jpg" alt="Harmandir Sahib on the Amrit Sarovar"></a>
+            <figcaption><span class="lm">Harmandir Sahib on the Amrit Sarovar</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/amritsar-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/amritsar-2.jpg" alt="Attari-Wagah Border ceremonial gate"></a>
+            <figcaption><span class="lm">Attari-Wagah Border ceremonial gate</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/amritsar-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/amritsar-3.jpg" alt="White marble parikrama walkway at blue hour"></a>
+            <figcaption><span class="lm">White marble parikrama walkway at blue hour</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Bodh Gaya</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/bodh-gaya-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/bodh-gaya-1.jpg" alt="Mahabodhi Temple"></a>
+            <figcaption><span class="lm">Mahabodhi Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/bodh-gaya-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/bodh-gaya-2.jpg" alt="Sacred Bodhi Tree and Vajrasana"></a>
+            <figcaption><span class="lm">Sacred Bodhi Tree and Vajrasana</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/bodh-gaya-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/bodh-gaya-3.jpg" alt="Great Buddha Statue (Daibutsu)"></a>
+            <figcaption><span class="lm">Great Buddha Statue (Daibutsu)</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Hampi &amp; Pattadakal</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/pattadakal-hampi-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/pattadakal-hampi-1.jpg" alt="Stone Chariot (Garuda Shrine), Vittala Temple, Hampi"></a>
+            <figcaption><span class="lm">Stone Chariot (Garuda Shrine), Vittala Temple, Hampi</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/pattadakal-hampi-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/pattadakal-hampi-2.jpg" alt="Virupaksha Temple Gopuram, Hampi Bazaar"></a>
+            <figcaption><span class="lm">Virupaksha Temple Gopuram, Hampi Bazaar</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/pattadakal-hampi-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/pattadakal-hampi-3.jpg" alt="Pattadakal Temple Cluster, Malaprabha River"></a>
+            <figcaption><span class="lm">Pattadakal Temple Cluster, Malaprabha River</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Kamakhya, Guwahati</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/kamakhya-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/kamakhya-1.jpg" alt="Kamakhya Temple shikhara"></a>
+            <figcaption><span class="lm">Kamakhya Temple shikhara</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/kamakhya-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/kamakhya-2.jpg" alt="Brahmaputra River panorama from Nilachal Hill"></a>
+            <figcaption><span class="lm">Brahmaputra River panorama from Nilachal Hill</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/kamakhya-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/kamakhya-3.jpg" alt="Kamakhya Temple entrance gateway (torana)"></a>
+            <figcaption><span class="lm">Kamakhya Temple entrance gateway (torana)</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Rameswaram</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/rameswaram-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/rameswaram-1.jpg" alt="Ramanathaswamy Temple corridor"></a>
+            <figcaption><span class="lm">Ramanathaswamy Temple corridor</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/rameswaram-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/rameswaram-2.jpg" alt="Pamban Railway Bridge"></a>
+            <figcaption><span class="lm">Pamban Railway Bridge</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/rameswaram-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/rameswaram-3.jpg" alt="Dhanushkodi ruins"></a>
+            <figcaption><span class="lm">Dhanushkodi ruins</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Pushkar</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/pushkar-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/pushkar-1.jpg" alt="Jagatpita Brahma Mandir"></a>
+            <figcaption><span class="lm">Jagatpita Brahma Mandir</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/pushkar-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/pushkar-2.jpg" alt="Pushkar Sarovar (Sacred Lake and Ghats)"></a>
+            <figcaption><span class="lm">Pushkar Sarovar (Sacred Lake and Ghats)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/pushkar-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/pushkar-3.jpg" alt="Savitri Temple on Ratnagiri Hill"></a>
+            <figcaption><span class="lm">Savitri Temple on Ratnagiri Hill</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Hemkund Sahib</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/hemkund-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/hemkund-1.jpg" alt="Gurudwara Hemkund Sahib"></a>
+            <figcaption><span class="lm">Gurudwara Hemkund Sahib</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/hemkund-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/hemkund-2.jpg" alt="Hemkund Lake (Lokpal Lake) glacial cirque panorama"></a>
+            <figcaption><span class="lm">Hemkund Lake (Lokpal Lake) glacial cirque panorama</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/hemkund-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/hemkund-3.jpg" alt="Nishan Sahib flag poles at the Hemkund Sahib entrance"></a>
+            <figcaption><span class="lm">Nishan Sahib flag poles at the Hemkund Sahib entrance</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Tawang Monastery</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/tawang-monastery-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/tawang-monastery-1.jpg" alt="Galden Namgyal Lhatse (Tawang Monastery)"></a>
+            <figcaption><span class="lm">Galden Namgyal Lhatse (Tawang Monastery)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/tawang-monastery-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/tawang-monastery-2.jpg" alt="Sela Pass and Sela Lake"></a>
+            <figcaption><span class="lm">Sela Pass and Sela Lake</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/tawang-monastery-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/tawang-monastery-3.jpg" alt="Madhuri Lake (Shungetser Tso)"></a>
+            <figcaption><span class="lm">Madhuri Lake (Shungetser Tso)</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Spiti Gompas — Key &amp; Tabo</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/spiti-gompas-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/spiti-gompas-1.jpg" alt="Key Monastery (Ki Gompa)"></a>
+            <figcaption><span class="lm">Key Monastery (Ki Gompa)</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/spiti-gompas-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/spiti-gompas-2.jpg" alt="Tabo Monastery complex"></a>
+            <figcaption><span class="lm">Tabo Monastery complex</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/spiti-gompas-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/spiti-gompas-3.jpg" alt="Tabo meditation cave temples in the cliff face"></a>
+            <figcaption><span class="lm">Tabo meditation cave temples in the cliff face</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Madurai — Meenakshi</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/madurai-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/madurai-1.jpg" alt="South Gopuram, Meenakshi Amman Temple"></a>
+            <figcaption><span class="lm">South Gopuram, Meenakshi Amman Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/madurai-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/madurai-2.jpg" alt="Thirumalai Nayakkar Mahal — pillared courtyard colonnade"></a>
+            <figcaption><span class="lm">Thirumalai Nayakkar Mahal — pillared courtyard colonnade</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/madurai-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/madurai-3.jpg" alt="Mariamman Teppakulam — island shrine and tank reflection"></a>
+            <figcaption><span class="lm">Mariamman Teppakulam — island shrine and tank reflection</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Dwarka &amp; Somnath</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/dwarka-somnath-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/dwarka-somnath-1.jpg" alt="Dwarkadhish Temple shikhara, Dwarka"></a>
+            <figcaption><span class="lm">Dwarkadhish Temple shikhara, Dwarka</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/dwarka-somnath-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/dwarka-somnath-2.jpg" alt="Somnath Jyotirlinga temple &amp; Baan Stambha, Saurashtra coast"></a>
+            <figcaption><span class="lm">Somnath Jyotirlinga temple &amp; Baan Stambha, Saurashtra coast</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/dwarka-somnath-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/dwarka-somnath-3.jpg" alt="Gomti Ghat, Dwarka"></a>
+            <figcaption><span class="lm">Gomti Ghat, Dwarka</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Shravanabelagola</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/shravanabelagola-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/shravanabelagola-1.jpg" alt="Gomateshwara (Bahubali) monolithic statue, Vindhyagiri Hill"></a>
+            <figcaption><span class="lm">Gomateshwara (Bahubali) monolithic statue, Vindhyagiri Hill</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/shravanabelagola-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/shravanabelagola-2.jpg" alt="614 granite rock-cut steps ascending Vindhyagiri Hill"></a>
+            <figcaption><span class="lm">614 granite rock-cut steps ascending Vindhyagiri Hill</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/shravanabelagola-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/shravanabelagola-3.jpg" alt="Chandragiri Hill and its cluster of ancient Jain bastis"></a>
+            <figcaption><span class="lm">Chandragiri Hill and its cluster of ancient Jain bastis</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Kanchipuram</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/kanchipuram-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/kanchipuram-1.jpg" alt="Ekambareswarar Temple gopuram"></a>
+            <figcaption><span class="lm">Ekambareswarar Temple gopuram</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/kanchipuram-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/kanchipuram-2.jpg" alt="Kailasanathar Temple"></a>
+            <figcaption><span class="lm">Kailasanathar Temple</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/kanchipuram-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/kanchipuram-3.jpg" alt="Kanjeevaram silk pit-loom workshop"></a>
+            <figcaption><span class="lm">Kanjeevaram silk pit-loom workshop</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Velankanni</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/velankanni-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/velankanni-1.jpg" alt="Basilica of Our Lady of Good Health"></a>
+            <figcaption><span class="lm">Basilica of Our Lady of Good Health</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/velankanni-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/velankanni-2.jpg" alt="Shrine Tank beside the Basilica"></a>
+            <figcaption><span class="lm">Shrine Tank beside the Basilica</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/velankanni-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/velankanni-3.jpg" alt="Velankanni Beach on the Bay of Bengal"></a>
+            <figcaption><span class="lm">Velankanni Beach on the Bay of Bengal</span></figcaption>
+          </figure></div>
+      </article>
+<article class="place">
+        <h3>Sabarimala</h3>
+        <div class="tiles"><figure style="--ar:16 / 9">
+            <a href="india-spiritual/sabarimala-1.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/sabarimala-1.jpg" alt="Pathinettampadi — the 18 sacred gold-plated steps"></a>
+            <figcaption><span class="lm">Pathinettampadi — the 18 sacred gold-plated steps</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/sabarimala-2.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/sabarimala-2.jpg" alt="Sabarimala Sannidhanam — hilltop temple complex above the forest"></a>
+            <figcaption><span class="lm">Sabarimala Sannidhanam — hilltop temple complex above the forest</span></figcaption>
+          </figure>
+<figure style="--ar:16 / 9">
+            <a href="india-spiritual/sabarimala-3.jpg" target="_blank" rel="noopener"><img loading="lazy" src="india-spiritual/sabarimala-3.jpg" alt="Pampa River — Triveni Sangamam bathing ghat"></a>
+            <figcaption><span class="lm">Pampa River — Triveni Sangamam bathing ghat</span></figcaption>
+          </figure></div>
+      </article>
+    </section>
+</main>
+</body>
+</html>
