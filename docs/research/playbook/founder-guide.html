@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Driftibo Founder's Field Guide to the Travel Business</title>
+<meta name="description" content="One reference for starting a travel business in India: how to start, where the margins are, who to source from, two example trips priced with real rates, and the volume-tiered roadmap from first sale to scale.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============ Driftibo tokens (self-contained for print) ============ */
+  :root{
+    --pk-ink:oklch(0.38 0.06 220); --pk-ink-soft:oklch(0.46 0.06 220); --pk-on-ink:oklch(0.965 0.012 210);
+    --pk-accent:oklch(0.80 0.085 32); --pk-accent-deep:oklch(0.66 0.12 32);
+    --pk-paper:oklch(0.972 0.012 210); --pk-panel:oklch(0.95 0.016 215); --pk-card:oklch(0.995 0.004 210); --pk-sky:oklch(0.93 0.035 220);
+    --pk-text:oklch(0.32 0.035 220); --pk-muted:oklch(0.57 0.03 210);
+    --pk-line:oklch(0.85 0.028 210); --pk-line-soft:oklch(0.90 0.02 210); --pk-line-strong:oklch(0.76 0.025 210);
+    --pk-ok:oklch(0.55 0.11 155); --pk-ok-bg:oklch(0.95 0.04 155); --pk-warn-bg:oklch(0.95 0.05 60);
+    --pk-shadow-sm:0 1px 3px oklch(0.38 0.06 220 / 0.07);
+    --pk-shadow:0 2px 8px oklch(0.38 0.06 220 / 0.07), 0 14px 36px oklch(0.38 0.06 220 / 0.10);
+    --r-sm:8px; --r-md:14px; --r-lg:22px; --r-pill:999px;
+    --display:'Fraunces',Georgia,serif; --ui:'Plus Jakarta Sans',system-ui,sans-serif;
+    --maxw:1080px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:60px}
+  body{font-family:var(--ui);color:var(--pk-text);background:var(--pk-paper);-webkit-font-smoothing:antialiased;line-height:1.65}
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+  a{color:var(--pk-accent-deep);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* ---- type ---- */
+  .display{font-family:var(--display);font-weight:300;line-height:1.04;letter-spacing:-0.015em;color:var(--pk-text)}
+  h1{font-family:var(--display);font-weight:300;line-height:.98;letter-spacing:-0.02em;font-size:clamp(2.2rem,5.5vw,4rem)}
+  h2{font-family:var(--display);font-weight:400;font-size:clamp(1.55rem,3.4vw,2.3rem);letter-spacing:-0.01em;line-height:1.08}
+  h3{font-family:var(--display);font-weight:500;font-size:1.28rem;margin:24px 0 8px}
+  h4{font-family:var(--ui);font-weight:700;font-size:1rem;margin:16px 0 6px}
+  p{margin:10px 0}
+  .kicker{font-family:var(--ui);font-weight:700;text-transform:uppercase;letter-spacing:.32em;font-size:.66rem;color:var(--pk-accent-deep)}
+  .eyebrow{font-family:var(--display);font-style:italic;font-weight:300;color:var(--pk-muted)}
+  .lede{font-size:1.075rem;color:var(--pk-muted)}
+  .poetry{font-family:var(--display);font-style:italic;font-weight:300}
+  small,.small{font-size:.82rem;color:var(--pk-muted)}
+  .rule{width:40px;height:2px;background:var(--pk-accent);opacity:.5;border:0;margin:14px 0}
+
+  /* ---- seal ---- */
+  .seal{position:relative;border-radius:50%;display:grid;place-items:center;aspect-ratio:1;width:64px;flex:none}
+  .seal .ring{position:absolute;inset:7.8%;border-radius:50%;border:1px solid currentColor}
+  .seal .star{width:44%;height:44%;background:currentColor;
+    clip-path:polygon(50% 0%,56% 44%,100% 50%,56% 56%,50% 100%,44% 56%,0% 50%,44% 44%)}
+  .seal .cn,.seal .cs,.seal .ce,.seal .cw{position:absolute;font-family:var(--ui);font-weight:700;line-height:1}
+  .seal .cn{top:9%;left:50%;transform:translateX(-50%)} .seal .cs{bottom:9%;left:50%;transform:translateX(-50%)}
+  .seal .ce{right:9%;top:50%;transform:translateY(-50%)} .seal .cw{left:9%;top:50%;transform:translateY(-50%)}
+  .seal.t-coral{background:var(--pk-accent);color:oklch(0.30 0.05 32)}
+  .seal.t-ink{background:var(--pk-ink);color:var(--pk-accent)}
+  .seal.t-ink .star{background:var(--pk-accent)}
+
+  /* ---- cover ---- */
+  .cover{background:
+      radial-gradient(60% 80% at 12% 8%,oklch(0.80 0.10 210 / .9),transparent 60%),
+      radial-gradient(64% 66% at 92% 14%,oklch(0.85 0.11 32 / .55),transparent 55%),
+      radial-gradient(90% 95% at 50% 120%,oklch(0.60 0.11 198 / .8),transparent 60%),
+      linear-gradient(160deg,oklch(0.46 0.07 218),oklch(0.36 0.06 228));
+    color:var(--pk-on-ink);position:relative;overflow:hidden}
+  .cover .wrap{padding:60px 24px 64px}
+  .cover-top{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:oklch(0.86 0.08 32)}
+  .cover-mid{display:flex;flex-direction:column;align-items:center;text-align:center;gap:26px;padding:54px 0 44px}
+  .cover h1{color:var(--pk-on-ink);max-width:20ch}
+  .cover .tag{font-weight:700;font-size:.8rem;letter-spacing:.36em;text-transform:uppercase;color:oklch(0.86 0.08 32)}
+  .cover-foot{border-top:1px solid oklch(0.86 0.08 32 / .3);padding-top:20px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    font-size:.84rem;color:oklch(0.92 0.02 210);line-height:1.55}
+  .cover-foot .right{text-align:right}
+
+  /* ---- sticky nav (screen only) ---- */
+  nav.toc{position:sticky;top:0;z-index:50;background:oklch(0.972 0.012 210 / .92);backdrop-filter:blur(10px);border-bottom:1px solid var(--pk-line)}
+  nav.toc .inner{max-width:var(--maxw);margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:9px 16px;-webkit-overflow-scrolling:touch}
+  nav.toc a{flex:none;font-weight:600;font-size:.78rem;color:var(--pk-ink);padding:6px 11px;border-radius:var(--r-pill);white-space:nowrap}
+  nav.toc a:hover{background:var(--pk-sky);text-decoration:none}
+  .printbtn{position:fixed;right:18px;bottom:18px;z-index:60;font-family:var(--ui);font-weight:700;font-size:.82rem;border:0;cursor:pointer;
+    background:var(--pk-ink);color:var(--pk-on-ink);padding:11px 18px;border-radius:var(--r-pill);box-shadow:var(--pk-shadow)}
+  .printbtn:hover{transform:translateY(-1px)}
+
+  /* ---- sections ---- */
+  section{padding:44px 0;border-top:1px solid var(--pk-line-soft)}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+  .sec-num{font-family:var(--display);font-size:1.7rem;color:var(--pk-accent-deep);font-weight:400}
+
+  /* ---- cards / callouts ---- */
+  .card{background:var(--pk-card);border:1px solid var(--pk-line);border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--pk-shadow-sm)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:820px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+
+  .callout{border-radius:var(--r-lg);padding:18px 22px;margin:16px 0;border:1px solid var(--pk-line)}
+  .callout .ttl{font-weight:800;font-size:.96rem;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .callout.ink{background:var(--pk-ink);color:var(--pk-on-ink);border:0}
+  .callout.ink a{color:oklch(0.86 0.08 32)} .callout.ink .ttl{color:var(--pk-accent)}
+  .callout.driftibo{background:linear-gradient(135deg,oklch(0.40 0.07 220),oklch(0.34 0.06 228));color:var(--pk-on-ink);border:0;box-shadow:var(--pk-shadow)}
+  .callout.driftibo .ttl{color:var(--pk-accent)} .callout.driftibo a{color:oklch(0.88 0.07 32)}
+  .callout.ok{background:var(--pk-ok-bg);border-color:oklch(0.80 0.06 155)}
+  .callout.warn{background:var(--pk-warn-bg);border-color:oklch(0.80 0.08 60)}
+  .callout.coral{background:oklch(0.96 0.03 32);border-color:oklch(0.82 0.08 40)}
+  .callout.decision{background:oklch(0.95 0.035 250);border-color:oklch(0.80 0.06 250)} .callout.decision .ttl{color:oklch(0.42 0.10 250)}
+
+  /* verdict badges */
+  .vb{display:inline-flex;align-items:center;gap:5px;font-weight:700;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:var(--r-pill);vertical-align:middle}
+  .vb.ok{background:var(--pk-ok-bg);color:var(--pk-ok);box-shadow:inset 0 0 0 1px oklch(0.78 0.06 155)}
+  .vb.warn{background:var(--pk-warn-bg);color:oklch(0.5 0.12 60);box-shadow:inset 0 0 0 1px oklch(0.78 0.09 60)}
+  .vb.fix{background:oklch(0.95 0.04 32);color:var(--pk-accent-deep);box-shadow:inset 0 0 0 1px oklch(0.80 0.09 40)}
+  .vb.no{background:oklch(0.95 0.04 25);color:oklch(0.52 0.16 25);box-shadow:inset 0 0 0 1px oklch(0.82 0.10 25)}
+
+  /* ---- tables ---- */
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--pk-line);border-radius:var(--r-md);margin:16px 0;box-shadow:var(--pk-shadow-sm)}
+  table{border-collapse:collapse;width:100%;min-width:640px;background:var(--pk-card);font-size:.84rem}
+  caption{caption-side:top;text-align:left;font-weight:700;font-size:.82rem;color:var(--pk-muted);padding:10px 14px;background:var(--pk-panel)}
+  th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--pk-line-soft);vertical-align:top}
+  thead th{background:var(--pk-panel);font-weight:700;font-size:.72rem;letter-spacing:.03em;text-transform:uppercase;color:var(--pk-ink)}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:nth-child(even){background:oklch(0.97 0.012 210 / .5)}
+  td strong{color:var(--pk-ink)}
+  .bf{color:var(--pk-accent-deep);font-weight:600}
+  .nowrap{white-space:nowrap}
+  .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  /* lists */
+  ul,ol{margin:10px 0 10px 22px}
+  li{margin:5px 0}
+  ul.clean{list-style:none;margin-left:0}
+  ul.clean li{padding-left:24px;position:relative}
+  ul.clean li::before{content:'›';position:absolute;left:6px;top:-1px;color:var(--pk-accent-deep);font-weight:800}
+
+  /* checklist */
+  .check{margin-left:0}
+  .check li{list-style:none;position:relative;padding:8px 0 8px 32px;border-bottom:1px dashed var(--pk-line-soft)}
+  .check li::before{content:'';position:absolute;left:2px;top:11px;width:16px;height:16px;border-radius:5px;border:2px solid var(--pk-line-strong)}
+  .check li b{color:var(--pk-ink)}
+  .phase-tag{display:inline-block;font-size:.64rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--pk-accent-deep);background:oklch(0.95 0.03 32);padding:2px 8px;border-radius:var(--r-pill);margin-right:8px}
+
+  /* defined term */
+  .dfn{border-bottom:1px dotted var(--pk-accent-deep);cursor:help;text-decoration:none}
+
+  /* source line under a priced row / fact */
+  .src{font-size:.72rem;color:var(--pk-muted)}
+  .src a{color:var(--pk-muted)}
+  cite{display:block;font-style:normal;font-size:.72rem;color:var(--pk-muted);margin-top:2px}
+  .tag-src{display:inline-block;font-size:.68rem;font-weight:600;color:var(--pk-muted);background:var(--pk-panel);border:1px solid var(--pk-line-soft);border-radius:var(--r-pill);padding:1px 8px}
+  .est{display:inline-block;font-size:.64rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:oklch(0.5 0.12 60);background:var(--pk-warn-bg);border-radius:var(--r-pill);padding:1px 7px;box-shadow:inset 0 0 0 1px oklch(0.82 0.08 60)}
+
+  /* roadmap tier card */
+  .tier{background:var(--pk-card);border:1px solid var(--pk-line);border-left:4px solid var(--pk-accent);border-radius:var(--r-lg);padding:18px 20px;box-shadow:var(--pk-shadow-sm);margin:14px 0}
+  .tier .tier-no{font-family:var(--display);font-size:1.05rem;color:var(--pk-accent-deep);font-weight:500}
+  .tier .trig{font-size:.82rem;color:var(--pk-muted);font-weight:600}
+  .tier h4{margin-top:10px}
+  .tier .dont{font-size:.84rem;color:oklch(0.52 0.16 25)}
+
+  /* example-trip take-home strip */
+  .takehome{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .takehome .kpi{flex:1;min-width:130px;background:var(--pk-panel);border:1px solid var(--pk-line-soft);border-radius:var(--r-md);padding:12px 14px}
+  .takehome .kpi .k{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--pk-muted)}
+  .takehome .kpi .v{font-family:var(--display);font-size:1.45rem;color:var(--pk-ink);font-weight:400;margin-top:2px}
+  .takehome .kpi.coral{background:oklch(0.96 0.03 32);border-color:oklch(0.82 0.08 40)}
+  .takehome .kpi.coral .v{color:var(--pk-accent-deep)}
+
+  /* glossary */
+  .gloss{columns:2;column-gap:34px}
+  @media(max-width:760px){.gloss{columns:1}}
+  .gloss dt{font-weight:800;color:var(--pk-ink);margin-top:12px;break-after:avoid}
+  .gloss dd{margin:2px 0 0;font-size:.9rem;color:var(--pk-text)}
+  .gloss .full{color:var(--pk-accent-deep);font-weight:600}
+
+  .disclaimer{background:oklch(0.95 0.05 60);border:1px solid oklch(0.82 0.08 60);border-radius:var(--r-md);padding:12px 16px;font-size:.84rem;margin:16px 0}
+  footer{background:var(--pk-ink);color:var(--pk-on-ink);padding:38px 0;margin-top:8px}
+  footer a{color:oklch(0.86 0.08 32)}
+  footer .seal{color:var(--pk-accent)}
+
+  /* ============ PRINT ============ */
+  @media print{
+    @page{size:A4;margin:15mm 14mm}
+    html,body{background:#fff}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body::before{display:none}              /* drop grain film */
+    nav.toc,.printbtn{display:none !important}
+    html{scroll-padding-top:0}
+    .wrap{max-width:none;padding:0}
+    a{color:var(--pk-text);text-decoration:none}
+    .cover{break-after:page}
+    .cover .wrap{padding:26mm 0}
+    section{padding:14px 0;border-top:1px solid var(--pk-line-soft);break-inside:auto}
+    h1,h2{break-after:avoid} h3,h4{break-after:avoid}
+    .sec-head{break-after:avoid}
+    .card,.callout,.tier,.takehome .kpi,.disclaimer{break-inside:avoid}
+    .tbl-wrap{overflow:visible;break-inside:auto;box-shadow:none}
+    table{min-width:0;font-size:.74rem}
+    thead{display:table-header-group}        /* repeat headers across pages */
+    tr{break-inside:avoid}
+    .grid2,.grid3,.grid4{gap:10px}
+    footer{break-before:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════ COVER ════════ -->
+<header class="cover">
+  <div class="wrap">
+    <div class="cover-top">
+      <div>Driftibo &middot; Founder Reference</div>
+      <div>Edition 01 &middot; as of July 2026</div>
+    </div>
+    <div class="cover-mid">
+      <div class="seal t-ink" style="width:118px">
+        <span class="ring"></span><span class="star"></span>
+        <span class="cn" style="font-size:10px">N</span><span class="ce" style="font-size:10px">E</span>
+        <span class="cs" style="font-size:10px">S</span><span class="cw" style="font-size:10px">W</span>
+      </div>
+      <div>
+        <h1>The Driftibo Founder's Field Guide to the Travel Business</h1>
+        <p class="tag" style="margin-top:18px">Travel by your own star</p>
+      </div>
+    </div>
+    <div class="cover-foot">
+      <div style="max-width:60ch">One reference for someone new to travel. How to start, where the money is, who to buy from, two example trips priced with real rates, and the channel to use at every stage of growth.</div>
+      <div class="right">Start &rarr; Margins &rarr; Suppliers<br>Examples &rarr; Volume roadmap &rarr; Risk</div>
+    </div>
+  </div>
+</header>
+
+<!-- ════════ NAV ════════ -->
+<nav class="toc" aria-label="Sections">
+  <div class="inner">
+    <a href="plan.html">&larr; Playbook</a>
+    <a href="#model">1 &middot; The model</a>
+    <a href="#startup">2 &middot; Start-up roadmap</a>
+    <a href="#margins">3 &middot; Where money is</a>
+    <a href="#products">4 &middot; Product lines</a>
+    <a href="#suppliers">5 &middot; Suppliers</a>
+    <a href="#examples">6 &middot; Example trips</a>
+    <a href="#future">7 &middot; Volume roadmap</a>
+    <a href="#risk">8 &middot; Risk</a>
+    <a href="#glossary">9 &middot; Glossary</a>
+    <a href="#checklist">10 &middot; 90 days</a>
+  </div>
+</nav>
+
+<button class="printbtn" onclick="window.print()">Print / Save as PDF</button>
+
+<main class="wrap">
+
+<!-- 1 ───────── THE MODEL -->
+<section id="model">
+  <div class="sec-head"><span class="sec-num">1</span><h2>The business in one picture</h2></div>
+  <p class="lede">A travel business is simple to say and easy to forget. You buy travel at wholesale, you package it, you sell it at retail. Your money is the gap between the two, plus the fee you add for doing the work of putting it together.</p>
+
+  <div class="callout driftibo">
+    <div class="ttl">The model in one line</div>
+    <p style="margin-top:2px">Buy rooms, transport, activities and flights at <b>net (wholesale) rates</b>, wrap them into a trip a person can understand, sell that trip at a <b>retail price</b>, and keep the difference. You never own a hotel or a bus. You assemble and you sell.</p>
+  </div>
+
+  <p>Everything else in this guide hangs off three layers. Build them in order. Each one unlocks the next.</p>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="kicker">Layer 1</div>
+      <h3 style="margin-top:6px">The legal shell</h3>
+      <p class="small">The registered business that lets you buy wholesale and take a customer's money.</p>
+      <ul class="clean small">
+        <li>A registered firm (start as a proprietorship)</li>
+        <li><span class="dfn" title="Goods and Services Tax registration, your tax identity">GST</span> and <span class="dfn" title="Permanent Account Number, your business tax ID">PAN</span></li>
+        <li>A current bank account and a payment link</li>
+      </ul>
+      <p class="small" style="margin-bottom:0"><b>Why first:</b> no supplier opens a wholesale account without GST and PAN. This is the key to the whole supply chain.</p>
+    </div>
+    <div class="card">
+      <div class="kicker">Layer 2</div>
+      <h3 style="margin-top:6px">The supply chain</h3>
+      <p class="small">Where you get travel at net rates, so there is room for margin.</p>
+      <ul class="clean small">
+        <li><span class="dfn" title="A wholesale hotel-room bank: book rooms at net rates with no hotel contract of your own">Bedbanks</span> for rooms, worldwide</li>
+        <li><span class="dfn" title="Destination Management Company: a local operator that already contracts hotels, jeeps, guides and permits and sells you the finished trip">DMCs</span> for ready-made ground trips</li>
+        <li><span class="dfn" title="A wholesaler of airline seats who gives agents fares below the public price">Consolidators</span> for flights and net air fares</li>
+      </ul>
+      <p class="small" style="margin-bottom:0"><b>Why second:</b> a website with nothing to sell is not a business. This layer is your shelf stock.</p>
+    </div>
+    <div class="card">
+      <div class="kicker">Layer 3</div>
+      <h3 style="margin-top:6px">The selling</h3>
+      <p class="small">How a stranger finds you, trusts you, and pays a deposit.</p>
+      <ul class="clean small">
+        <li>Instagram to get seen</li>
+        <li>WhatsApp to answer and quote</li>
+        <li>A deposit link to lock the booking</li>
+      </ul>
+      <p class="small" style="margin-bottom:0"><b>Why third:</b> the first two layers cost you nothing until someone buys. This layer is what turns the shelf into income.</p>
+    </div>
+  </div>
+
+  <div class="callout coral">
+    <div class="ttl">The one rule that protects you</div>
+    <p style="margin:2px 0 0">Take the customer's deposit <b>before</b> you pay any supplier. You are a middle layer, not a bank. Collect first, pay out second, and you never fund a trip with your own cash.</p>
+  </div>
+</section>
+
+<!-- 2 ───────── START-UP ROADMAP -->
+<section id="startup">
+  <div class="sec-head"><span class="sec-num">2</span><h2>The start-up roadmap, zero to first sale</h2></div>
+  <p class="lede">Four phases, in order. Each one is small and one-time. Do not jump ahead. Phase 0 unlocks Phase 1, and so on.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="kicker">Phase 0</div>
+      <h3 style="margin-top:6px">Get legal and money ready</h3>
+      <p class="small">Before you take a single rupee. Cheap, one-time, unblocks everything.</p>
+      <ul class="clean small">
+        <li>Register as a proprietorship, then get GST and PAN</li>
+        <li>Open a current account and a Razorpay (or similar) link</li>
+        <li>Write your cancellation tiers into a short terms-and-conditions and make "I agree" a real step before any advance</li>
+        <li>Sit with a chartered accountant for thirty minutes to confirm how you charge GST</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="kicker">Phase 1</div>
+      <h3 style="margin-top:6px">Get your first inventory</h3>
+      <p class="small">Open the free supplier accounts and do your first tie-ups. This fixes "we have a site but nothing to sell."</p>
+      <ul class="clean small">
+        <li>Open one or two bedbank accounts (zero deposit to start)</li>
+        <li>Tie up one DMC in each region you want to sell</li>
+        <li>Get each DMC's net rates, deposit terms and payment terms in writing</li>
+        <li>Set one markup rule and run one real trip through it end to end</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="kicker">Phase 2</div>
+      <h3 style="margin-top:6px">Win your first customers</h3>
+      <p class="small">Your first five to ten trips come from people who already trust you, not from strangers.</p>
+      <ul class="clean small">
+        <li>Send a WhatsApp broadcast to friends and family with one clear offer</li>
+        <li>Sell at a thin margin on purpose; you are buying reviews and photos</li>
+        <li>Answer fast, quote the same day, collect a deposit to confirm</li>
+        <li>Log every lead's quote, deposit and paid stage so nothing slips</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="kicker">Phase 3</div>
+      <h3 style="margin-top:6px">Build the marketing engine</h3>
+      <p class="small">Now make a repeatable way for strangers to find you and buy.</p>
+      <ul class="clean small">
+        <li>Set the Instagram business profile with a link to one "Go" page in the bio</li>
+        <li>Pick a Reels cadence you can keep, for example three a week</li>
+        <li>End every Reel with one line: "link in bio to plan this trip"</li>
+        <li>Post proof, not just pretty pictures: traveller photos and happy chats</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout ok">
+    <div class="ttl">Do this week</div>
+    <p style="margin:2px 0 0">Register the firm and start the GST application. Open one bedbank account and message one DMC. Post your first three Reels. That is the whole of Phase 0 and the start of Phase 1, and none of it needs code or capital.</p>
+  </div>
+</section>
+
+<!-- 3 ───────── MARGINS -->
+<section id="margins">
+  <div class="sec-head"><span class="sec-num">3</span><h2>Where the money is</h2></div>
+  <p class="lede">Not every line of a trip earns the same. Some are easy for a customer to price-check, so your margin on them is thin. Others are hard to compare, so you can carry a healthy markup. Learn which is which, and you price every trip well.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <caption>Typical gross margin by product line, for a small Indian agent</caption>
+      <thead><tr><th>Product line</th><th class="num">Typical margin</th><th>Why it sits there</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Activities and experiences</strong></td><td class="num bf">30 to 50%</td><td>Bespoke and hard to compare. A guided trek or a private boat has no public list price the customer can check.</td></tr>
+        <tr><td><strong>Ground transport</strong></td><td class="num bf">25 to 40%</td><td>Local fleets and drivers are fragmented. Few customers know the real rate, and it can be 40 to 50% of an offbeat trip's cost.</td></tr>
+        <tr><td><strong>Hotels</strong></td><td class="num">13 to 27%</td><td>Net rates leave room, but big chains are easy to look up, so the visible ones stay near market.</td></tr>
+        <tr><td><strong>Flights</strong></td><td class="num">around 0%</td><td>The most price-checked line in travel. Airlines pay almost no commission. Treat air as a service, not a profit line.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <h4>The comparability rule</h4>
+      <p class="small" style="margin-bottom:0">The easier a line is to search and compare, the thinner your margin must be. A customer can price a Delhi to Goa flight in ten seconds, but not a sunrise jeep with a local guide. Keep the visible lines near market and earn on the lines no one can easily check.</p>
+    </div>
+    <div class="card">
+      <h4>The layer cake</h4>
+      <p class="small" style="margin-bottom:0">Each layer you remove gives more margin and more work. A <b>bedbank</b> is instant and free but thinner. A <b>DMC</b> hands you a finished trip at a better rate. Going <b>direct</b> with a hotel or driver pays best, but you carry the contract and the risk. Climb a layer only when the volume pays for it.</p>
+    </div>
+    <div class="card">
+      <h4>Load the invisible lines</h4>
+      <p class="small" style="margin-bottom:0">Sell a bundle, not a line-item bill. Keep the flight and the named hotel near their public price so the trip feels fair, and place your real markup on the experiences and the ground transport the customer cannot price-check.</p>
+    </div>
+  </div>
+
+  <div class="callout coral">
+    <div class="ttl">The takeaway</div>
+    <p style="margin:2px 0 0">Do not try to make money on flights. Make it on the parts of the trip that only you have put together. A good package hides a fair flight inside a well-margined experience.</p>
+  </div>
+</section>
+
+<!-- 4 ───────── PRODUCT LINES -->
+<section id="products">
+  <div class="sec-head"><span class="sec-num">4</span><h2>The four product lines, sourced and priced</h2></div>
+  <p class="lede">A trip is built from four parts. Each one has its own supplier, its own margin, and its own barrier to entry. Three of them are easy and pay well. The fourth, flights, is the one beginners misjudge most.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">Hotels</h3>
+      <p class="small"><b>Channel:</b> a bedbank (TripJack, TBO, RateHawk) from day one. A direct tie-up later, once you fill one property often.</p>
+      <p class="small"><b>Margin:</b> 13 to 27% on net rates (est).</p>
+      <p class="small" style="margin-bottom:0"><b>Barrier:</b> low. GST and PAN open a free bedbank account in days.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Local transport</h3>
+      <p class="small"><b>Channel:</b> a regional DMC, or two reliable drivers per region on direct terms.</p>
+      <p class="small"><b>Margin:</b> 25 to 40% (est), and it can be 40 to 50% of an offbeat trip's cost.</p>
+      <p class="small" style="margin-bottom:0"><b>Barrier:</b> low. A WhatsApp relationship and a fair rate card.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Activities and experiences</h3>
+      <p class="small"><b>Channel:</b> a DMC or a direct local operator for the fat margin. Klook or Viator for international, but only at a thin affiliate cut.</p>
+      <p class="small"><b>Margin:</b> 30 to 50% direct (est); only 5 to 12% on a Klook or Viator affiliate link (est).</p>
+      <p class="small" style="margin-bottom:0"><b>Barrier:</b> low, but the margin lives in sourcing direct, not in resharing an affiliate link.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Flights</h3>
+      <p class="small"><b>Channel:</b> book as a sub-agent through TBO or TripJack. Consolidator net fares for international. Series or block fares only once you have route volume.</p>
+      <p class="small"><b>Margin:</b> around 0%.</p>
+      <p class="small" style="margin-bottom:0"><b>Barrier:</b> high if you want to issue tickets yourself (IATA plus a GDS plus ADM risk).</p>
+    </div>
+  </div>
+
+  <h3>The honest truth about flights</h3>
+  <p>Two beliefs trip up almost every new agent. Both are mostly false.</p>
+
+  <div class="callout warn">
+    <div class="ttl"><span class="vb no">Mostly false</span> "Flights are good money"</div>
+    <p style="margin:2px 0 0">Airlines pay agents almost no commission. Your margin on a bare ticket is close to zero. The only real upside is a volume bonus (PLB) that airlines negotiate privately with high-volume agents and consolidators, and it is not published, so do not build a plan around a number you have seen on a blog. For a beginner, treat air as a service that completes a package, not a profit line.</p>
+  </div>
+  <div class="callout warn">
+    <div class="ttl"><span class="vb no">Mostly false</span> "I can beat MakeMyTrip on price"</div>
+    <p style="margin:2px 0 0">The big online agencies run on razor-thin air margins and enormous volume bonuses you cannot match on day one. You will not undercut them on a plain ticket. You win on the bundle and the service around the trip, not on the fare itself.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>What issuing tickets yourself really costs</h4>
+      <p class="small">To ticket on your own plate you need IATA accreditation.</p>
+      <ul class="clean small">
+        <li><b>GoLite</b> (entry): about ₹60,000 to join, ₹25,000 to ₹30,000 a year, no bank guarantee.</li>
+        <li><b>GoStandard:</b> about ₹1.5 lakh to join, ₹80,000 a year, plus a bank guarantee from around ₹8.4 lakh (USD 10,000) upward.</li>
+        <li>A GDS subscription (Amadeus, Sabre, Galileo) sits on top of all of that.</li>
+      </ul>
+      <p class="small" style="margin-bottom:0">Skip it until air ticketing is a real, separate income line. <span class="src">Figures are trade-source ranges; confirm on the IATA portal before you commit.</span></p>
+    </div>
+    <div class="card">
+      <h4>The ADM trap, and where air margin actually lives</h4>
+      <p class="small">Once you issue your own tickets, an airline can debit your settlement account directly for a fare or rule mistake. This is an <span class="dfn" title="Agency Debit Memo: an airline-initiated debit through BSP settlement for booking or fare errors">ADM</span>, and an airline like Air India adds an admin fee of about 10.5% plus 18% GST on top. One ADM can wipe out the margin on several bookings.</p>
+      <p class="small" style="margin-bottom:0">For international, the small real air margin lives in <b>consolidator net fares</b>, which sit below the public price (a rough industry ballpark is 30 to 40% off in some cases). You reach those through a consolidator, not your own ticketing plate.</p>
+    </div>
+  </div>
+
+  <h3>How you actually get flight tickets, day one</h3>
+  <p>You do not need IATA to sell flights. You ride on a B2B portal that already holds the airline plate. Selling tickets is opening a portal account and topping up a wallet, not an accreditation project.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>The day-one flow</h4>
+      <ol class="small" style="margin:6px 0 0 18px">
+        <li>Register the agency on a B2B portal (TBO, TripJack, Akbar Travels B2B) with your name, PAN and GST. Approval takes a few days.</li>
+        <li>Load a prepaid wallet (UPI, net banking, card, or bank deposit).</li>
+        <li>Search live fares and book. The e-ticket issues instantly under the <b>portal's own IATA plate, not yours</b>. Your customer gets a normal, valid ticket.</li>
+        <li>On a cancellation, the net refund returns to your wallet (not your bank), minus the airline fee and the portal fee.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h4>Where your money comes from</h4>
+      <ul class="clean small">
+        <li>A <b>markup</b> you set on the portal's net fare, plus a flat <b>service fee</b> per passenger. Air commission is thin to zero, so this is the real lever.</li>
+        <li>GST is <b>18% on your markup or service fee only</b>, shown as a separate line, with the base fare passed through as a pure agent.</li>
+      </ul>
+      <p class="small" style="margin-bottom:0"><span class="src">The 5% or 10% deemed-value GST shortcut is meant for IATA agents earning direct airline commission, so as a markup-only sub-agent you likely cannot use it. Confirm your treatment with a CA.</span></p>
+    </div>
+  </div>
+
+  <div class="callout coral">
+    <div class="ttl">What "block the ticket and let them issue it" really means</div>
+    <p style="margin:2px 0 0">It is the same sub-agent model, described from the other side. "Block" means one of two things, and you must keep them apart:</p>
+    <ul class="clean small" style="margin-bottom:6px">
+      <li><b>Fare hold on a single ticket:</b> a small non-refundable fee freezes today's price for a short window (often 48 to 72 hours, on some products up to about a week). Ticket it before the deadline or it auto-cancels and the fee is lost. <span class="src">Airline add-on fees change, so check the airline's own page before you quote one.</span></li>
+      <li><b>Group or series block (10 or more passengers):</b> a non-refundable per-passenger deposit locks a block of seats at a fixed price, then a name-list deadline and a balance deadline follow. Miss either and you forfeit the block. Ask the airline group desk for current terms rather than trusting a blog's figures.</li>
+    </ul>
+    <p class="small" style="margin-bottom:0">In both cases the <b>airline or the portal issues the ticket, never you</b>. You reserve and collect the money; the party with ticketing authority pulls the trigger once payment clears.</p>
+  </div>
+
+  <div class="callout decision">
+    <div class="ttl">You do not need a reference to get IATA</div>
+    <p style="margin:2px 0 0">There is no referral gate. IATA is a <b>direct self-application</b> through IATA's own portal, judged on your own finances plus a bank guarantee (reported around USD 50,000), reviewed in about 3 to 5 weeks. New agents sub-agent because a fresh business has no financial track record yet, not because a bigger agency has to vouch for them. <span class="src">"Yatra" here is usually "IATA" misheard; Yatra does run its own agent program, but Riya (itself IATA-accredited) and Mystifly are the dedicated air consolidators.</span></p>
+    <p class="small" style="margin-bottom:0"><b>One nuance:</b> India's low-cost carriers (IndiGo, SpiceJet, Akasa) sit largely outside the IATA system, so you can book them directly through the airline's own agent program. But one portal that carries both low-cost and full-service (Air India, Vistara) inventory is the simplest day-one setup.</p>
+  </div>
+</section>
+
+<!-- 5 ───────── SUPPLIERS -->
+<section id="suppliers">
+  <div class="sec-head"><span class="sec-num">5</span><h2>The supplier directory</h2></div>
+  <p class="lede">Where you actually buy travel at net rates. Each row shows what they supply, how hard it is to get in, how you pay and earn, whether they offer an API or white-label, and a plain verdict for a new solo agent. Verified on live signup and partner pages around July 2026.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <caption>Bedbanks, aggregators and B2B portals (rooms, packages, some flights)</caption>
+      <thead><tr><th>Supplier</th><th>What they supply</th><th>Sign-up bar</th><th>Margin and payment</th><th>API / white-label</th><th>New-agent verdict</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>TripJack</strong></td>
+          <td>800,000+ India hotels, flights, packages. India-focused, Mumbai HQ.</td>
+          <td>Low online form. GST and PAN expected.</td>
+          <td>Commission on net. UPI wallet, instant top-up, refunds back to wallet.</td>
+          <td>Full hotel and flight API. White-label portal yes.</td>
+          <td><span class="vb ok">Start here</span> Most India-native, the UPI wallet keeps cash flow easy.</td>
+        </tr>
+        <tr>
+          <td><strong>RateHawk</strong></td>
+          <td>2.9M+ stays across 220 countries, flights, cars. Thin on India domestic.</td>
+          <td>Very low. Free, fast, no deposit (confirmed live).</td>
+          <td>Set your own markup. Pay by card, transfer or Pay-By-Link.</td>
+          <td>B2B API. Agent tools, no full storefront.</td>
+          <td><span class="vb ok">Start here</span> Fastest free signup, best for international hotels.</td>
+        </tr>
+        <tr>
+          <td><strong>TBO</strong></td>
+          <td>200,000+ hotels, flights, transfers, sightseeing. Largest India-HQ bedbank.</td>
+          <td>Low form, GST and PAN collected later. Page blocks bots, verify manually.</td>
+          <td>Commission to a wallet. Advance is forfeited if unused within 360 days.</td>
+          <td>Full air and hotel API. White-label engine yes.</td>
+          <td><span class="vb ok">Add next</span> Broad flight and hotel content, but support can be patchy.</td>
+        </tr>
+        <tr>
+          <td><strong>Bedsonline</strong> <span class="small">(Hotelbeds)</span></td>
+          <td>One of the largest global hotel bedbanks, plus transfers and activities.</td>
+          <td>Low. Must be a registered travel company. Free, 1 to 3 days.</td>
+          <td>Net-rate markup. Billing terms via a sales rep.</td>
+          <td>Full API, but a 4 to 8 week developer integration. Portal alone is manual search.</td>
+          <td><span class="vb warn">Partial</span> Great inventory, real value needs the API.</td>
+        </tr>
+        <tr>
+          <td><strong>RezLive</strong></td>
+          <td>500,000+ rooms worldwide, 45,000+ activities, transfers in 900+ cities.</td>
+          <td>Medium. Form needs GST (15 digit), PAN and IATA status (confirmed live).</td>
+          <td>Net plus markup. Prepaid RezVault wallet with top-up rewards.</td>
+          <td>API yes. White-label on request.</td>
+          <td><span class="vb warn">Partial</span> Solid legacy bedbank, smaller reach, cross-check rates first.</td>
+        </tr>
+        <tr>
+          <td><strong>Akbar Travels</strong> <span class="small">(B2B Plus)</span></td>
+          <td>Flights (Gulf heritage), hotels, packages, bus, IRCTC rail. 45,000+ agents.</td>
+          <td>Low form, a sales executive calls. GST and PAN expected.</td>
+          <td>Commission, "no hidden fee". Wallet or credit, confirm directly.</td>
+          <td>Own-brand selling implied. No documented self-serve API.</td>
+          <td><span class="vb warn">Partial</span> Best if your customers skew Gulf flights or rail.</td>
+        </tr>
+        <tr>
+          <td><strong>Riya Travel</strong> <span class="small">(Riya Connect)</span></td>
+          <td>Flights, hotels, rail, car, bus, visa, insurance, lounge. Strong visa history.</td>
+          <td>Low, team verifies by call or email. Page blocked bot re-check.</td>
+          <td>Commission plus markup and service fee. B2B credit account.</td>
+          <td>App and portal. API not confirmed.</td>
+          <td><span class="vb warn">Partial</span> Handy to bundle visa with flights, but support is mixed, start small.</td>
+        </tr>
+        <tr>
+          <td><strong>EaseMyTrip</strong> <span class="small">(B2B)</span></td>
+          <td>Flights (LCC and GDS), hotels, packages. 70,000+ agents.</td>
+          <td>Low registration portal. Document list not detailed.</td>
+          <td>Instant commission credit on every sale.</td>
+          <td>Free white-label booking site. Partner API for flights and hotels.</td>
+          <td><span class="vb warn">Partial</span> Good for a free branded storefront, but one more login.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <caption>Visa partners (for outbound, once you sell international)</caption>
+      <thead><tr><th>Partner</th><th>Coverage</th><th>Built for agents?</th><th>New-agent verdict</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>StampMyVisa</strong></td>
+          <td>Visa processing across 110+ countries. Claims 900+ agents and OTAs.</td>
+          <td>Yes, B2B-only for travel agents.</td>
+          <td><span class="vb ok">Yes</span> The one clearly verifiable B2B visa partner. Open it when you start selling outbound. Confirm its approval-rate and agent-count claims directly before you quote them.</td>
+        </tr>
+        <tr>
+          <td><strong>Atlys</strong></td>
+          <td>Visa applications to 120+ destinations. Mainly a consumer app.</td>
+          <td>No clear self-serve agent program found.</td>
+          <td><span class="vb no">Skip for now</span> Contact them directly before counting on it.</td>
+        </tr>
+        <tr>
+          <td><strong>OneVasco</strong></td>
+          <td>Visa concierge across 120 countries, plus insurance and forex.</td>
+          <td>No. Partners with big brands, not small agencies.</td>
+          <td><span class="vb no">Skip for now</span> No agent program found that fits a solo agent.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout coral">
+    <div class="ttl">Worth knowing, not worth starting with</div>
+    <ul class="clean small" style="margin-bottom:0">
+      <li><b>Mystifly</b> (flight consolidator): API-only, needs a developer. Revisit once you have a booking engine.</li>
+      <li><b>Yatra Partner Programme:</b> a marketplace listing that feeds Yatra's own customers, not a net-rate source you resell. The brick-and-mortar franchise needs ₹2 to 8 lakh, overkill to start.</li>
+      <li><b>Agoda affiliate / Partner Hub:</b> a referral link paying up to around 7%, not a net-rate supplier you mark up and resell.</li>
+    </ul>
+  </div>
+
+  <div class="callout driftibo">
+    <div class="ttl">Start with these two</div>
+    <p style="margin:2px 0 0"><b>TripJack and RateHawk.</b> Between them you cover India-domestic depth and international hotels, both with almost no signup friction and no capital. Add <b>TBO</b> when you want broader flight content and its loyalty wallet. Add <b>StampMyVisa</b> the day you sell your first international trip.</p>
+  </div>
+</section>
+
+<!-- 6 ───────── EXAMPLE TRIPS -->
+<section id="examples">
+  <div class="sec-head"><span class="sec-num">6</span><h2>Two example trips, priced with real rates</h2></div>
+  <p class="lede">One domestic, one visa-easy international. Each is built line by line from real, published retail prices, with the source on every line. These show how a real package breaks down and where the margin sits.</p>
+
+  <div class="callout warn">
+    <div class="ttl">Read this first</div>
+    <p style="margin:2px 0 0">These are <b>illustrative teaching examples, not Driftibo products.</b> The retail prices are real snapshots opened around July 2026 and will move with season and demand. The agent <b>net cost and margin on every line are clearly marked estimates</b>, because true wholesale net rates sit behind agent logins. Use the logic, not the exact rupees, as a quote.</p>
+  </div>
+
+  <h3>Example A: Goa, 3 nights, 2 travellers <span class="small">(domestic)</span></h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Line</th><th>What it covers</th><th class="num">Retail</th><th class="num">Est. net</th><th class="num">Est. margin</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Flight</strong></td>
+          <td>Delhi to Goa return, economy, 2 travellers. Lowest published fare across airlines, a floor (IndiGo's own lowest on the page was about ₹6,480 one way). <cite>Source: <a href="https://www.ixigo.com/cheap-flights/new-delhi-goa-del-gox">ixigo</a>, checked Jul 2026</cite></td>
+          <td class="num">₹20,380</td><td class="num">₹20,176</td><td class="num">~1% <span class="est">est</span></td>
+        </tr>
+        <tr>
+          <td><strong>Hotel</strong></td>
+          <td>Ginger Goa, Panjim (3-star), room-only, 3 nights at ₹3,714 a night. <cite>Source: <a href="https://www.easemytrip.com/hotels/ginger-goa-panjim-163745/">EaseMyTrip</a>, checked Jul 2026</cite></td>
+          <td class="num">₹11,142</td><td class="num">₹9,248</td><td class="num">~17% <span class="est">est</span></td>
+        </tr>
+        <tr>
+          <td><strong>Transport</strong></td>
+          <td>Dabolim airport to North Goa, prepaid sedan, round trip. <cite>Source: <a href="https://www.gozocabs.com/book-taxi/dabolim_international_airport_goi_goa_-calangute">GoZoCabs</a>, checked Jul 2026</cite></td>
+          <td class="num">₹3,430</td><td class="num">₹2,401</td><td class="num">~30% <span class="est">est</span></td>
+        </tr>
+        <tr>
+          <td><strong>Activity</strong></td>
+          <td>Scuba dive at Grand Island, 1 hour, 2 travellers. <cite>Source: <a href="https://triptradition.com/trip/scuba-diving-grand-island-goa/">TripTradition</a>, checked Jul 2026</cite></td>
+          <td class="num">₹3,000</td><td class="num">₹1,800</td><td class="num">~40% <span class="est">est</span></td>
+        </tr>
+        <tr>
+          <td><strong>Activity</strong></td>
+          <td>Mandovi river dolphin boat trip, 2 travellers. <cite>Source: <a href="https://mandovicruises.com/product/dolphin-trip-in-goa/">Mandovi Cruises</a>, checked Jul 2026</cite></td>
+          <td class="num">₹800</td><td class="num">₹440</td><td class="num">~45% <span class="est">est</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="takehome">
+    <div class="kpi"><div class="k">Retail total</div><div class="v">₹38,752</div></div>
+    <div class="kpi"><div class="k">Est. net cost</div><div class="v">₹34,065</div></div>
+    <div class="kpi coral"><div class="k">Est. take-home</div><div class="v">₹4,687</div></div>
+    <div class="kpi"><div class="k">Est. blended margin</div><div class="v">~12%</div></div>
+  </div>
+
+  <h3>Example B: Bali, 4 nights, 2 travellers <span class="small">(visa-easy international, visa on arrival)</span></h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Line</th><th>What it covers</th><th class="num">Retail</th><th class="num">Est. net</th><th class="num">Est. margin</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Flight</strong></td>
+          <td>Mumbai to Denpasar (Bali), IndiGo direct return, 2 travellers. <cite>Source: <a href="https://www.kayak.co.in/flight-routes/Mumbai-Chhatrapati-Shivaji-BOM/Bali-IDBA">Kayak.co.in</a>, checked Jul 2026</cite></td>
+          <td class="num">₹90,830</td><td class="num">₹89,922</td><td class="num">0 to 2% <span class="est">est</span></td>
+        </tr>
+        <tr>
+          <td><strong>Hotel</strong></td>
+          <td>Ubud Village Hotel (4-star), 4 nights. <cite>Source: <a href="https://www.kayak.com/Ubud-Hotels-Ubud-Village-Hotel.287394.ksp">Kayak.com</a>, checked Jul 2026</cite></td>
+          <td class="num">₹25,080</td><td class="num">₹20,064</td><td class="num">~20% <span class="est">est</span></td>
+        </tr>
+        <tr>
+          <td><strong>Transport</strong></td>
+          <td>Private sedan, round-trip airport to Ubud transfer. <cite>Source: <a href="https://balinusatransport.id/blog/bali-airport-transfer-price-guide.html">Bali Nusa Transport</a>, checked Jul 2026</cite></td>
+          <td class="num">₹5,300</td><td class="num">₹3,975</td><td class="num">~25% <span class="est">est</span></td>
+        </tr>
+        <tr>
+          <td><strong>Activity</strong></td>
+          <td>Ubud and Kintamani volcano day tour, 2 travellers. <cite>Source: Viator (via <a href="https://www.aaa.com/tripcanvas/thing-to-do/bali-ubud-and-kintamani-volcano-tour-all-inclusive-64753P6">AAA Trip Canvas</a> mirror), checked Jul 2026</cite></td>
+          <td class="num">₹14,250</td><td class="num">₹13,110</td><td class="num">~8% <span class="est">est</span></td>
+        </tr>
+        <tr>
+          <td><strong>Activity</strong></td>
+          <td>Nusa Penida island day trip, 2 travellers. <cite>Source: Viator (via <a href="https://www.aaa.com/tripcanvas/thing-to-do/nusa-penida-one-day-trip-with-all-inclusive-60357P25">AAA Trip Canvas</a> mirror), checked Jul 2026</cite></td>
+          <td class="num">₹14,060</td><td class="num">₹12,935</td><td class="num">~8% <span class="est">est</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="takehome">
+    <div class="kpi"><div class="k">Retail total</div><div class="v">₹1,49,520</div></div>
+    <div class="kpi"><div class="k">Est. net cost</div><div class="v">₹1,40,006</div></div>
+    <div class="kpi coral"><div class="k">Est. take-home</div><div class="v">₹9,514</div></div>
+    <div class="kpi"><div class="k">Est. blended margin</div><div class="v">~6%</div></div>
+  </div>
+  <p class="src">Currency assumption for the Bali lines: 1 USD = ₹95, 1 IDR = ₹0.0053 (live mid-market rates, late June 2026). The two Viator activities are shown through an AAA Trip Canvas page that carries the identical Viator product code and price, because Viator's own pages block automated reading.</p>
+
+  <div class="callout ink">
+    <div class="ttl">What the two trips teach</div>
+    <p style="margin:2px 0 0">The Bali trip takes home more in rupees (about ₹9,514 against ₹4,687) but earns a <b>lower</b> blended margin (about 6% against 12%), because the flight is roughly 61% of the Bali spend and earns almost nothing. In both trips the real margin sits in the hotel, the ground transport and the activities, never the flight. A bigger trip is not automatically a better-margin trip. Load your markup where the customer cannot price-check it.</p>
+  </div>
+</section>
+
+<!-- 7 ───────── VOLUME ROADMAP -->
+<section id="future">
+  <div class="sec-head"><span class="sec-num">7</span><h2>The volume-tiered future roadmap</h2></div>
+  <p class="lede">The single most useful map for a new agent. At low volume some channels cost more than they return, so you do not touch them yet. Each tier has a trigger (the volume signal that tells you it is time), what to add, which channel to shift to, and what to leave alone for now.</p>
+
+  <div class="tier">
+    <span class="tier-no">Tier 0</span> <span class="trig">&middot; Trigger: pre-launch, zero trips sold</span>
+    <h4>Add</h4>
+    <p class="small" style="margin-top:0">Proprietorship plus GST. One bedbank with no deposit (RateHawk) and one DMC in your home region. Sell to your own network.</p>
+    <h4>Channel</h4>
+    <p class="small" style="margin-top:0">Rooms through the bedbank, ground and experiences through the DMC. Flights only when needed, booked as a sub-agent through a portal like TBO or TripJack. No IATA.</p>
+    <h4>Where the margin is</h4>
+    <p class="small" style="margin-top:0">Experiences and ground transport. Treat flights as a courtesy, not a profit line.</p>
+    <p class="dont" style="margin-bottom:0"><b>Not yet:</b> no IATA, no direct hotel contracts, no air ticketing of your own.</p>
+  </div>
+
+  <div class="tier">
+    <span class="tier-no">Tier 1</span> <span class="trig">&middot; Trigger: your first roughly 10 to 30 trips</span>
+    <h4>Add</h4>
+    <p class="small" style="margin-top:0">A TBO wallet for instant rooms, a second DMC, a standard markup rule, and Razorpay deposits. Start a steady Instagram cadence.</p>
+    <h4>Channel</h4>
+    <p class="small" style="margin-top:0">Stay on bedbanks plus DMCs. This is still the cheapest, lowest-risk supply you can get.</p>
+    <p class="dont" style="margin-bottom:0"><b>Not yet:</b> do not chase direct hotel contracts or your own fleet. You do not have the repeat volume on one property to make them worth the commitment.</p>
+  </div>
+
+  <div class="tier">
+    <span class="tier-no">Tier 2</span> <span class="trig">&middot; Trigger: steady monthly volume on one route</span>
+    <h4>Add</h4>
+    <p class="small" style="margin-top:0">Your first direct hotel tie-up on the property you fill most often. A direct fleet or driver for your busiest ground leg. Register visa-as-a-service for outbound.</p>
+    <h4>Channel</h4>
+    <p class="small" style="margin-top:0">Shift your busiest room and your busiest transfer from bedbank and DMC to direct, where the better rate now pays for the extra effort. Add international trips through consolidator net fares.</p>
+    <p class="dont" style="margin-bottom:0"><b>Not yet:</b> keep everything outside your one busy route on bedbank and DMC. Direct only makes sense where you have repeat fills.</p>
+  </div>
+
+  <div class="tier">
+    <span class="tier-no">Tier 3</span> <span class="trig">&middot; Trigger: established, predictable volume</span>
+    <h4>Add</h4>
+    <p class="small" style="margin-top:0">Evaluate your own IATA at the entry tier (GoLite). Series or block fares on your densest route. Start earning PLB through a host or consolidator. Bring in operations help.</p>
+    <h4>Channel</h4>
+    <p class="small" style="margin-top:0">Move air on your one dense route to series or block fares for a better margin, while everything else stays on consolidator net fares.</p>
+    <p class="dont" style="margin-bottom:0"><b>Not yet:</b> no full GDS membership unless air ticketing is becoming a real, separate income line.</p>
+  </div>
+
+  <div class="tier">
+    <span class="tier-no">Tier 4</span> <span class="trig">&middot; Trigger: scale across regions</span>
+    <h4>Add</h4>
+    <p class="small" style="margin-top:0">IATA at the full tier (GoStandard) with GDS, but only if flight ticketing is genuinely a real line. A multi-region DMC network. Your own sub-agents under a white label. MICE and corporate work. Full outbound tax setup with TAN and TCS.</p>
+    <h4>Channel</h4>
+    <p class="small" style="margin-top:0">You are now a supplier to other agents, not just to travellers. White-label your inventory and let smaller agents sell under your shell.</p>
+    <p class="dont" style="margin-bottom:0"><b>Watch:</b> every tier you add here brings real fixed cost and compliance. Add each one only when a clear, repeating line of business already pays for it.</p>
+  </div>
+
+  <div class="callout ink">
+    <div class="ttl">The principle behind the whole table</div>
+    <p style="margin:2px 0 0">Channels are tools, and tools have a cost of entry. A bedbank costs nothing, so you start there. A direct contract, an IATA, a GDS each carry real money and risk, so you only reach for them once a proven, repeating volume already covers that cost. Grow the volume first, then move the channel to match it. Never the other way round.</p>
+  </div>
+</section>
+
+<!-- 8 ───────── RISK -->
+<section id="risk">
+  <div class="sec-head"><span class="sec-num">8</span><h2>What to take care of</h2></div>
+  <p class="lede">The handful of rules and risks that can quietly cost you money. None is hard. Each just needs a decision made once, early.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Charge GST correctly</h4>
+      <p class="small" style="margin-bottom:0">A bundled tour package rides the <b>5% slab with no input-tax credit</b>. You may instead opt for <b>18% with full input credit</b>, which can suit an agency with heavy marketing and office costs. A standalone flight is taxed at 18% on your commission, not on the full ticket. Let a chartered accountant set your default. <span class="src">A 2025 GST reform is reported by trade sources; confirm the current slab against the CBIC notification.</span></p>
+    </div>
+    <div class="card">
+      <h4>Collect TCS on outbound trips</h4>
+      <p class="small" style="margin-bottom:0">From your first overseas package you collect a tax from the customer and pass it on. The current rule (Budget 2026) is a <b>flat 2% with no threshold</b>, which replaced the older 5% and 20% slabs over ₹7 lakh. You need a <span class="dfn" title="Tax Deduction and Collection Account Number, needed before you can collect TCS">TAN</span> to collect it, and it sits under the LRS remittance framework. <span class="src">Confirm the exact rate and start date with your CA before you price it in.</span></p>
+    </div>
+    <div class="card">
+      <h4>Put cancellation terms in writing</h4>
+      <p class="small" style="margin-bottom:0">Write your cancellation tiers into a short terms-and-conditions, and make "I agree" a non-skippable step before you take any advance. In a dispute this is your single best protection.</p>
+    </div>
+    <div class="card">
+      <h4>Do not over-commit on allotment</h4>
+      <p class="small" style="margin-bottom:0">When a DMC or hotel holds rooms for you (an allotment), do not promise more than you can fill or release in time. Held inventory you have committed to but cannot sell can turn into your own cost.</p>
+    </div>
+    <div class="card">
+      <h4>Watch the billing currency</h4>
+      <p class="small" style="margin-bottom:0">On international trips, check which currency a supplier bills you in, and either lock the rate or add a buffer. A swing between your quote and your payment can erase a thin margin. The Bali example already runs at only about 6%.</p>
+    </div>
+    <div class="card">
+      <h4>Two rules you have already met</h4>
+      <p class="small" style="margin-bottom:0"><b>Cash first:</b> take the deposit before you pay any supplier (Section 1). <b>Flights:</b> stay a sub-agent until air is a real line, so a single airline debit (an ADM) cannot wipe out several bookings' margin (Section 4).</p>
+    </div>
+  </div>
+
+  <div class="disclaimer"><b>Not legal, tax or financial advice.</b> Rates and rules change and vary by state. Confirm every filing with a chartered accountant and a lawyer before you commit money.</div>
+</section>
+
+<!-- 9 ───────── GLOSSARY -->
+<section id="glossary">
+  <div class="sec-head"><span class="sec-num">9</span><h2>Glossary of short forms</h2></div>
+  <p class="lede">Every short form in this guide, in plain words.</p>
+  <dl class="gloss">
+    <dt>ADM <span class="full">(Agency Debit Memo)</span></dt>
+    <dd>A bill an airline sends an agent to recover money for a fare or rule mistake on a ticket. A key reason small agents avoid issuing air on their own plate.</dd>
+    <dt>API <span class="full">(Application Programming Interface)</span></dt>
+    <dd>A direct software link between your site and a supplier, so prices and bookings flow automatically instead of by hand.</dd>
+    <dt>Bedbank</dt>
+    <dd>A wholesale bank of hotel rooms. You book at net rates without a contract with each hotel. Also called a hotel aggregator. Examples: TBO, RateHawk, Bedsonline.</dd>
+    <dt>Consolidator</dt>
+    <dd>A wholesaler of airline seats who gives agents fares below the public price, often with a small commission or bonus on top.</dd>
+    <dt>DMC <span class="full">(Destination Management Company)</span></dt>
+    <dd>A local operator that has already contracted the hotels, jeeps, guides and permits in a region, and sells you the finished trip at wholesale.</dd>
+    <dt>GDS <span class="full">(Global Distribution System)</span></dt>
+    <dd>The shared booking network airlines use (Amadeus, Sabre, Galileo). Full air ticketing usually needs access to one.</dd>
+    <dt>GST <span class="full">(Goods and Services Tax)</span></dt>
+    <dd>India's sales tax. A bundled tour package rides a 5% slab; a standalone flight ticket is taxed differently.</dd>
+    <dt>IATA</dt>
+    <dd>The global airline body. Its accreditation lets an agent issue airline tickets directly. It carries a financial guarantee and annual fees, so most agents start without it.</dd>
+    <dt>LRS <span class="full">(Liberalised Remittance Scheme)</span></dt>
+    <dd>The Reserve Bank rule for how much an Indian resident can send abroad in a year. It is the backdrop to TCS on overseas trips.</dd>
+    <dt>MICE <span class="full">(Meetings, Incentives, Conferences, Exhibitions)</span></dt>
+    <dd>Corporate and group travel. A higher-value line you add later, not at the start.</dd>
+    <dt>Net rate</dt>
+    <dd>The wholesale price a supplier charges you, before your markup. Your retail price minus the net rate is your gross margin.</dd>
+    <dt>OTA <span class="full">(Online Travel Agency)</span></dt>
+    <dd>A large online seller like MakeMyTrip or Booking.com. Your retail competitor, and the price a customer often checks against you.</dd>
+    <dt>PAN <span class="full">(Permanent Account Number)</span></dt>
+    <dd>Your business tax identity in India. Needed to register and to open supplier accounts.</dd>
+    <dt>PLB <span class="full">(Productivity Linked Bonus)</span></dt>
+    <dd>An extra bonus airlines pay agents for hitting volume targets, on top of any base commission.</dd>
+    <dt>Series fare <span class="full">(block fare)</span></dt>
+    <dd>A block of airline seats bought in advance at a fixed low price, usually with a non-refundable deposit. Cheap per seat, but you carry the risk of unsold seats.</dd>
+    <dt>TAN <span class="full">(Tax Deduction and Collection Account Number)</span></dt>
+    <dd>A one-time registration you need before you can collect TCS. Required only when you start selling international trips.</dd>
+    <dt>TCS <span class="full">(Tax Collected at Source)</span></dt>
+    <dd>A tax you collect from the customer on overseas tour packages and pass to the government. The customer can later adjust it against their own tax.</dd>
+    <dt>White-label</dt>
+    <dd>Selling a supplier's product, or letting another agent sell yours, under your own brand name instead of the original's.</dd>
+  </dl>
+</section>
+
+<!-- 10 ───────── 90-DAY CHECKLIST -->
+<section id="checklist">
+  <div class="sec-head"><span class="sec-num">10</span><h2>The 90-day action checklist</h2></div>
+  <p class="lede">Concrete next steps in three blocks of thirty days. This mirrors the live, shared <a href="plan.html">action plan</a>, so you can tick items there as you go.</p>
+
+  <h3>Days 1 to 30 &middot; get legal and stock the shelf</h3>
+  <ul class="check">
+    <li><span class="phase-tag">Legal</span><b>Register the firm and start the GST and PAN application.</b> Nothing wholesale opens without these.</li>
+    <li><span class="phase-tag">Money</span><b>Open a current account and switch on a Razorpay deposit link.</b></li>
+    <li><span class="phase-tag">Legal</span><b>Write your cancellation tiers into a short terms-and-conditions</b> and make "I agree" a non-skippable step before any advance.</li>
+    <li><span class="phase-tag">Tax</span><b>Spend thirty minutes with a chartered accountant</b> to confirm how you charge GST on a bundled package versus a standalone ticket.</li>
+    <li><span class="phase-tag">Supply</span><b>Open one bedbank account</b> (RateHawk needs no deposit; add TBO next).</li>
+    <li><span class="phase-tag">Supply</span><b>Message one DMC in each region you want to sell</b> and ask for net rates, deposit terms and payment terms in writing.</li>
+  </ul>
+
+  <h3>Days 31 to 60 &middot; make it sellable and win the first few</h3>
+  <ul class="check">
+    <li><span class="phase-tag">Pricing</span><b>Set one markup rule</b> and run one real trip through it line by line, so you can see exactly where your margin lands.</li>
+    <li><span class="phase-tag">Marketing</span><b>Set up the Instagram business profile</b> with a one-line bio and a single "Go" link that leads to WhatsApp.</li>
+    <li><span class="phase-tag">Marketing</span><b>Pick a Reels cadence you can keep,</b> for example three a week, built from clips your DMCs already have.</li>
+    <li><span class="phase-tag">Sales</span><b>Send a WhatsApp broadcast to friends and family</b> and seed your first five to ten trips at a thin margin.</li>
+    <li><span class="phase-tag">Sales</span><b>Answer every enquiry within an hour, quote the same day,</b> and collect a deposit to confirm.</li>
+    <li><span class="phase-tag">Ops</span><b>Log every lead's quote, deposit and paid stage</b> so nothing slips.</li>
+  </ul>
+
+  <h3>Days 61 to 90 &middot; turn it into an engine</h3>
+  <ul class="check">
+    <li><span class="phase-tag">Marketing</span><b>Post proof, not just pretty pictures:</b> traveller photos, happy WhatsApp screenshots, the Starbook stamp.</li>
+    <li><span class="phase-tag">Marketing</span><b>Publish one destination guide per place</b> for free, compounding search traffic.</li>
+    <li><span class="phase-tag">Marketing</span><b>Line up three to five creator collaborations or barters</b> to borrow other people's audiences.</li>
+    <li><span class="phase-tag">Sales</span><b>Chase a quiet lead up to three times</b> before letting it go. The agent who follows up usually wins.</li>
+    <li><span class="phase-tag">Ads</span><b>Only put money behind a Reel that already won on its own.</b> Scale what works; do not pay to find out.</li>
+    <li><span class="phase-tag">Outbound</span><b>Register visa-as-a-service</b> the day you sell your first international trip, get a TAN, and collect the flat 2% TCS on overseas packages from your first outbound sale.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <div class="seal t-coral" style="width:46px"><span class="ring"></span><span class="star"></span></div>
+      <div><b>Driftibo &middot; Founder's Field Guide</b><br><span class="small" style="color:oklch(0.8 0.02 210)">A travel-business reference, as of July 2026</span></div>
+    </div>
+    <p class="small" style="color:oklch(0.82 0.02 210);max-width:74ch">
+      The two example trips are illustrative teaching examples, not Driftibo products. Prices are real published retail snapshots with sources, checked around July 2026; the agent net cost and margin on each line are clearly marked estimates, since true wholesale net rates sit behind agent logins. See the live <a href="plan.html">action plan</a> and <a href="sources.html">sources log</a>.</p>
+    <div class="disclaimer" style="color:oklch(0.3 0.05 60)"><b>Not legal, tax or financial advice.</b> Rates and rules change and vary by state. Use this to get oriented and ask the right questions, then confirm filings with a chartered accountant and a lawyer before you commit money.</div>
+  </div>
+</footer>
+
+<script>
+/* tap or hover a dotted term to see its full meaning (title attr is the source of truth) */
+(function(){
+  var terms=[].slice.call(document.querySelectorAll('.dfn[title]'));
+  document.addEventListener('click',function(e){
+    var d=e.target&&e.target.closest?e.target.closest('.dfn'):null;
+    if(d&&d.title){ /* native title shows on hover; on touch, surface it inline once */ }
+  });
+})();
+</script>
+</body>
+</html>
