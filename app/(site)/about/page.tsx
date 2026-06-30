@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getIntent } from "@/lib/intent-server";
 
+// Lane-personalized copy via the cookie — render per request so it reads the cookie
+// and reorients on router.refresh() instead of freezing at the default lane.
+export const dynamic = "force-dynamic";
+
 const SITE_URL = "https://driftibo.com";
 
 // Lane-aware <head> — the description leads with the chosen lane's promise.

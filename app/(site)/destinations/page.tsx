@@ -11,16 +11,20 @@ import {
   type PlaceWithCatalog,
 } from "@/lib/catalog";
 import {
-  INTENTS,
   INTENT_LABEL,
   INTENT_TO_CATALOGS,
   normalizeIntent,
   type Intent,
 } from "@/lib/intent";
+import { getIntent } from "@/lib/intent-server";
 import { LANE } from "@/lib/lane";
 import { waLink } from "@/lib/site";
 import WhatsAppClose from "@/components/WhatsAppClose";
 import CatalogTabs from "./CatalogTabs";
+
+// Lane-scoped via the cookie; render per request so the bare nav link reads the cookie
+// and a lane pick (router.refresh) re-scopes in place instead of re-serving frozen HTML.
+export const dynamic = "force-dynamic";
 
 // A lane's WhatsApp handoff context — keeps the conversion band on-voice per lane.
 const LANE_WA_CONTEXT: Record<Intent, string> = {
@@ -218,12 +222,18 @@ function WaBand({ lane }: { lane: Intent }) {
   );
 }
 
-type Props = { searchParams: Promise<{ intent?: string }> };
+type Props = { searchParams: Promise<{ intent?: string; all?: string }> };
 
 export default async function DestinationsPage({ searchParams }: Props) {
-  const { intent } = await searchParams;
+  const { intent, all } = await searchParams;
   const places = allPlaces();
-  const validIntent = normalizeIntent(intent) ?? undefined;
+  // The cookie is the source of truth — the whole site scopes to the chosen lane, so the
+  // bare nav link lands you scoped, not at the all-lanes default. A ?intent= deep-link
+  // only fills in when there's no cookie; ?all=1 forces the cross-lane view regardless
+  // (the deliberate escape). The cookie winning over a stale ?intent is intentional: a
+  // modal lane-change (cookie + router.refresh) re-scopes correctly.
+  const seeAll = all === "1";
+  const activeLane: Intent | null = seeAll ? null : ((await getIntent()) ?? normalizeIntent(intent));
 
   const inIntent = (i: Intent) => places.filter((p) => INTENT_TO_CATALOGS[i].includes(p.catalog));
   const inCatalog = (c: Catalog) => places.filter((p) => p.catalog === c);
@@ -243,11 +253,9 @@ export default async function DestinationsPage({ searchParams }: Props) {
     })),
   };
 
-  const tabs = INTENTS.map((i) => ({ key: i, label: INTENT_LABEL[i] }));
-
-  // ── Default (no intent): season-first curated view ──
+  // ── Default (no lane): season-first curated view ──
   const month = currentMonthAbbr();
-  const seasonal = validIntent ? [] : idealInMonth(month);
+  const seasonal = activeLane ? [] : idealInMonth(month);
   const bookablePlaces = places.filter((p) => bookableSlugs.has(p.slug));
 
   return (
@@ -262,35 +270,41 @@ export default async function DestinationsPage({ searchParams }: Props) {
         Where should your star send you?
       </h1>
       <p className="lede" style={{ maxWidth: "54ch", marginBottom: 18 }}>
-        {validIntent
-          ? LANE[validIntent].exploreBlurb
+        {activeLane
+          ? LANE[activeLane].exploreBlurb
           : `Start with what's glowing right now — the places at their seasonal best this ${MONTH_FULL[month]}. Or pick a lane and see all of it.`}
       </p>
 
-      <CatalogTabs tabs={tabs} activeIntent={validIntent} />
+      <CatalogTabs activeLane={activeLane} seeAll={seeAll} />
 
-      {validIntent ? (
+      {activeLane ? (
         // ── Selected intent: real product first (Ready to book), then a curated
         //    editorial pick, a WhatsApp conversion band, and the rest of the lane. ──
         <section style={{ marginBottom: 56 }}>
           {(() => {
-            const items = inIntent(validIntent);
+            const items = inIntent(activeLane);
             const book = items.filter((p) => bookableSlugs.has(p.slug));
             const rest = items.filter((p) => !bookableSlugs.has(p.slug));
             // Curated editorial picks (info-only is fine) — distinct from the bookable strip.
-            const editorialSet = new Set(LANE[validIntent].editorialSlugs);
-            const editorial = LANE[validIntent].editorialSlugs
+            const editorialSet = new Set(LANE[activeLane].editorialSlugs);
+            const editorial = LANE[activeLane].editorialSlugs
               .map((s) => items.find((p) => p.slug === s))
               .filter((p): p is PlaceWithCatalog => !!p && !bookableSlugs.has(p.slug));
             const restMinusEditorial = rest.filter((p) => !editorialSet.has(p.slug));
+            // Lane-filtered "in season" — same idealInMonth() the calendar uses, scoped to
+            // this lane's catalogs (the all-lanes seasonal grid lives behind ?all=1).
+            const seasonInLane = idealInMonth(month).filter((p) =>
+              INTENT_TO_CATALOGS[activeLane].includes(p.catalog),
+            );
             return (
               <div style={{ display: "grid", gap: 40 }}>
                 <SubBand head="Ready to book" blurb="Real trips with tiers and from-prices — pick one and we close it on chat." places={book} />
-                <WaBand lane={validIntent} />
+                <SubBand head={`In season this ${MONTH_FULL[month]}`} blurb="At their seasonal best right now — dry, comfortable, open." places={seasonInLane} />
+                <WaBand lane={activeLane} />
                 {editorial.length > 0 && (
-                  <SubBand head={LANE[validIntent].editorialHead} blurb={LANE[validIntent].editorialBlurb} places={editorial} />
+                  <SubBand head={LANE[activeLane].editorialHead} blurb={LANE[activeLane].editorialBlurb} places={editorial} />
                 )}
-                {validIntent === "india" ? (
+                {activeLane === "india" ? (
                   <>
                     <SubBand
                       head="Classics"
@@ -314,7 +328,7 @@ export default async function DestinationsPage({ searchParams }: Props) {
               eyebrow="Or skip the browsing"
               heading="Let a human plan it with you."
               sub="Tell us your dates and limits on WhatsApp — we send 2–3 options and a full quote, usually within the hour."
-              context={LANE_WA_CONTEXT[validIntent]}
+              context={LANE_WA_CONTEXT[activeLane]}
             />
           </div>
         </section>

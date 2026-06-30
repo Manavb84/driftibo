@@ -11,6 +11,11 @@ import { getDestinations, getPackages, getOfferings, minTierPrice } from "@/lib/
 import { getIntent } from "@/lib/intent-server";
 import { lane as laneOf } from "@/lib/lane";
 
+// Personalized per lane via the cookie (getIntent). Force per-request render so
+// router.refresh() after a lane pick re-runs the whole server tree — a statically
+// prerendered route would just re-serve frozen HTML at the default lane.
+export const dynamic = "force-dynamic";
+
 const inr = (n: number) => n.toLocaleString("en-IN");
 
 // Lane-aware <head>: the chosen lane leads the title/description so SSR + share cards

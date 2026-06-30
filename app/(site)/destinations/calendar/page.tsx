@@ -12,7 +12,12 @@ import {
   INTENT_TO_CATALOGS,
   normalizeIntent,
 } from "@/lib/intent";
+import { getIntent } from "@/lib/intent-server";
 import MonthPicker, { type CalMonth } from "./MonthPicker";
+
+// Reads the lane cookie (getIntent) so a bare visit opens on the chosen lane — render
+// per request so it isn't frozen at the default in a production build.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "When to go where — month by month · Driftibo",
@@ -46,11 +51,15 @@ const MONTH_NOTE: Record<string, string> = {
   Dec: "Crisp days, cold nights — winter's first full month.",
 };
 
-type Props = { searchParams: Promise<{ intent?: string }> };
+type Props = { searchParams: Promise<{ intent?: string; all?: string }> };
 
 export default async function CalendarPage({ searchParams }: Props) {
-  const { intent } = await searchParams;
-  const scoped = normalizeIntent(intent) ?? undefined;
+  const { intent, all } = await searchParams;
+  // The lane chips set ?intent, so it wins (a chip click must override the cookie);
+  // bare visits fall back to the chosen lane (cookie); ?all=1 is the explicit Everywhere
+  // escape (the bare URL no longer means "all" — it means "your lane").
+  const seeAll = all === "1";
+  const scoped = seeAll ? undefined : (normalizeIntent(intent) ?? (await getIntent()) ?? undefined);
 
   const inScope = (catalog: Catalog) =>
     scoped ? INTENT_TO_CATALOGS[scoped].includes(catalog) : true;
@@ -83,7 +92,7 @@ export default async function CalendarPage({ searchParams }: Props) {
       {/* Lane chips — scope every month to one intent (reuse ?intent) */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 26 }}>
         <Link
-          href="/destinations/calendar"
+          href="/destinations/calendar?all=1"
           className={`pill${scoped ? "" : " is-on"}`}
           style={{ textDecoration: "none" }}
         >

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { normalizeIntent, type Intent } from "@/lib/intent";
 import IntentChooser from "./IntentChooser";
 
@@ -31,14 +31,23 @@ function persistIntent(i: Intent) {
   } catch {}
 }
 
-// Read the stored intent, preferring the COOKIE (the SSR source of truth) over
-// localStorage so the client never disagrees with what the server already rendered.
-// Falls back to localStorage for legacy visitors who only have it.
-function readStoredIntent(): string | null {
+// The raw COOKIE value only (the SSR source of truth). Used to tell whether the server
+// already personalized for this lane — if the cookie is absent, the server rendered at
+// the default and the client must reconcile the tree after adopting from localStorage.
+function readCookieIntent(): string | null {
   try {
     const m = document.cookie.match(/(?:^|;\s*)driftiboIntent=([^;]+)/);
     if (m) return decodeURIComponent(m[1]);
   } catch {}
+  return null;
+}
+
+// Read the stored intent, preferring the COOKIE (the SSR source of truth) over
+// localStorage so the client never disagrees with what the server already rendered.
+// Falls back to localStorage for legacy visitors who only have it.
+function readStoredIntent(): string | null {
+  const cookie = readCookieIntent();
+  if (cookie) return cookie;
   try {
     return localStorage.getItem("driftiboIntent");
   } catch {}
@@ -55,12 +64,14 @@ export function IntentProvider({ children }: { children: React.ReactNode }) {
   const [intent, setIntentState] = useState<Intent | null>(null);
   const [overlay, setOverlay] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   // First visit (no stored intent) → open the chooser. Otherwise adopt silently,
   // normalizing any legacy catalog value (india-popular/offbeat → india, etc.).
   // /start has its own immersive chooser (the triptych), so we never auto-pop the
   // modal there — the two would stack.
   useEffect(() => {
+    const hadCookie = !!readCookieIntent();
     const stored = readStoredIntent();
     const normalized = normalizeIntent(stored);
     if (normalized) {
@@ -68,6 +79,11 @@ export function IntentProvider({ children }: { children: React.ReactNode }) {
       // Re-persist on every adopt so the cookie exists for SSR even when only the
       // legacy localStorage value was present (or we just normalized it).
       persistIntent(normalized);
+      // Legacy localStorage-only visitor: the server rendered at the default (no
+      // cookie), so reconcile the whole server tree to the lane we just adopted.
+      // (When the cookie already existed, the server saw it — no refresh needed,
+      // so this never fires a redundant round-trip on ordinary navigations.)
+      if (!hadCookie) router.refresh();
     } else if (pathname !== "/start") {
       // Auto-open the first-visit chooser at most ONCE per session — a dismissal
       // ("Skip"/✕) sets driftiboChooserSeen so the [pathname] effect can't re-nag on
@@ -80,11 +96,18 @@ export function IntentProvider({ children }: { children: React.ReactNode }) {
     }
   }, [pathname]);
 
-  const setIntent = useCallback((i: Intent) => {
-    persistIntent(i);
-    setIntentState(i);
-    setOverlay(false);
-  }, []);
+  const setIntent = useCallback(
+    (i: Intent) => {
+      persistIntent(i);
+      setIntentState(i);
+      setOverlay(false);
+      // Re-run every Server Component on the current route with the new cookie, so a
+      // modal pick reorients the WHOLE page (server sections + client islands), not
+      // just the islands. Harmless no-op on surfaces that also router.push afterwards.
+      router.refresh();
+    },
+    [router],
+  );
 
   const openChooser = useCallback(() => setOverlay(true), []);
   const closeChooser = useCallback(() => {

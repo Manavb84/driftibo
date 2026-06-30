@@ -5,6 +5,10 @@ import { getIntent } from "@/lib/intent-server";
 import { lane as laneOf } from "@/lib/lane";
 import { INTENT_LABEL } from "@/lib/intent";
 
+// Lane-personalized via the cookie — render per request so a lane pick (router.refresh)
+// reorients it, and ?all=1 can break out to every trip.
+export const dynamic = "force-dynamic";
+
 // Lane-aware <head>, consistent with home + about.
 export async function generateMetadata(): Promise<Metadata> {
   const intent = await getIntent();
@@ -18,18 +22,31 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const inr = (n: number) => n.toLocaleString("en-IN");
 
-export default async function PackagesPage() {
-  // Lane-scoped: each intent sees its own trips. Falls back to India when undecided.
+type Props = { searchParams: Promise<{ all?: string }> };
+
+export default async function PackagesPage({ searchParams }: Props) {
+  // Lane-scoped: each intent sees its own trips. The cookie owns the scope; ?all=1 is
+  // the deliberate escape to every trip; undecided visitors see all by default.
+  const { all } = await searchParams;
   const intent = await getIntent();
-  const effectiveLane = intent ?? "india";
-  const laneData = laneOf(intent);
-  const PACKS = await getPackages(effectiveLane);
+  const showAll = all === "1" || !intent;
+  const laneData = laneOf(showAll ? null : intent);
+  const PACKS = await getPackages(showAll ? undefined : intent);
   return (
     <>
       <section style={{ padding: "104px 22px 40px", maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
-        <p className="kicker" style={{ color: "var(--persona-accent,var(--pk-accent-deep))" }}>Done-for-you drifts{intent ? ` · ${INTENT_LABEL[intent]}` : ""}</p>
+        <p className="kicker" style={{ color: "var(--persona-accent,var(--pk-accent-deep))" }}>Done-for-you drifts{intent && !showAll ? ` · ${INTENT_LABEL[intent]}` : ""}</p>
         <h1 className="display-mega" style={{ fontSize: "clamp(2.2rem,7vw,3.4rem)", margin: "6px 0 8px" }}>{laneData.packagesHead}</h1>
         <p className="lede" style={{ maxWidth: "48ch", margin: "0 auto" }}>Not a pricing grid. Finished ideas you can take as-is or bend to your dates — each one with options from budget to luxury. Every card shows a from-price; the full quote comes on chat.</p>
+        {intent && (
+          <p style={{ marginTop: 14, fontSize: "0.85rem", color: "var(--pk-muted)" }}>
+            {showAll ? (
+              <>Showing all packages · <Link href="/packages" style={{ color: "var(--pk-accent-deep)", textDecoration: "none", fontWeight: 600 }}>back to {INTENT_LABEL[intent]} →</Link></>
+            ) : (
+              <>Browsing: {INTENT_LABEL[intent]} · <Link href="/packages?all=1" style={{ color: "var(--pk-accent-deep)", textDecoration: "none", fontWeight: 600 }}>see all packages →</Link></>
+            )}
+          </p>
+        )}
       </section>
 
       {PACKS.map((p, i) => {
