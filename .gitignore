@@ -35,3 +35,15 @@ tsconfig.tsbuildinfo
 # generated overlay renders (large, lossless)
 **/templates/overlays/*.mov
 **/templates/overlays/*.webm
+
+# ── Secrets & credential screenshots — never commit (safety net) ──
+# General env catch-all (in addition to the specific pipeline/growth-agent rules above)
+.env
+**/.env
+instagram-mcp/.env
+# Screenshots that expose app secrets / access tokens
+ig-app-secret.png
+ig-secret-reveal.png
+ig-token-generated.png
+ig-after-token.png
+meta-app-secret.png
