@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   title: "Driftibo · Travel by your own star",
   description:
     "Stop choosing. Start packing. Surprise travel, hand-planned: you set the limits, your star picks a real place, and we close it on WhatsApp. Seven taps, no destination choice — India's hidden corners and visa-easy escapes beyond.",
-  icons: { icon: "/favicon.svg", apple: "/apple-touch-icon.png" },
+  icons: { icon: "/favicon.svg?v=2", apple: "/apple-touch-icon.png?v=2" },
   manifest: "/site.webmanifest",
   openGraph: {
     title: "Driftibo · Travel by your own star",

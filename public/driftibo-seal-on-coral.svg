@@ -1,7 +1,7 @@
 <!-- Driftibo seal — ON-CORAL variant. Teal disc + cream rim/marks, for coral accent backgrounds. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Driftibo compass-star seal on coral">
   <circle cx="50" cy="50" r="50" fill="#1F4A52"/>
-  <circle cx="50" cy="50" r="46.2" fill="none" stroke="#ECF3F4" stroke-width="1.6"/>
+  <circle cx="50" cy="50" r="48.3" fill="none" stroke="#ECF3F4" stroke-width="1.8"/>
   <g stroke="#ECF3F4" fill="none" opacity="0.95">
     <circle cx="50" cy="50" r="33.6" stroke-width="2.8"/>
     <circle cx="50" cy="50" r="31.6" stroke-width="1.2"/>
