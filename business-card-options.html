@@ -1,0 +1,2434 @@
+<!--
+  Driftibo business card options - founder card.
+  Edit holder details only in the HOLDER const at the top of the script.
+  Toolbar state is applied to <body> with:
+  .size-indian / .size-square / .size-tag
+  .side-front / .side-back / .side-both
+  .motion-on / .motion-off
+  Print buttons add .print-mode and .is-printing, then rewrite #print-page
+  to Indian/tag 91mm x 61mm or square 61mm x 61mm for 3mm bleed.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driftibo - Business Card Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root{
+      --teal:#1F4A52; --teal-soft:#2E5C66; --on-ink:#ECF3F4;
+      --coral:#F0A582; --coral-deep:#D87555;
+      --paper:#F4F7F9; --panel:#EAF0F2; --card:#FBFDFD; --sky:#DCE9EE;
+      --text:#2A3A40; --muted:#748389; --line:#CDD8DB;
+      --serif:'Fraunces',Georgia,serif; --sans:'Plus Jakarta Sans',system-ui,sans-serif;
+      --shadow: 0 18px 50px rgba(31, 74, 82, 0.16);
+      --toolbar-h: 72px;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--sky);
+    }
+
+    body {
+      --card-w: 85mm;
+      --card-h: 55mm;
+      --safe-left: 5.6mm;
+      --safe-right: 5.6mm;
+      --safe-top: 5mm;
+      --safe-bottom: 5mm;
+      min-height: 100dvh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(240, 165, 130, 0.16), transparent 30rem),
+        linear-gradient(180deg, var(--sky), var(--paper) 44%, var(--panel));
+      font-family: var(--sans);
+      line-height: 1.45;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.035;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+    }
+
+    body.size-square {
+      --card-w: 55mm;
+      --card-h: 55mm;
+      --safe-left: 4.2mm;
+      --safe-right: 4.2mm;
+      --safe-top: 4mm;
+      --safe-bottom: 4mm;
+    }
+
+    body.size-tag {
+      --card-w: 85mm;
+      --card-h: 55mm;
+      --safe-left: 15mm;
+      --safe-right: 5.8mm;
+      --safe-top: 5mm;
+      --safe-bottom: 5mm;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-color: rgba(216, 117, 85, 0.5);
+      text-underline-offset: 0.18em;
+    }
+
+    button,
+    input,
+    label {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(1220px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 72px;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      padding: 12px 0 28px;
+    }
+
+    .wordmark {
+      font-family: var(--serif);
+      font-weight: 300;
+      letter-spacing: -0.018em;
+      line-height: 0.95;
+    }
+
+    .wordmark em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .intro .wordmark {
+      color: var(--teal);
+      font-size: clamp(3.1rem, 8vw, 7.8rem);
+    }
+
+    .intro p {
+      max-width: 42rem;
+      color: var(--teal-soft);
+      font-size: clamp(1rem, 1.7vw, 1.25rem);
+      font-weight: 500;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      align-items: center;
+      justify-content: space-between;
+      min-height: var(--toolbar-h);
+      margin: 0 -16px 36px;
+      padding: 12px 16px;
+      border: 1px solid rgba(205, 216, 219, 0.78);
+      border-radius: 0 0 8px 8px;
+      background: rgba(244, 247, 249, 0.92);
+      box-shadow: 0 10px 28px rgba(31, 74, 82, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .control-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .control-title {
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .segmented,
+    .toggle-wrap {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(251, 253, 253, 0.76);
+    }
+
+    .segment,
+    .toggle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 6px;
+      color: var(--teal-soft);
+      cursor: pointer;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      transition: color 0.18s ease, background-color 0.18s ease;
+    }
+
+    .segment input,
+    .toggle input {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segment:has(input:checked),
+    .toggle:has(input:checked) {
+      color: var(--on-ink);
+      background: var(--teal);
+    }
+
+    .toggle {
+      gap: 8px;
+    }
+
+    .toggle-dot {
+      width: 18px;
+      height: 18px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      background: transparent;
+      box-shadow: inset 0 0 0 3px var(--card);
+    }
+
+    .toggle:has(input:checked) .toggle-dot {
+      background: var(--coral);
+      box-shadow: inset 0 0 0 3px var(--teal);
+    }
+
+    .concept {
+      display: grid;
+      gap: 18px;
+      padding: 34px 0 46px;
+      border-top: 1px solid rgba(205, 216, 219, 0.78);
+    }
+
+    .concept-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .kicker {
+      color: var(--coral-deep);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-top: 4px;
+      color: var(--teal);
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3.2vw, 3.2rem);
+      font-weight: 300;
+      letter-spacing: -0.018em;
+      line-height: 1;
+    }
+
+    .concept-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .pill,
+    .print-btn,
+    .save-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(251, 253, 253, 0.8);
+      color: var(--teal);
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .print-btn {
+      border-color: var(--teal);
+      background: var(--teal);
+      color: var(--on-ink);
+    }
+
+    .pill:hover,
+    .save-link:hover {
+      border-color: var(--coral);
+      color: var(--coral-deep);
+    }
+
+    .card-pair {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      align-items: flex-start;
+    }
+
+    .card-shell {
+      position: relative;
+      flex: 0 0 auto;
+      width: var(--card-w);
+      height: var(--card-h);
+      filter: drop-shadow(0 16px 28px rgba(31, 74, 82, 0.16));
+    }
+
+    .business-card {
+      position: relative;
+      width: var(--card-w);
+      height: var(--card-h);
+      overflow: hidden;
+      border: 1px solid rgba(205, 216, 219, 0.74);
+      border-radius: 4mm;
+      background: var(--card);
+      color: var(--text);
+      isolation: isolate;
+    }
+
+    body.size-square .business-card {
+      border-radius: 3mm;
+    }
+
+    body.size-tag .business-card {
+      border-radius: 0 5.6mm 5.6mm 0;
+      clip-path: polygon(9.5mm 0, 100% 0, 100% 100%, 9.5mm 100%, 0 50%);
+    }
+
+    .tag-hole,
+    .tag-corner {
+      display: none;
+      position: absolute;
+      z-index: 28;
+      pointer-events: none;
+    }
+
+    body.size-tag .tag-hole {
+      display: block;
+      left: 4.3mm;
+      top: calc(50% - 2.7mm);
+      width: 5.4mm;
+      height: 5.4mm;
+      border: 0.55mm solid rgba(31, 74, 82, 0.34);
+      border-radius: 50%;
+      background: var(--sky);
+      box-shadow: inset 0 0 0 0.55mm rgba(251, 253, 253, 0.72);
+    }
+
+    body.size-tag .tag-corner {
+      display: block;
+      left: 7.1mm;
+      top: 0;
+      width: 8mm;
+      height: 8mm;
+      border-left: 1px solid rgba(31, 74, 82, 0.14);
+      transform: skewX(-22deg);
+      transform-origin: top left;
+      opacity: 0.75;
+    }
+
+    .crop-tick {
+      display: none;
+      position: absolute;
+      z-index: 45;
+      width: 5mm;
+      height: 5mm;
+      pointer-events: none;
+      opacity: 0.74;
+    }
+
+    .crop-tick::before,
+    .crop-tick::after {
+      content: "";
+      position: absolute;
+      background: rgba(42, 58, 64, 0.74);
+    }
+
+    .crop-tick::before { width: 4mm; height: 0.18mm; }
+    .crop-tick::after { width: 0.18mm; height: 4mm; }
+    .crop-tl { top: 1mm; left: 1mm; }
+    .crop-tl::before { top: 0; left: 0; }
+    .crop-tl::after { top: 0; left: 0; }
+    .crop-tr { top: 1mm; right: 1mm; }
+    .crop-tr::before { top: 0; right: 0; }
+    .crop-tr::after { top: 0; right: 0; }
+    .crop-bl { bottom: 1mm; left: 1mm; }
+    .crop-bl::before { bottom: 0; left: 0; }
+    .crop-bl::after { bottom: 0; left: 0; }
+    .crop-br { right: 1mm; bottom: 1mm; }
+    .crop-br::before { right: 0; bottom: 0; }
+    .crop-br::after { right: 0; bottom: 0; }
+
+    body.side-front .card-shell.back,
+    body.side-back .card-shell.front {
+      display: none;
+    }
+
+    .caption {
+      display: grid;
+      gap: 8px;
+      max-width: 920px;
+      color: var(--teal-soft);
+      font-size: 0.9rem;
+    }
+
+    .caption p {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: baseline;
+    }
+
+    .caption strong {
+      color: var(--teal);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .caption .wildcard {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .seal {
+      --seal-size: 21mm;
+      position: relative;
+      display: inline-grid;
+      place-items: center;
+      width: var(--seal-size);
+      height: var(--seal-size);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 45% 42%, rgba(255,255,255,0.08), transparent 28%),
+        var(--teal);
+      color: var(--coral);
+      box-shadow: inset 0 0 0 calc(var(--seal-size) * 0.035) rgba(236, 243, 244, 0.18);
+    }
+
+    .seal::before {
+      content: "";
+      position: absolute;
+      inset: 15%;
+      border: calc(var(--seal-size) * 0.028) solid currentColor;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 calc(var(--seal-size) * 0.012) currentColor;
+      opacity: 0.95;
+    }
+
+    .seal::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: currentColor;
+      -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g stroke='%23000' stroke-linecap='butt' fill='none'><line x1='50' y1='23' x2='50' y2='19' stroke-width='0.7'/><line x1='53.52' y1='23.23' x2='54.05' y2='19.27' stroke-width='0.7'/><line x1='56.99' y1='23.92' x2='58.02' y2='20.06' stroke-width='0.7'/><line x1='60.33' y1='25.06' x2='61.86' y2='21.36' stroke-width='0.7'/><line x1='63.5' y1='26.62' x2='65.5' y2='23.15' stroke-width='0.7'/><line x1='66.44' y1='28.58' x2='68.87' y2='25.41' stroke-width='0.7'/><line x1='69.09' y1='30.91' x2='71.92' y2='28.08' stroke-width='0.7'/><line x1='71.42' y1='33.56' x2='74.59' y2='31.13' stroke-width='0.7'/><line x1='73.38' y1='36.5' x2='76.85' y2='34.5' stroke-width='0.7'/><line x1='74.94' y1='39.67' x2='78.64' y2='38.14' stroke-width='0.7'/><line x1='76.08' y1='43.01' x2='79.94' y2='41.98' stroke-width='0.7'/><line x1='76.77' y1='46.48' x2='80.73' y2='45.95' stroke-width='0.7'/><line x1='77' y1='50' x2='81' y2='50' stroke-width='0.7'/><line x1='76.77' y1='53.52' x2='80.73' y2='54.05' stroke-width='0.7'/><line x1='76.08' y1='56.99' x2='79.94' y2='58.02' stroke-width='0.7'/><line x1='74.94' y1='60.33' x2='78.64' y2='61.86' stroke-width='0.7'/><line x1='73.38' y1='63.5' x2='76.85' y2='65.5' stroke-width='0.7'/><line x1='71.42' y1='66.44' x2='74.59' y2='68.87' stroke-width='0.7'/><line x1='69.09' y1='69.09' x2='71.92' y2='71.92' stroke-width='0.7'/><line x1='66.44' y1='71.42' x2='68.87' y2='74.59' stroke-width='0.7'/><line x1='63.5' y1='73.38' x2='65.5' y2='76.85' stroke-width='0.7'/><line x1='60.33' y1='74.94' x2='61.86' y2='78.64' stroke-width='0.7'/><line x1='56.99' y1='76.08' x2='58.02' y2='79.94' stroke-width='0.7'/><line x1='53.52' y1='76.77' x2='54.05' y2='80.73' stroke-width='0.7'/><line x1='50' y1='77' x2='50' y2='81' stroke-width='0.7'/><line x1='46.48' y1='76.77' x2='45.95' y2='80.73' stroke-width='0.7'/><line x1='43.01' y1='76.08' x2='41.98' y2='79.94' stroke-width='0.7'/><line x1='39.67' y1='74.94' x2='38.14' y2='78.64' stroke-width='0.7'/><line x1='36.5' y1='73.38' x2='34.5' y2='76.85' stroke-width='0.7'/><line x1='33.56' y1='71.42' x2='31.13' y2='74.59' stroke-width='0.7'/><line x1='30.91' y1='69.09' x2='28.08' y2='71.92' stroke-width='0.7'/><line x1='28.58' y1='66.44' x2='25.41' y2='68.87' stroke-width='0.7'/><line x1='26.62' y1='63.5' x2='23.15' y2='65.5' stroke-width='0.7'/><line x1='25.06' y1='60.33' x2='21.36' y2='61.86' stroke-width='0.7'/><line x1='23.92' y1='56.99' x2='20.06' y2='58.02' stroke-width='0.7'/><line x1='23.23' y1='53.52' x2='19.27' y2='54.05' stroke-width='0.7'/><line x1='23' y1='50' x2='19' y2='50' stroke-width='0.7'/><line x1='23.23' y1='46.48' x2='19.27' y2='45.95' stroke-width='0.7'/><line x1='23.92' y1='43.01' x2='20.06' y2='41.98' stroke-width='0.7'/><line x1='25.06' y1='39.67' x2='21.36' y2='38.14' stroke-width='0.7'/><line x1='26.62' y1='36.5' x2='23.15' y2='34.5' stroke-width='0.7'/><line x1='28.58' y1='33.56' x2='25.41' y2='31.13' stroke-width='0.7'/><line x1='30.91' y1='30.91' x2='28.08' y2='28.08' stroke-width='0.7'/><line x1='33.56' y1='28.58' x2='31.13' y2='25.41' stroke-width='0.7'/><line x1='36.5' y1='26.62' x2='34.5' y2='23.15' stroke-width='0.7'/><line x1='39.67' y1='25.06' x2='38.14' y2='21.36' stroke-width='0.7'/><line x1='43.01' y1='23.92' x2='41.98' y2='20.06' stroke-width='0.7'/><line x1='46.48' y1='23.23' x2='45.95' y2='19.27' stroke-width='0.7'/><line x1='50' y1='25.5' x2='50' y2='18.5' stroke-width='1.4'/><line x1='62.25' y1='28.78' x2='65.75' y2='22.72' stroke-width='1.4'/><line x1='71.22' y1='37.75' x2='77.28' y2='34.25' stroke-width='1.4'/><line x1='74.5' y1='50' x2='81.5' y2='50' stroke-width='1.4'/><line x1='71.22' y1='62.25' x2='77.28' y2='65.75' stroke-width='1.4'/><line x1='62.25' y1='71.22' x2='65.75' y2='77.28' stroke-width='1.4'/><line x1='50' y1='74.5' x2='50' y2='81.5' stroke-width='1.4'/><line x1='37.75' y1='71.22' x2='34.25' y2='77.28' stroke-width='1.4'/><line x1='28.78' y1='62.25' x2='22.72' y2='65.75' stroke-width='1.4'/><line x1='25.5' y1='50' x2='18.5' y2='50' stroke-width='1.4'/><line x1='28.78' y1='37.75' x2='22.72' y2='34.25' stroke-width='1.4'/><line x1='37.75' y1='28.78' x2='34.25' y2='22.72' stroke-width='1.4'/></g></svg>") center / contain no-repeat;
+              mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g stroke='%23000' stroke-linecap='butt' fill='none'><line x1='50' y1='23' x2='50' y2='19' stroke-width='0.7'/><line x1='53.52' y1='23.23' x2='54.05' y2='19.27' stroke-width='0.7'/><line x1='56.99' y1='23.92' x2='58.02' y2='20.06' stroke-width='0.7'/><line x1='60.33' y1='25.06' x2='61.86' y2='21.36' stroke-width='0.7'/><line x1='63.5' y1='26.62' x2='65.5' y2='23.15' stroke-width='0.7'/><line x1='66.44' y1='28.58' x2='68.87' y2='25.41' stroke-width='0.7'/><line x1='69.09' y1='30.91' x2='71.92' y2='28.08' stroke-width='0.7'/><line x1='71.42' y1='33.56' x2='74.59' y2='31.13' stroke-width='0.7'/><line x1='73.38' y1='36.5' x2='76.85' y2='34.5' stroke-width='0.7'/><line x1='74.94' y1='39.67' x2='78.64' y2='38.14' stroke-width='0.7'/><line x1='76.08' y1='43.01' x2='79.94' y2='41.98' stroke-width='0.7'/><line x1='76.77' y1='46.48' x2='80.73' y2='45.95' stroke-width='0.7'/><line x1='77' y1='50' x2='81' y2='50' stroke-width='0.7'/><line x1='76.77' y1='53.52' x2='80.73' y2='54.05' stroke-width='0.7'/><line x1='76.08' y1='56.99' x2='79.94' y2='58.02' stroke-width='0.7'/><line x1='74.94' y1='60.33' x2='78.64' y2='61.86' stroke-width='0.7'/><line x1='73.38' y1='63.5' x2='76.85' y2='65.5' stroke-width='0.7'/><line x1='71.42' y1='66.44' x2='74.59' y2='68.87' stroke-width='0.7'/><line x1='69.09' y1='69.09' x2='71.92' y2='71.92' stroke-width='0.7'/><line x1='66.44' y1='71.42' x2='68.87' y2='74.59' stroke-width='0.7'/><line x1='63.5' y1='73.38' x2='65.5' y2='76.85' stroke-width='0.7'/><line x1='60.33' y1='74.94' x2='61.86' y2='78.64' stroke-width='0.7'/><line x1='56.99' y1='76.08' x2='58.02' y2='79.94' stroke-width='0.7'/><line x1='53.52' y1='76.77' x2='54.05' y2='80.73' stroke-width='0.7'/><line x1='50' y1='77' x2='50' y2='81' stroke-width='0.7'/><line x1='46.48' y1='76.77' x2='45.95' y2='80.73' stroke-width='0.7'/><line x1='43.01' y1='76.08' x2='41.98' y2='79.94' stroke-width='0.7'/><line x1='39.67' y1='74.94' x2='38.14' y2='78.64' stroke-width='0.7'/><line x1='36.5' y1='73.38' x2='34.5' y2='76.85' stroke-width='0.7'/><line x1='33.56' y1='71.42' x2='31.13' y2='74.59' stroke-width='0.7'/><line x1='30.91' y1='69.09' x2='28.08' y2='71.92' stroke-width='0.7'/><line x1='28.58' y1='66.44' x2='25.41' y2='68.87' stroke-width='0.7'/><line x1='26.62' y1='63.5' x2='23.15' y2='65.5' stroke-width='0.7'/><line x1='25.06' y1='60.33' x2='21.36' y2='61.86' stroke-width='0.7'/><line x1='23.92' y1='56.99' x2='20.06' y2='58.02' stroke-width='0.7'/><line x1='23.23' y1='53.52' x2='19.27' y2='54.05' stroke-width='0.7'/><line x1='23' y1='50' x2='19' y2='50' stroke-width='0.7'/><line x1='23.23' y1='46.48' x2='19.27' y2='45.95' stroke-width='0.7'/><line x1='23.92' y1='43.01' x2='20.06' y2='41.98' stroke-width='0.7'/><line x1='25.06' y1='39.67' x2='21.36' y2='38.14' stroke-width='0.7'/><line x1='26.62' y1='36.5' x2='23.15' y2='34.5' stroke-width='0.7'/><line x1='28.58' y1='33.56' x2='25.41' y2='31.13' stroke-width='0.7'/><line x1='30.91' y1='30.91' x2='28.08' y2='28.08' stroke-width='0.7'/><line x1='33.56' y1='28.58' x2='31.13' y2='25.41' stroke-width='0.7'/><line x1='36.5' y1='26.62' x2='34.5' y2='23.15' stroke-width='0.7'/><line x1='39.67' y1='25.06' x2='38.14' y2='21.36' stroke-width='0.7'/><line x1='43.01' y1='23.92' x2='41.98' y2='20.06' stroke-width='0.7'/><line x1='46.48' y1='23.23' x2='45.95' y2='19.27' stroke-width='0.7'/><line x1='50' y1='25.5' x2='50' y2='18.5' stroke-width='1.4'/><line x1='62.25' y1='28.78' x2='65.75' y2='22.72' stroke-width='1.4'/><line x1='71.22' y1='37.75' x2='77.28' y2='34.25' stroke-width='1.4'/><line x1='74.5' y1='50' x2='81.5' y2='50' stroke-width='1.4'/><line x1='71.22' y1='62.25' x2='77.28' y2='65.75' stroke-width='1.4'/><line x1='62.25' y1='71.22' x2='65.75' y2='77.28' stroke-width='1.4'/><line x1='50' y1='74.5' x2='50' y2='81.5' stroke-width='1.4'/><line x1='37.75' y1='71.22' x2='34.25' y2='77.28' stroke-width='1.4'/><line x1='28.78' y1='62.25' x2='22.72' y2='65.75' stroke-width='1.4'/><line x1='25.5' y1='50' x2='18.5' y2='50' stroke-width='1.4'/><line x1='28.78' y1='37.75' x2='22.72' y2='34.25' stroke-width='1.4'/><line x1='37.75' y1='28.78' x2='34.25' y2='22.72' stroke-width='1.4'/></g></svg>") center / contain no-repeat;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .seal-star {
+      width: 42%;
+      height: 42%;
+      background: var(--coral);
+      clip-path: polygon(50% 0%,56% 44%,100% 50%,56% 56%,50% 100%,44% 56%,0% 50%,44% 44%);
+      filter: drop-shadow(0 1px 0 rgba(0,0,0,0.08));
+    }
+
+    .cardinal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      color: var(--on-ink);
+      font-size: calc(var(--seal-size) * 0.092);
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .north { transform: translate(-50%, -50%) translateY(calc(var(--seal-size) * -0.42)); }
+    .south { transform: translate(-50%, -50%) translateY(calc(var(--seal-size) * 0.42)); }
+    .east { transform: translate(-50%, -50%) translateX(calc(var(--seal-size) * 0.42)); }
+    .west { transform: translate(-50%, -50%) translateX(calc(var(--seal-size) * -0.42)); }
+
+    .seal-lg { --seal-size: 22mm; }
+    .seal-sm { --seal-size: 13mm; }
+    .seal-xs { --seal-size: 22px; }
+    .seal-xs .cardinal { display: none; }
+    .seal-xs::after { display: none; }
+
+    body.size-square .seal-lg { --seal-size: 16mm; }
+    body.size-square .seal-sm { --seal-size: 10mm; }
+
+    .qr {
+      --qr-color: var(--teal);
+      position: relative;
+      display: grid;
+      place-items: end center;
+      width: 16mm;
+      height: 16mm;
+      overflow: hidden;
+      border: 0.35mm solid currentColor;
+      border-radius: 1.8mm;
+      background: var(--card);
+      color: var(--qr-color);
+      font-size: 1.65mm;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      text-align: center;
+      text-transform: none;
+    }
+
+    /* drop real QR SVG/PNG here later */
+    .qr::before {
+      content: "";
+      position: absolute;
+      inset: 1.1mm;
+      background:
+        linear-gradient(90deg, currentColor 0 12%, transparent 12% 21%, currentColor 21% 31%, transparent 31% 42%, currentColor 42% 55%, transparent 55% 66%, currentColor 66% 73%, transparent 73% 83%, currentColor 83% 100%),
+        linear-gradient(0deg, currentColor 0 9%, transparent 9% 18%, currentColor 18% 31%, transparent 31% 45%, currentColor 45% 53%, transparent 53% 64%, currentColor 64% 72%, transparent 72% 83%, currentColor 83% 100%);
+      background-blend-mode: multiply;
+      background-size: 3.4mm 3.4mm;
+      opacity: 0.74;
+    }
+
+    .qr::after {
+      content: "";
+      position: absolute;
+      left: 1.3mm;
+      top: 1.3mm;
+      width: 3.5mm;
+      height: 3.5mm;
+      border: 0.85mm solid currentColor;
+      background: var(--card);
+      box-shadow: 8.8mm 0 0 -0.85mm var(--card), 8.8mm 0 0 0 currentColor, 0 8.8mm 0 -0.85mm var(--card), 0 8.8mm 0 0 currentColor;
+    }
+
+    .qr span {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      padding: 0.75mm 0.5mm 0.8mm;
+      background: rgba(251, 253, 253, 0.9);
+      color: var(--teal);
+    }
+
+    body.size-square .qr {
+      width: 13.5mm;
+      height: 13.5mm;
+      font-size: 1.35mm;
+    }
+
+    .mini-label {
+      color: currentColor;
+      font-size: 1.75mm;
+      font-weight: 800;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .micro {
+      color: currentColor;
+      font-size: 1.95mm;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    .contact-row {
+      display: flex;
+      gap: 2mm;
+      align-items: center;
+      min-width: 0;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .star-bullet {
+      flex: 0 0 auto;
+      color: var(--coral-deep);
+      font-size: 2.5mm;
+      line-height: 1;
+    }
+
+    .card-save {
+      display: inline-flex;
+      width: fit-content;
+      padding: 1.3mm 2.2mm;
+      border: 0.25mm solid currentColor;
+      border-radius: 20mm;
+      color: inherit;
+      font-size: 1.7mm;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    /* 1. Star Seal */
+    .star-seal-front {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        radial-gradient(circle at 78% 18%, rgba(240, 165, 130, 0.13), transparent 28mm),
+        linear-gradient(135deg, var(--teal), #173a41);
+      color: var(--on-ink);
+    }
+
+    .star-seal-front .seal { align-self: start; }
+
+    .star-seal-front .front-lockup {
+      align-self: center;
+      max-width: 58mm;
+    }
+
+    .star-seal-front .wordmark {
+      color: var(--on-ink);
+      font-size: 11mm;
+    }
+
+    .star-seal-front .tagline {
+      margin-top: 2mm;
+      color: rgba(236, 243, 244, 0.84);
+      font-family: var(--serif);
+      font-size: 3.2mm;
+      font-style: italic;
+      font-weight: 300;
+      letter-spacing: 0.01em;
+    }
+
+    .star-seal-front .pill {
+      justify-self: start;
+      min-height: 8mm;
+      border-color: rgba(240, 165, 130, 0.76);
+      background: rgba(236, 243, 244, 0.08);
+      color: var(--coral);
+      font-size: 1.9mm;
+    }
+
+    .star-seal-back {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 4mm;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.58), rgba(255,255,255,0)),
+        var(--sky);
+      color: var(--teal);
+    }
+
+    .star-seal-back .name {
+      color: var(--teal);
+      font-family: var(--serif);
+      font-size: 7mm;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+    }
+
+    .star-seal-back .title {
+      margin-top: 1.2mm;
+      color: var(--coral-deep);
+      font-size: 2mm;
+      font-weight: 800;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .hairline {
+      width: 100%;
+      height: 0.25mm;
+      margin: 4mm 0 3mm;
+      background: rgba(31, 74, 82, 0.25);
+    }
+
+    .star-seal-back .contacts {
+      display: grid;
+      gap: 1.4mm;
+      color: var(--teal-soft);
+      font-size: 2.18mm;
+      font-weight: 700;
+    }
+
+    .star-seal-back .right-rail {
+      display: grid;
+      justify-items: end;
+      align-content: space-between;
+      min-width: 17mm;
+    }
+
+    .star-seal-back .card-save {
+      color: var(--coral-deep);
+    }
+
+    body.size-square .star-seal-front .wordmark { font-size: 8.2mm; }
+    body.size-square .star-seal-front .tagline { font-size: 2.55mm; }
+    body.size-square .star-seal-back {
+      grid-template-columns: 1fr;
+      gap: 2mm;
+    }
+    body.size-square .star-seal-back .name { font-size: 5.3mm; }
+    body.size-square .star-seal-back .right-rail {
+      grid-template-columns: auto auto;
+      align-items: end;
+      justify-content: space-between;
+    }
+
+    /* 2. Boarding Pass */
+    .boarding-front,
+    .boarding-back {
+      background: var(--card);
+      color: var(--teal);
+    }
+
+    .boarding-front {
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(20mm, 3fr);
+    }
+
+    .boarding-main {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 3mm;
+      padding: var(--safe-top) 4.5mm var(--safe-bottom) var(--safe-left);
+    }
+
+    .boarding-main::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      border-right: 0.45mm dashed rgba(31, 74, 82, 0.35);
+    }
+
+    .ticket-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 2mm;
+      color: var(--coral-deep);
+      font-size: 1.65mm;
+      font-weight: 800;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .ticket-fields {
+      display: grid;
+      gap: 2.3mm;
+      align-content: center;
+    }
+
+    .ticket-field label {
+      display: block;
+      color: var(--muted);
+      font-size: 1.55mm;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .ticket-value {
+      display: block;
+      margin-top: 0.7mm;
+      color: var(--teal);
+      font-size: 3.1mm;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1.05;
+    }
+
+    .ticket-value.big {
+      color: var(--teal);
+      font-family: var(--serif);
+      font-size: 4.2mm;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+    }
+
+    .split-flap {
+      position: relative;
+      display: inline-block;
+      transform-style: preserve-3d;
+      transform-origin: 50% 0;
+    }
+
+    .ticket-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2mm;
+      color: var(--teal-soft);
+      font-size: 1.8mm;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .boarding-stub {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      align-content: space-between;
+      padding: var(--safe-top) 3mm var(--safe-bottom);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(240, 165, 130, 0.28), rgba(240, 165, 130, 0.08)), var(--panel);
+      color: var(--teal);
+      text-decoration: none;
+    }
+
+    .boarding-stub .seat {
+      display: grid;
+      justify-items: center;
+      gap: 1mm;
+      color: var(--teal);
+    }
+
+    .boarding-stub .seat strong {
+      font-size: 9mm;
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+    }
+
+    .barcode {
+      width: 11mm;
+      height: 24mm;
+      background: repeating-linear-gradient(90deg, var(--coral-deep) 0 0.35mm, transparent 0.35mm 0.8mm, var(--coral) 0.8mm 1.05mm, transparent 1.05mm 1.55mm);
+      border-radius: 1mm;
+      opacity: 0.9;
+    }
+
+    .boarding-stub .qr {
+      width: 13.5mm;
+      height: 13.5mm;
+      --qr-color: var(--coral-deep);
+    }
+
+    .boarding-back {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4mm;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        linear-gradient(90deg, transparent 0 72%, rgba(240,165,130,0.16) 72% 100%),
+        repeating-linear-gradient(0deg, rgba(31,74,82,0.06) 0 0.2mm, transparent 0.2mm 4.4mm),
+        var(--card);
+    }
+
+    .boarding-back .wordmark {
+      color: var(--teal);
+      font-size: 8.6mm;
+    }
+
+    .boarding-back .manifest {
+      display: grid;
+      gap: 1.8mm;
+      margin-top: 4mm;
+      color: var(--teal-soft);
+      font-size: 2.05mm;
+      font-weight: 700;
+    }
+
+    .boarding-back .manifest span {
+      color: var(--coral-deep);
+      font-size: 1.55mm;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .boarding-back .stub-note {
+      display: grid;
+      justify-items: end;
+      align-content: space-between;
+      text-align: right;
+    }
+
+    body.size-square .boarding-front {
+      grid-template-columns: 1fr;
+    }
+    body.size-square .boarding-stub {
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      min-height: 15mm;
+      padding-top: 2mm;
+      padding-bottom: 2mm;
+    }
+    body.size-square .boarding-stub .seat strong { font-size: 5.8mm; }
+    body.size-square .barcode { width: 17mm; height: 8mm; }
+    body.size-square .ticket-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    body.size-square .boarding-back { grid-template-columns: 1fr; }
+    body.size-square .boarding-back .wordmark { font-size: 6.5mm; }
+
+    /* 3. Passport Stamp */
+    .passport-front,
+    .passport-back {
+      color: var(--teal);
+      background: var(--panel);
+    }
+
+    .passport-page {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      align-content: space-between;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        radial-gradient(circle at 22% 22%, rgba(240,165,130,0.16), transparent 18mm),
+        repeating-radial-gradient(circle at 50% 50%, rgba(31,74,82,0.11) 0 0.16mm, transparent 0.16mm 2.6mm),
+        repeating-conic-gradient(from 20deg at 50% 50%, rgba(31,74,82,0.08) 0 8deg, transparent 8deg 16deg),
+        var(--panel);
+      transform-origin: left center;
+    }
+
+    .passport-front .passport-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 4mm;
+    }
+
+    .passport-front .wordmark {
+      color: var(--teal);
+      font-size: 7.8mm;
+    }
+
+    .admit {
+      justify-self: center;
+      align-self: center;
+      width: min(54mm, 82%);
+      padding: 4mm 4mm;
+      border: 0.35mm solid rgba(31, 74, 82, 0.42);
+      outline: 0.25mm solid rgba(240, 165, 130, 0.65);
+      outline-offset: 1.3mm;
+      color: var(--teal);
+      text-align: center;
+    }
+
+    .admit span {
+      display: block;
+      color: var(--coral-deep);
+      font-size: 1.8mm;
+      font-weight: 800;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .admit strong {
+      display: block;
+      margin-top: 1mm;
+      font-family: var(--serif);
+      font-size: 7.2mm;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      text-transform: uppercase;
+    }
+
+    .mrz {
+      display: block;
+      width: 100%;
+      padding: 1.7mm 2mm;
+      border-top: 0.28mm solid rgba(31,74,82,0.32);
+      border-bottom: 0.28mm solid rgba(31,74,82,0.32);
+      color: var(--teal);
+      background: rgba(251,253,253,0.62);
+      font-size: 2.1mm;
+      line-height: 1.3;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .passport-back {
+      display: grid;
+      place-items: center;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        linear-gradient(135deg, rgba(236,243,244,0.76), rgba(220,233,238,0.92)),
+        var(--sky);
+    }
+
+    .rubber-stamp {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: min(42mm, 74%);
+      aspect-ratio: 1;
+      color: var(--coral-deep);
+      transform: rotate(-12deg);
+    }
+
+    .rubber-stamp svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .rubber-stamp text {
+      fill: currentColor;
+      font-family: var(--sans);
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+    }
+
+    .rubber-star {
+      position: absolute;
+      width: 35%;
+      height: 35%;
+      background: currentColor;
+      clip-path: polygon(50% 0%, 58% 35%, 85% 15%, 65% 42%, 100% 50%, 65% 58%, 85% 85%, 58% 65%, 50% 100%, 42% 65%, 15% 85%, 35% 58%, 0% 50%, 35% 42%, 15% 15%, 42% 35%);
+      opacity: 0.86;
+    }
+
+    .passport-back .contact-strip {
+      position: absolute;
+      right: var(--safe-right);
+      bottom: var(--safe-bottom);
+      display: grid;
+      justify-items: end;
+      gap: 1.3mm;
+      color: var(--teal-soft);
+      font-size: 1.8mm;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    body.size-square .passport-front .wordmark { font-size: 5.9mm; }
+    body.size-square .admit { width: 80%; padding: 3mm 2mm; }
+    body.size-square .admit strong { font-size: 5.1mm; }
+    body.size-square .mrz { font-size: 1.55mm; }
+
+    /* 4. Postcard */
+    .postcard-front {
+      display: grid;
+      align-content: space-between;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      color: var(--on-ink);
+      /* Swap this CSS Himalaya placeholder with a public/visual-bank photo later. */
+      background:
+        linear-gradient(150deg, transparent 0 52%, rgba(31,74,82,0.95) 52% 60%, transparent 60%),
+        linear-gradient(162deg, transparent 0 58%, rgba(236,243,244,0.86) 58% 64%, transparent 64%),
+        linear-gradient(172deg, transparent 0 66%, rgba(240,165,130,0.88) 66% 72%, transparent 72%),
+        linear-gradient(180deg, var(--teal) 0%, var(--teal-soft) 40%, var(--sky) 67%, var(--coral) 100%);
+    }
+
+    .postcard-front .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 3mm;
+    }
+
+    .postcard-front .wordmark {
+      color: var(--on-ink);
+      font-size: 6.2mm;
+      text-align: right;
+      text-shadow: 0 1px 14px rgba(31, 74, 82, 0.22);
+    }
+
+    .postcard-front .compass-glyph {
+      width: 9mm;
+      height: 9mm;
+      background: var(--coral);
+      clip-path: polygon(50% 0%, 58% 35%, 85% 15%, 65% 42%, 100% 50%, 65% 58%, 85% 85%, 58% 65%, 50% 100%, 42% 65%, 15% 85%, 35% 58%, 0% 50%, 35% 42%, 15% 15%, 42% 35%);
+    }
+
+    .postcard-front .place {
+      max-width: 48mm;
+      color: rgba(236,243,244,0.9);
+      font-size: 2mm;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .postcard-back {
+      display: grid;
+      grid-template-columns: 1fr 0.95fr;
+      gap: 4mm;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        linear-gradient(90deg, transparent calc(50% - 0.15mm), rgba(31,74,82,0.26) calc(50% - 0.15mm) calc(50% + 0.15mm), transparent calc(50% + 0.15mm)),
+        var(--card);
+      color: var(--teal);
+    }
+
+    .postcard-note {
+      display: grid;
+      align-content: space-between;
+      min-width: 0;
+    }
+
+    .handwritten {
+      color: var(--teal);
+      font-family: var(--serif);
+      font-size: 4.8mm;
+      font-style: italic;
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1.02;
+    }
+
+    .postcard-note .micro {
+      color: var(--muted);
+    }
+
+    .postcard-contact {
+      display: grid;
+      gap: 2.2mm;
+      align-content: start;
+    }
+
+    .stamp-box {
+      position: relative;
+      justify-self: end;
+      display: grid;
+      place-items: center;
+      width: 18mm;
+      height: 18mm;
+      border: 0.35mm solid var(--coral-deep);
+      color: var(--coral-deep);
+      background: rgba(240, 165, 130, 0.12);
+    }
+
+    .stamp-box .qr {
+      width: 14mm;
+      height: 14mm;
+      border-width: 0.25mm;
+      --qr-color: var(--coral-deep);
+      transform: scale(0.98);
+    }
+
+    .stamp-box .stamp-seal {
+      position: absolute;
+      left: 1mm;
+      top: 1mm;
+      z-index: 3;
+      box-shadow: 0 1px 4px rgba(31, 74, 82, 0.16);
+    }
+
+    .postmark {
+      position: absolute;
+      right: 11mm;
+      top: -2mm;
+      width: 20mm;
+      height: 20mm;
+      color: rgba(216,117,85,0.78);
+      transform: rotate(-13deg);
+      pointer-events: none;
+    }
+
+    .postmark svg { width: 100%; height: 100%; overflow: visible; }
+    .postmark text {
+      fill: currentColor;
+      font-family: var(--sans);
+      font-size: 5px;
+      font-weight: 800;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+    }
+
+    .coords-reveal {
+      position: absolute;
+      inset: auto 1mm 1mm 1mm;
+      padding: 0.9mm 0.8mm;
+      border-radius: 1mm;
+      background: var(--teal);
+      color: var(--on-ink);
+      font-size: 1.55mm;
+      font-weight: 800;
+      opacity: 0;
+      transform: translateY(1mm);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .stamp-box:hover .coords-reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .write-line {
+      display: grid;
+      grid-template-columns: 13mm 1fr;
+      gap: 2mm;
+      align-items: end;
+      color: var(--teal-soft);
+      font-size: 1.65mm;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .write-line a,
+    .write-line span:last-child {
+      display: block;
+      min-height: 3.7mm;
+      border-bottom: 0.28mm solid rgba(31, 74, 82, 0.32);
+      color: var(--teal);
+      font-size: 2mm;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: none;
+    }
+
+    body.size-square .postcard-back {
+      grid-template-columns: 1fr;
+      gap: 2mm;
+    }
+    body.size-square .handwritten { font-size: 3.8mm; }
+    body.size-square .stamp-box {
+      position: absolute;
+      right: var(--safe-right);
+      top: var(--safe-top);
+      width: 14mm;
+      height: 14mm;
+    }
+    body.size-square .stamp-box .qr {
+      width: 10.5mm;
+      height: 10.5mm;
+      font-size: 1.1mm;
+    }
+    body.size-square .postcard-contact {
+      padding-top: 15mm;
+    }
+
+    /* 5. Celestial Star Map */
+    .celestial-front,
+    .celestial-back {
+      color: var(--on-ink);
+    }
+
+    .celestial-front {
+      position: relative;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        radial-gradient(circle at 18% 24%, rgba(236,243,244,0.8) 0 0.25mm, transparent 0.3mm),
+        radial-gradient(circle at 32% 62%, rgba(236,243,244,0.56) 0 0.22mm, transparent 0.28mm),
+        radial-gradient(circle at 48% 18%, rgba(236,243,244,0.42) 0 0.18mm, transparent 0.25mm),
+        radial-gradient(circle at 63% 40%, rgba(236,243,244,0.62) 0 0.22mm, transparent 0.28mm),
+        radial-gradient(circle at 78% 70%, rgba(236,243,244,0.48) 0 0.2mm, transparent 0.26mm),
+        radial-gradient(circle at 91% 28%, rgba(236,243,244,0.5) 0 0.18mm, transparent 0.24mm),
+        linear-gradient(135deg, var(--teal), #173a41);
+    }
+
+    .star-map {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .star-map line {
+      stroke: rgba(236, 243, 244, 0.26);
+      stroke-width: 0.4;
+    }
+
+    .star-map .constellation-line {
+      stroke: rgba(236, 243, 244, 0.38);
+      stroke-width: 0.54;
+    }
+
+    .star-map .chart-tick {
+      stroke: rgba(236, 243, 244, 0.18);
+      stroke-width: 0.34;
+    }
+
+    .star-map path {
+      fill: none;
+      stroke: rgba(236, 243, 244, 0.16);
+      stroke-width: 0.46;
+      stroke-dasharray: 10 15;
+    }
+
+    .star-map circle {
+      fill: rgba(236, 243, 244, 0.75);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .celestial-front .celestial-north-star {
+      position: absolute;
+      top: 5.4mm;
+      right: 8.8mm;
+      z-index: 3;
+      display: inline-grid;
+      place-items: center;
+      width: 18.5mm;
+      height: 18.5mm;
+      filter: drop-shadow(0 0 8px rgba(240,165,130,0.5));
+    }
+
+    .celestial-front .celestial-north-star .seal {
+      --seal-size: 16.5mm;
+      box-shadow:
+        inset 0 0 0 calc(var(--seal-size) * 0.035) rgba(236, 243, 244, 0.18),
+        0 0 0 0.42mm rgba(240,165,130,0.2),
+        0 0 12px rgba(240,165,130,0.46);
+    }
+
+    .celestial-front-copy {
+      position: absolute;
+      left: var(--safe-left);
+      bottom: var(--safe-bottom);
+      z-index: 2;
+      display: grid;
+      gap: 1.25mm;
+      max-width: 50mm;
+    }
+
+    .celestial-kicker {
+      color: var(--coral);
+      font-size: 1.55mm;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .celestial-front .wordmark {
+      position: relative;
+      color: var(--on-ink);
+      font-size: 8.4mm;
+      letter-spacing: -0.025em;
+      text-shadow: 0 1px 16px rgba(23, 58, 65, 0.3);
+    }
+
+    .celestial-front .wordmark em {
+      color: var(--coral);
+    }
+
+    .celestial-front .coords {
+      position: relative;
+      color: rgba(236,243,244,0.72);
+      font-size: 1.72mm;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .celestial-back {
+      display: grid;
+      grid-template-rows: auto 0.25mm minmax(0, 1fr) auto;
+      gap: 1.5mm;
+      position: relative;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        radial-gradient(circle at 83% 18%, rgba(240,165,130,0.26), transparent 25mm),
+        linear-gradient(135deg, var(--paper), var(--sky));
+      color: var(--teal);
+    }
+
+    .celestial-back::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.62;
+      background:
+        radial-gradient(ellipse at 84% 20%, transparent 0 25mm, rgba(31,74,82,0.15) 25.15mm 25.48mm, transparent 25.66mm),
+        repeating-linear-gradient(90deg, rgba(31,74,82,0.05) 0 0.12mm, transparent 0.12mm 8.5mm),
+        repeating-linear-gradient(0deg, rgba(31,74,82,0.04) 0 0.12mm, transparent 0.12mm 8.5mm);
+    }
+
+    .celestial-lockup,
+    .celestial-rule,
+    .celestial-main,
+    .celestial-footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    .celestial-lockup {
+      display: flex;
+      align-items: center;
+      gap: 2.4mm;
+      margin-right: 17mm;
+      min-width: 0;
+    }
+
+    .celestial-lockup .seal {
+      --seal-size: 8.4mm;
+      flex: 0 0 auto;
+      box-shadow:
+        inset 0 0 0 calc(var(--seal-size) * 0.035) rgba(236, 243, 244, 0.18),
+        0 1px 4px rgba(31, 74, 82, 0.12);
+    }
+
+    .celestial-lockup .wordmark {
+      color: var(--teal);
+      font-size: 5.5mm;
+      letter-spacing: -0.025em;
+    }
+
+    .celestial-lockup .wordmark em {
+      color: var(--coral);
+    }
+
+    .lockup-tagline {
+      margin-top: 0.5mm;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 2.08mm;
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .celestial-rule {
+      width: auto;
+      height: 0.25mm;
+      margin-right: 17mm;
+      background: linear-gradient(90deg, rgba(31,74,82,0.34), rgba(31,74,82,0.06));
+    }
+
+    .celestial-main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.55mm;
+      align-items: start;
+      min-width: 0;
+    }
+
+    .celestial-identity {
+      max-width: calc(100% - 20mm);
+      min-width: 0;
+    }
+
+    .celestial-back .name {
+      color: var(--teal);
+      font-family: var(--serif);
+      font-size: 5.8mm;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 0.96;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .celestial-back .title {
+      margin-top: 1mm;
+      color: var(--coral-deep);
+      font-size: 1.72mm;
+      font-weight: 800;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .celestial-contact-list {
+      display: grid;
+      gap: 1.25mm;
+      align-content: start;
+      min-width: 0;
+    }
+
+    .celestial-back .contact-row {
+      display: grid;
+      grid-template-columns: 2.4mm 14mm minmax(0, 1fr);
+      gap: 1.55mm;
+      align-items: baseline;
+      min-width: 0;
+      color: var(--teal-soft);
+      font-size: 1.98mm;
+      font-weight: 700;
+      line-height: 1.2;
+      text-decoration: none;
+    }
+
+    .celestial-back .contact-star {
+      align-self: center;
+      width: 1.8mm;
+      height: 1.8mm;
+      background: var(--coral-deep);
+      filter: none;
+    }
+
+    .contact-label {
+      color: var(--muted);
+      font-size: 1.38mm;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .contact-value {
+      min-width: 0;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+
+    .contact-pair-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0;
+      align-items: baseline;
+      min-width: 0;
+    }
+
+    .contact-pair-row .contact-row {
+      grid-template-columns: 2.4mm 14mm minmax(0, 1fr);
+      gap: 1.55mm;
+    }
+
+    .handle-row {
+      max-width: 100%;
+    }
+
+    .handle-row .contact-value {
+      position: relative;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .handle-row .contact-value::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -0.52mm;
+      height: 0.18mm;
+      background: rgba(31,74,82,0.26);
+    }
+
+    .celestial-footer {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      justify-items: start;
+      padding-top: 1mm;
+      border-top: 0.22mm solid rgba(31,74,82,0.22);
+    }
+
+    .coords-readout {
+      display: grid;
+      gap: 0.75mm;
+      width: fit-content;
+      color: var(--teal);
+      line-height: 1;
+      text-decoration: none;
+    }
+
+    .coords-readout span {
+      color: var(--muted);
+      font-size: 1.28mm;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .coords-readout strong {
+      display: block;
+      color: var(--teal);
+      font-size: 2.05mm;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .celestial-qr-corner {
+      position: absolute;
+      top: var(--safe-top);
+      right: var(--safe-right);
+      z-index: 2;
+      display: grid;
+      justify-items: center;
+      gap: 0.75mm;
+      width: 16mm;
+    }
+
+    .qr-wrap {
+      min-width: 0;
+    }
+
+    .qr-label {
+      max-width: 16mm;
+      color: var(--muted);
+      font-size: 1.18mm;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      line-height: 1.16;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: normal;
+    }
+
+    .celestial-back .qr {
+      --qr-color: var(--teal);
+      width: 15mm;
+      height: 15mm;
+      background: var(--card);
+    }
+
+    .celestial-back .qr::before,
+    .celestial-back .qr::after {
+      display: none;
+    }
+
+    .celestial-back .qr svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    body.size-square .celestial-front .celestial-north-star {
+      top: 5mm;
+      right: 5.2mm;
+      width: 14.4mm;
+      height: 14.4mm;
+    }
+    body.size-square .celestial-front .celestial-north-star .seal {
+      --seal-size: 13mm;
+    }
+    body.size-square .celestial-front-copy {
+      gap: 1mm;
+      max-width: 34mm;
+    }
+    body.size-square .celestial-kicker {
+      font-size: 1.22mm;
+      letter-spacing: 0.22em;
+    }
+    body.size-square .celestial-front .wordmark { font-size: 6.35mm; }
+    body.size-square .celestial-front .coords {
+      max-width: 32mm;
+      font-size: 1.42mm;
+      letter-spacing: 0.1em;
+    }
+    body.size-square .celestial-back {
+      gap: 1.35mm;
+    }
+    body.size-square .celestial-lockup {
+      gap: 1.65mm;
+      margin-right: 16.4mm;
+    }
+    body.size-square .celestial-lockup .seal {
+      --seal-size: 7mm;
+    }
+    body.size-square .celestial-lockup .wordmark {
+      font-size: 4.65mm;
+    }
+    body.size-square .lockup-tagline {
+      font-size: 1.62mm;
+    }
+    body.size-square .celestial-rule {
+      margin-right: 16.4mm;
+    }
+    body.size-square .celestial-main {
+      grid-template-columns: 1fr;
+      gap: 1.35mm;
+    }
+    body.size-square .celestial-identity {
+      max-width: calc(100% - 19mm);
+    }
+    body.size-square .celestial-back .name { font-size: 5.15mm; }
+    body.size-square .celestial-back .title {
+      margin-top: 0.65mm;
+      font-size: 1.42mm;
+    }
+    body.size-square .celestial-contact-list {
+      gap: 0.72mm;
+    }
+    body.size-square .celestial-back .contact-row {
+      grid-template-columns: 2mm 11.2mm minmax(0, 1fr);
+      gap: 1.05mm;
+      font-size: 1.42mm;
+    }
+    body.size-square .contact-pair-row {
+      gap: 0;
+    }
+    body.size-square .contact-pair-row .contact-row {
+      grid-template-columns: 2mm 11.2mm minmax(0, 1fr);
+      gap: 1.05mm;
+    }
+    body.size-square .celestial-back .contact-star {
+      width: 1.42mm;
+      height: 1.42mm;
+    }
+    body.size-square .contact-label {
+      font-size: 1.02mm;
+      letter-spacing: 0.13em;
+    }
+    body.size-square .celestial-footer {
+      padding-top: 1.25mm;
+    }
+    body.size-square .coords-readout {
+      gap: 0.55mm;
+    }
+    body.size-square .coords-readout span {
+      font-size: 1mm;
+      letter-spacing: 0.16em;
+    }
+    body.size-square .coords-readout strong {
+      font-size: 1.55mm;
+      letter-spacing: 0.03em;
+    }
+    body.size-square .celestial-qr-corner {
+      width: 16mm;
+      gap: 0.52mm;
+    }
+    body.size-square .qr-label {
+      max-width: 16mm;
+      font-size: 0.92mm;
+      letter-spacing: 0.02em;
+    }
+    body.size-square .celestial-back .qr {
+      width: 15mm;
+      height: 15mm;
+      font-size: 1.05mm;
+    }
+    body.size-tag .celestial-back .name {
+      font-size: 5.15mm;
+    }
+    body.size-tag .celestial-back .contact-row {
+      grid-template-columns: 2mm 10.5mm minmax(0, 1fr);
+      gap: 1mm;
+      font-size: 1.6mm;
+    }
+    body.size-tag .contact-label {
+      font-size: 1mm;
+      letter-spacing: 0.13em;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.36; transform: scale(0.88); }
+      45% { opacity: 1; transform: scale(1.08); }
+    }
+
+    @keyframes flap {
+      0%, 22%, 100% { transform: rotateX(0); filter: brightness(1); }
+      34% { transform: rotateX(-82deg); filter: brightness(0.86); }
+      48% { transform: rotateX(0); filter: brightness(1.08); }
+    }
+
+    @keyframes pageFlip {
+      0%, 100% { transform: rotateY(0); }
+      48% { transform: rotateY(-11deg); }
+    }
+
+    @keyframes stampThunk {
+      0%, 72%, 100% { transform: rotate(-12deg) scale(1); opacity: 0.92; }
+      78% { transform: rotate(-12deg) scale(1.08); opacity: 0.72; }
+      84% { transform: rotate(-12deg) scale(0.96); opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      body.motion-on .seal.can-spin:hover {
+        animation: spin 1.4s cubic-bezier(.64,.02,.19,1) infinite;
+      }
+
+      body.motion-on .split-flap {
+        animation: flap 3.8s ease-in-out infinite;
+      }
+
+      body.motion-on .passport-front:hover .passport-page {
+        animation: pageFlip 1.1s ease-in-out;
+      }
+
+      body.motion-on .rubber-stamp {
+        animation: stampThunk 3.6s ease-in-out infinite;
+      }
+
+      body.motion-on .star-map circle {
+        animation: twinkle 2.6s ease-in-out infinite;
+      }
+
+      body.motion-on .star-map circle:nth-of-type(2n) { animation-delay: 0.6s; }
+      body.motion-on .star-map circle:nth-of-type(3n) { animation-delay: 1.1s; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
+    body.motion-off *,
+    body.motion-off *::before,
+    body.motion-off *::after {
+      animation: none !important;
+      transition-duration: 0.001ms !important;
+    }
+
+    @media (max-width: 820px) {
+      .page {
+        width: min(100% - 20px, 1220px);
+        padding-top: 20px;
+      }
+
+      .intro,
+      .concept-head {
+        grid-template-columns: 1fr;
+      }
+
+      .concept-actions {
+        justify-content: flex-start;
+      }
+
+      .toolbar {
+        margin-inline: -10px;
+        border-radius: 0;
+      }
+
+      .card-pair {
+        gap: 16px;
+      }
+    }
+
+    @media print {
+      @page { size: 91mm 61mm; margin: 0; }
+
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      html,
+      body {
+        width: auto;
+        min-height: 0;
+        background: white !important;
+      }
+
+      body::before,
+      .intro,
+      .toolbar,
+      .concept-head,
+      .caption {
+        display: none !important;
+      }
+
+      .page {
+        width: auto;
+        margin: 0;
+        padding: 0;
+      }
+
+      .concept {
+        display: none !important;
+        padding: 0;
+        border: 0;
+      }
+
+      body.print-mode .concept.is-printing {
+        display: block !important;
+      }
+
+      body.print-mode .concept.is-printing .card-pair {
+        display: block;
+      }
+
+      body.print-mode .concept.is-printing .card-shell {
+        display: block !important;
+        width: var(--card-w);
+        height: var(--card-h);
+        margin: 3mm;
+        break-after: page;
+        page-break-after: always;
+        filter: none;
+      }
+
+      body.print-mode .concept.is-printing .card-shell:last-child {
+        break-after: auto;
+        page-break-after: auto;
+      }
+
+      .business-card {
+        box-shadow: none !important;
+      }
+
+      .crop-tick {
+        display: block;
+      }
+    }
+  </style>
+  <style id="print-page">
+    @media print { @page { size: 91mm 61mm; margin: 0; } }
+  </style>
+</head>
+<body class="size-indian side-both motion-on">
+  <main class="page">
+    <header class="intro">
+      <div>
+        <div class="wordmark" aria-label="Driftibo">Drifti<em>b</em>o</div>
+        <p>Five concepts. Pick one; we take it to a print-ready + digital final.</p>
+      </div>
+      <a class="pill" href="https://driftibo.com" data-href="site">driftibo.com</a>
+    </header>
+
+    <form class="toolbar" aria-label="Business card preview controls">
+      <div class="control-group" role="radiogroup" aria-label="Size and shape">
+        <span class="control-title">Size</span>
+        <div class="segmented">
+          <label class="segment"><input type="radio" name="size" value="indian" checked><span>Indian 85x55 mm</span></label>
+          <label class="segment"><input type="radio" name="size" value="square"><span>Square 55x55 mm</span></label>
+          <label class="segment"><input type="radio" name="size" value="tag"><span>Luggage-tag</span></label>
+        </div>
+      </div>
+
+      <div class="control-group" role="radiogroup" aria-label="Visible side">
+        <span class="control-title">Side</span>
+        <div class="segmented">
+          <label class="segment"><input type="radio" name="side" value="front"><span>Front</span></label>
+          <label class="segment"><input type="radio" name="side" value="back"><span>Back</span></label>
+          <label class="segment"><input type="radio" name="side" value="both" checked><span>Both</span></label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <span class="control-title">Motion</span>
+        <div class="toggle-wrap">
+          <label class="toggle"><input id="motion-toggle" type="checkbox" checked><span class="toggle-dot" aria-hidden="true"></span><span>Spin &amp; Twinkle</span></label>
+        </div>
+      </div>
+    </form>
+
+    <section class="concept" data-concept="star-seal" aria-labelledby="star-seal-title">
+      <div class="concept-head">
+        <div>
+          <div class="kicker">Concept 01</div>
+          <h2 id="star-seal-title">Star Seal</h2>
+        </div>
+        <div class="concept-actions">
+          <a class="save-link" href="#" data-vcard>Save contact</a>
+          <button class="print-btn" type="button" data-print-card>Print this card</button>
+        </div>
+      </div>
+
+      <div class="card-pair">
+        <div class="card-shell front">
+          <article class="business-card star-seal-front" aria-label="Star Seal front">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <div class="seal seal-lg can-spin" aria-label="Driftibo compass seal">
+              <span class="seal-star"></span><span class="cardinal north">N</span><span class="cardinal east">E</span><span class="cardinal south">S</span><span class="cardinal west">W</span>
+            </div>
+            <div class="front-lockup">
+              <div class="wordmark">Drifti<em>b</em>o</div>
+              <p class="tagline" data-holder="tagline">Travel by your own star</p>
+            </div>
+            <a class="pill" href="https://driftibo.com" data-href="site">Spin my star</a>
+          </article>
+        </div>
+
+        <div class="card-shell back">
+          <article class="business-card star-seal-back" aria-label="Star Seal back">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <div>
+              <div class="name" data-holder="name">Manav Bajaj</div>
+              <div class="title" data-holder="title">Founder</div>
+              <div class="hairline"></div>
+              <div class="contacts">
+                <a class="contact-row" href="https://wa.me/917011842360" data-href="whatsapp"><span class="star-bullet">★</span><span data-holder="whatsapp">+91 70118 42360</span></a>
+                <a class="contact-row" href="mailto:hello@driftibo.com" data-href="email"><span class="star-bullet">★</span><span data-holder="email">hello@driftibo.com</span></a>
+                <a class="contact-row" href="https://driftibo.com" data-href="site"><span class="star-bullet">★</span><span data-holder="site">driftibo.com</span></a>
+                <span class="contact-row"><span class="star-bullet">★</span><span data-holder="handle">@driftibo</span></span>
+              </div>
+            </div>
+            <div class="right-rail">
+              <div class="qr"><span data-qr-text>wa.me/917011842360</span></div>
+              <a class="card-save" href="#" data-vcard>vCard</a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="caption">
+        <p><strong>Offline finish</strong> Coral foil + spot-UV star on matte soft-touch; letterpress wordmark.</p>
+        <p><strong>Digital twist</strong> Seal spins on hover; "Spin my star" opens driftibo.com; QR + vCard are present.</p>
+        <p class="wildcard">Wildcard: ISO credit-card "Wanderer No. 001" membership.</p>
+      </div>
+    </section>
+
+    <section class="concept" data-concept="boarding-pass" aria-labelledby="boarding-pass-title">
+      <div class="concept-head">
+        <div>
+          <div class="kicker">Concept 02</div>
+          <h2 id="boarding-pass-title">Boarding Pass</h2>
+        </div>
+        <div class="concept-actions">
+          <a class="save-link" href="#" data-vcard>Save contact</a>
+          <button class="print-btn" type="button" data-print-card>Print this card</button>
+        </div>
+      </div>
+
+      <div class="card-pair">
+        <div class="card-shell front">
+          <article class="business-card boarding-front" aria-label="Boarding Pass front">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <div class="boarding-main">
+              <div class="ticket-topline"><span>Driftibo Air</span><span>Founder Card</span></div>
+              <div class="ticket-fields">
+                <div class="ticket-field">
+                  <label>Passenger</label>
+                  <span class="ticket-value big" data-holder="name">Manav Bajaj</span>
+                </div>
+                <div class="ticket-field">
+                  <label>To</label>
+                  <span class="ticket-value"><span class="split-flap">WHEREVER YOUR STAR SENDS YOU</span></span>
+                </div>
+              </div>
+              <div class="ticket-meta">
+                <div><span class="mini-label">Flight</span><br>DFT 001</div>
+                <div><span class="mini-label">Class</span><br>Founder</div>
+                <div><span class="mini-label">Gate</span><br>STAR</div>
+              </div>
+            </div>
+            <a class="boarding-stub" href="https://wa.me/917011842360" data-href="whatsapp" aria-label="Message Driftibo on WhatsApp">
+              <span class="seat"><span class="mini-label">Seat</span><strong>1A</strong></span>
+              <span class="barcode" aria-hidden="true"></span>
+              <span class="qr"><span data-qr-text>wa.me/917011842360</span></span>
+            </a>
+          </article>
+        </div>
+
+        <div class="card-shell back">
+          <article class="business-card boarding-back" aria-label="Boarding Pass back">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <div>
+              <div class="wordmark">Drifti<em>b</em>o</div>
+              <div class="manifest">
+                <p><span>Holder</span><br><strong data-holder="name">Manav Bajaj</strong> / <span data-holder="title">Founder</span></p>
+                <p><span>Boarding contact</span><br><a href="https://wa.me/917011842360" data-href="whatsapp" data-holder="whatsapp">+91 70118 42360</a></p>
+                <p><span>Signal</span><br><a href="mailto:hello@driftibo.com" data-href="email" data-holder="email">hello@driftibo.com</a></p>
+              </div>
+            </div>
+            <div class="stub-note">
+              <div class="seal seal-sm can-spin" aria-label="Driftibo compass seal">
+                <span class="seal-star"></span><span class="cardinal north">N</span><span class="cardinal east">E</span><span class="cardinal south">S</span><span class="cardinal west">W</span>
+              </div>
+              <a class="card-save" href="#" data-vcard>vCard</a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="caption">
+        <p><strong>Offline finish</strong> Real perforation; kraft / soft-sky stock.</p>
+        <p><strong>Digital twist</strong> Split-flap destination flip animation; stub tap opens wa.me/917011842360.</p>
+        <p class="wildcard">Wildcard: boarding group by trip mood instead of seat class.</p>
+      </div>
+    </section>
+
+    <section class="concept" data-concept="passport-stamp" aria-labelledby="passport-stamp-title">
+      <div class="concept-head">
+        <div>
+          <div class="kicker">Concept 03</div>
+          <h2 id="passport-stamp-title">Passport Stamp</h2>
+        </div>
+        <div class="concept-actions">
+          <a class="save-link" href="#" data-vcard>Save contact</a>
+          <button class="print-btn" type="button" data-print-card>Print this card</button>
+        </div>
+      </div>
+
+      <div class="card-pair">
+        <div class="card-shell front">
+          <article class="business-card passport-front" aria-label="Passport Stamp front">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <div class="passport-page">
+              <div class="passport-top">
+                <div class="wordmark">Drifti<em>b</em>o</div>
+                <div class="seal seal-xs can-spin" aria-label="Driftibo compass seal"><span class="seal-star"></span><span class="cardinal north">N</span><span class="cardinal east">E</span><span class="cardinal south">S</span><span class="cardinal west">W</span></div>
+              </div>
+              <div class="admit"><span>Admit one</span><strong>Wanderer</strong></div>
+              <div class="mrz mono">P&lt;IND BAJAJ&lt;&lt;MANAV&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="card-shell back">
+          <article class="business-card passport-back" aria-label="Passport Stamp back">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <div class="rubber-stamp" aria-label="Travel by your own star rubber stamp">
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <defs>
+                  <path id="stamp-circle" d="M50,8a42,42 0 1,1 0,84a42,42 0 1,1 0,-84"></path>
+                </defs>
+                <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="4"></circle>
+                <circle cx="50" cy="50" r="31" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                <text><textPath href="#stamp-circle">Travel by your own star - Driftibo - Founder - </textPath></text>
+              </svg>
+              <span class="rubber-star"></span>
+            </div>
+            <div class="contact-strip">
+              <span data-holder="name">Manav Bajaj</span>
+              <a href="https://driftibo.com" data-href="site" data-holder="site">driftibo.com</a>
+              <a class="card-save" href="#" data-vcard>vCard</a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="caption">
+        <p><strong>Offline finish</strong> Fold-to-passport or real rubber stamp; edge-paint.</p>
+        <p><strong>Digital twist</strong> Page-flip on hover + stamp "thunk" scale-in animation.</p>
+        <p class="wildcard">Wildcard: each batch gets a different entry-date stamp.</p>
+      </div>
+    </section>
+
+    <section class="concept" data-concept="postcard" aria-labelledby="postcard-title">
+      <div class="concept-head">
+        <div>
+          <div class="kicker">Concept 04</div>
+          <h2 id="postcard-title">Postcard From The Edge</h2>
+        </div>
+        <div class="concept-actions">
+          <a class="save-link" href="#" data-vcard>Save contact</a>
+          <button class="print-btn" type="button" data-print-card>Print this card</button>
+        </div>
+      </div>
+
+      <div class="card-pair">
+        <div class="card-shell front">
+          <article class="business-card postcard-front" aria-label="Postcard From The Edge front">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <div class="top-row">
+              <span class="compass-glyph" aria-hidden="true"></span>
+              <div class="wordmark">Drifti<em>b</em>o</div>
+            </div>
+            <p class="place">Himalaya light, soft-sky air, coral last mile.</p>
+          </article>
+        </div>
+
+        <div class="card-shell back">
+          <article class="business-card postcard-back" aria-label="Postcard From The Edge back">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <div class="postcard-note">
+              <p class="handwritten">Wish you were here...</p>
+              <p class="micro" data-holder="tagline">Travel by your own star</p>
+            </div>
+            <div class="postcard-contact">
+              <div class="stamp-box" aria-label="QR stamp">
+                <div class="postmark" aria-hidden="true">
+                  <svg viewBox="0 0 100 100">
+                    <defs><path id="postmark-arc" d="M12,52a38,38 0 1,1 76,0"></path></defs>
+                    <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="14 5"></circle>
+                    <text><textPath href="#postmark-arc">DRIFTIBO POSTMARK</textPath></text>
+                  </svg>
+                </div>
+                <div class="seal seal-xs stamp-seal" aria-label="Driftibo compass seal"><span class="seal-star"></span><span class="cardinal north">N</span><span class="cardinal east">E</span><span class="cardinal south">S</span><span class="cardinal west">W</span></div>
+                <div class="qr"><span data-qr-text>wa.me/917011842360</span></div>
+                <span class="coords-reveal">30.32N 78.03E</span>
+              </div>
+              <div class="write-line"><span>Name</span><span data-holder="name">Manav Bajaj</span></div>
+              <div class="write-line"><span>Mobile</span><a href="https://wa.me/917011842360" data-href="whatsapp" data-holder="whatsapp">+91 70118 42360</a></div>
+              <div class="write-line"><span>Email</span><a href="mailto:hello@driftibo.com" data-href="email" data-holder="email">hello@driftibo.com</a></div>
+              <div class="write-line"><span>Web</span><a href="https://driftibo.com" data-href="site" data-holder="site">driftibo.com</a></div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="caption">
+        <p><strong>Offline finish</strong> Matte front, uncoated writable back.</p>
+        <p><strong>Digital twist</strong> Stamp is the QR; hover reveals coordinates.</p>
+        <p class="wildcard">Wildcard: 35mm film-strip variant.</p>
+      </div>
+    </section>
+
+    <section class="concept" data-concept="celestial-star-map" aria-labelledby="celestial-title">
+      <div class="concept-head">
+        <div>
+          <div class="kicker">Concept 05</div>
+          <h2 id="celestial-title">Celestial Star-Map</h2>
+        </div>
+        <div class="concept-actions">
+          <a class="save-link" href="#" data-vcard>Save contact</a>
+          <button class="print-btn" type="button" data-print-card>Print this card</button>
+        </div>
+      </div>
+
+      <div class="card-pair">
+        <div class="card-shell front">
+          <article class="business-card celestial-front" aria-label="Celestial Star-Map front">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <svg class="star-map" viewBox="0 0 850 550" preserveAspectRatio="none" aria-hidden="true">
+              <path class="chart-arc" d="M-42 466 C178 324 458 268 890 116"></path>
+              <path class="chart-arc" d="M44 542 C272 392 524 334 872 214"></path>
+              <line class="chart-tick" x1="58" y1="462" x2="84" y2="487"></line>
+              <line class="chart-tick" x1="176" y1="386" x2="204" y2="414"></line>
+              <line class="chart-tick" x1="304" y1="324" x2="330" y2="356"></line>
+              <line class="chart-tick" x1="642" y1="186" x2="664" y2="220"></line>
+              <line class="constellation-line" x1="132" y1="410" x2="268" y2="322"></line>
+              <line class="constellation-line" x1="268" y1="322" x2="420" y2="248"></line>
+              <line class="constellation-line" x1="420" y1="248" x2="566" y2="160"></line>
+              <line class="constellation-line" x1="566" y1="160" x2="728" y2="80"></line>
+              <line x1="420" y1="248" x2="496" y2="368"></line>
+              <line x1="566" y1="160" x2="602" y2="294"></line>
+              <circle cx="98" cy="118" r="2.2"></circle>
+              <circle cx="132" cy="410" r="4"></circle>
+              <circle cx="214" cy="194" r="2.8"></circle>
+              <circle cx="268" cy="322" r="3.5"></circle>
+              <circle cx="342" cy="86" r="2.3"></circle>
+              <circle cx="420" cy="248" r="3.2"></circle>
+              <circle cx="496" cy="368" r="2.7"></circle>
+              <circle cx="566" cy="160" r="3.8"></circle>
+              <circle cx="602" cy="294" r="2.4"></circle>
+              <circle cx="710" cy="418" r="2.6"></circle>
+              <circle cx="790" cy="246" r="2.1"></circle>
+            </svg>
+            <span class="celestial-north-star" aria-hidden="true">
+              <span class="seal seal-sm can-spin"><span class="seal-star"></span><span class="cardinal north">N</span><span class="cardinal east">E</span><span class="cardinal south">S</span><span class="cardinal west">W</span></span>
+            </span>
+            <div class="celestial-front-copy">
+              <div class="celestial-kicker">BY YOUR OWN STAR</div>
+              <div class="wordmark" aria-label="Driftibo">Drifti<em>b</em>o</div>
+              <div class="coords mono">30.32&deg;N 78.03&deg;E &middot; mag 0.0</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="card-shell back">
+          <article class="business-card celestial-back" aria-label="Celestial Star-Map back">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <header class="celestial-lockup">
+              <span class="seal seal-sm can-spin" aria-label="Driftibo compass seal"><span class="seal-star"></span><span class="cardinal north">N</span><span class="cardinal east">E</span><span class="cardinal south">S</span><span class="cardinal west">W</span></span>
+              <div>
+                <div class="wordmark" aria-label="Driftibo">Drifti<em>b</em>o</div>
+                <div class="lockup-tagline" data-holder="tagline">Travel by your own star</div>
+              </div>
+            </header>
+            <div class="celestial-rule"></div>
+            <div class="celestial-qr-corner qr-wrap">
+              <div class="qr" aria-label="QR code: save Manav Bajaj contact"><svg class="qr-code" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47 47" shape-rendering="crispEdges"><path fill="#FBFDFD" d="M0 0h47v47H0z"/><path fill="#1F4A52" d="M3 3h7v1H3zM11 3h1v1H11zM15 3h1v1H15zM18 3h2v1H18zM22 3h1v1H22zM24 3h2v1H24zM27 3h2v1H27zM30 3h6v1H30zM37 3h7v1H37zM3 4h1v1H3zM9 4h1v1H9zM13 4h1v1H13zM15 4h1v1H15zM17 4h2v1H17zM20 4h1v1H20zM23 4h2v1H23zM26 4h1v1H26zM28 4h2v1H28zM31 4h1v1H31zM33 4h3v1H33zM37 4h1v1H37zM43 4h1v1H43zM3 5h1v1H3zM5 5h3v1H5zM9 5h1v1H9zM12 5h1v1H12zM14 5h2v1H14zM17 5h1v1H17zM19 5h1v1H19zM22 5h1v1H22zM24 5h2v1H24zM27 5h3v1H27zM37 5h1v1H37zM39 5h3v1H39zM43 5h1v1H43zM3 6h1v1H3zM5 6h3v1H5zM9 6h1v1H9zM11 6h4v1H11zM19 6h1v1H19zM21 6h2v1H21zM24 6h5v1H24zM32 6h1v1H32zM37 6h1v1H37zM39 6h3v1H39zM43 6h1v1H43zM3 7h1v1H3zM5 7h3v1H5zM9 7h1v1H9zM11 7h3v1H11zM15 7h2v1H15zM19 7h3v1H19zM23 7h1v1H23zM25 7h1v1H25zM28 7h1v1H28zM30 7h1v1H30zM35 7h1v1H35zM37 7h1v1H37zM39 7h3v1H39zM43 7h1v1H43zM3 8h1v1H3zM9 8h1v1H9zM11 8h2v1H11zM16 8h2v1H16zM19 8h1v1H19zM23 8h3v1H23zM27 8h1v1H27zM29 8h2v1H29zM35 8h1v1H35zM37 8h1v1H37zM43 8h1v1H43zM3 9h7v1H3zM11 9h1v1H11zM13 9h1v1H13zM15 9h1v1H15zM17 9h1v1H17zM19 9h1v1H19zM21 9h1v1H21zM23 9h1v1H23zM25 9h1v1H25zM27 9h1v1H27zM29 9h1v1H29zM31 9h1v1H31zM33 9h1v1H33zM35 9h1v1H35zM37 9h7v1H37zM11 10h1v1H11zM15 10h2v1H15zM18 10h2v1H18zM21 10h8v1H21zM30 10h2v1H30zM33 10h1v1H33zM35 10h1v1H35zM3 11h3v1H3zM7 11h1v1H7zM9 11h1v1H9zM11 11h5v1H11zM19 11h1v1H19zM21 11h1v1H21zM23 11h1v1H23zM29 11h1v1H29zM34 11h1v1H34zM36 11h5v1H36zM43 11h1v1H43zM4 12h4v1H4zM12 12h2v1H12zM15 12h2v1H15zM18 12h1v1H18zM21 12h1v1H21zM25 12h1v1H25zM27 12h1v1H27zM29 12h3v1H29zM33 12h2v1H33zM36 12h2v1H36zM40 12h1v1H40zM43 12h1v1H43zM3 13h3v1H3zM7 13h1v1H7zM9 13h1v1H9zM17 13h4v1H17zM23 13h1v1H23zM27 13h1v1H27zM37 13h1v1H37zM41 13h2v1H41zM3 14h1v1H3zM6 14h2v1H6zM10 14h1v1H10zM12 14h1v1H12zM14 14h2v1H14zM17 14h4v1H17zM22 14h1v1H22zM25 14h2v1H25zM30 14h1v1H30zM35 14h3v1H35zM39 14h2v1H39zM42 14h1v1H42zM6 15h1v1H6zM8 15h3v1H8zM12 15h1v1H12zM14 15h2v1H14zM19 15h3v1H19zM24 15h2v1H24zM33 15h1v1H33zM36 15h1v1H36zM38 15h1v1H38zM41 15h1v1H41zM43 15h1v1H43zM7 16h1v1H7zM10 16h1v1H10zM13 16h4v1H13zM19 16h1v1H19zM22 16h1v1H22zM27 16h2v1H27zM30 16h1v1H30zM32 16h1v1H32zM35 16h3v1H35zM39 16h2v1H39zM43 16h1v1H43zM9 17h1v1H9zM12 17h1v1H12zM14 17h1v1H14zM19 17h1v1H19zM27 17h1v1H27zM29 17h1v1H29zM32 17h4v1H32zM37 17h1v1H37zM39 17h1v1H39zM41 17h1v1H41zM43 17h1v1H43zM3 18h2v1H3zM6 18h3v1H6zM10 18h1v1H10zM12 18h2v1H12zM16 18h1v1H16zM18 18h1v1H18zM21 18h2v1H21zM24 18h4v1H24zM30 18h3v1H30zM35 18h1v1H35zM37 18h4v1H37zM42 18h1v1H42zM3 19h1v1H3zM5 19h6v1H5zM13 19h1v1H13zM16 19h2v1H16zM21 19h1v1H21zM23 19h2v1H23zM30 19h1v1H30zM32 19h1v1H32zM36 19h3v1H36zM40 19h1v1H40zM42 19h2v1H42zM4 20h2v1H4zM7 20h1v1H7zM10 20h2v1H10zM13 20h1v1H13zM16 20h1v1H16zM18 20h1v1H18zM20 20h2v1H20zM25 20h3v1H25zM30 20h2v1H30zM33 20h4v1H33zM39 20h3v1H39zM43 20h1v1H43zM3 21h1v1H3zM5 21h1v1H5zM7 21h5v1H7zM13 21h1v1H13zM15 21h3v1H15zM19 21h1v1H19zM21 21h1v1H21zM23 21h1v1H23zM25 21h1v1H25zM27 21h2v1H27zM31 21h2v1H31zM34 21h2v1H34zM38 21h1v1H38zM40 21h2v1H40zM3 22h1v1H3zM5 22h1v1H5zM8 22h1v1H8zM10 22h1v1H10zM12 22h6v1H12zM20 22h1v1H20zM22 22h2v1H22zM25 22h1v1H25zM27 22h2v1H27zM37 22h1v1H37zM43 22h1v1H43zM3 23h1v1H3zM5 23h1v1H5zM8 23h3v1H8zM12 23h1v1H12zM16 23h4v1H16zM22 23h3v1H22zM26 23h2v1H26zM31 23h3v1H31zM35 23h1v1H35zM39 23h4v1H39zM3 24h1v1H3zM5 24h1v1H5zM7 24h2v1H7zM10 24h1v1H10zM13 24h6v1H13zM20 24h1v1H20zM22 24h2v1H22zM25 24h1v1H25zM27 24h1v1H27zM29 24h3v1H29zM33 24h3v1H33zM37 24h1v1H37zM39 24h1v1H39zM41 24h1v1H41zM43 24h1v1H43zM3 25h1v1H3zM6 25h6v1H6zM15 25h3v1H15zM20 25h1v1H20zM24 25h2v1H24zM29 25h1v1H29zM31 25h2v1H31zM34 25h2v1H34zM39 25h2v1H39zM42 25h2v1H42zM3 26h2v1H3zM7 26h2v1H7zM11 26h3v1H11zM15 26h1v1H15zM17 26h2v1H17zM20 26h1v1H20zM23 26h2v1H23zM26 26h2v1H26zM30 26h4v1H30zM36 26h1v1H36zM38 26h1v1H38zM40 26h2v1H40zM43 26h1v1H43zM5 27h3v1H5zM9 27h1v1H9zM11 27h1v1H11zM15 27h1v1H15zM17 27h1v1H17zM20 27h1v1H20zM24 27h1v1H24zM26 27h1v1H26zM28 27h2v1H28zM32 27h1v1H32zM34 27h1v1H34zM36 27h2v1H36zM40 27h1v1H40zM42 27h2v1H42zM11 28h1v1H11zM14 28h2v1H14zM17 28h3v1H17zM21 28h3v1H21zM25 28h1v1H25zM27 28h7v1H27zM36 28h5v1H36zM42 28h2v1H42zM3 29h1v1H3zM7 29h5v1H7zM13 29h3v1H13zM17 29h2v1H17zM21 29h1v1H21zM27 29h1v1H27zM29 29h1v1H29zM31 29h4v1H31zM40 29h3v1H40zM3 30h3v1H3zM8 30h1v1H8zM14 30h2v1H14zM17 30h1v1H17zM19 30h1v1H19zM23 30h2v1H23zM27 30h2v1H27zM30 30h2v1H30zM34 30h1v1H34zM39 30h3v1H39zM43 30h1v1H43zM4 31h3v1H4zM9 31h1v1H9zM11 31h1v1H11zM14 31h1v1H14zM18 31h1v1H18zM23 31h1v1H23zM26 31h2v1H26zM29 31h1v1H29zM33 31h2v1H33zM37 31h2v1H37zM43 31h1v1H43zM3 32h1v1H3zM7 32h1v1H7zM13 32h4v1H13zM18 32h1v1H18zM22 32h1v1H22zM32 32h3v1H32zM37 32h3v1H37zM41 32h1v1H41zM43 32h1v1H43zM3 33h2v1H3zM6 33h1v1H6zM9 33h3v1H9zM15 33h3v1H15zM19 33h2v1H19zM22 33h1v1H22zM24 33h1v1H24zM26 33h3v1H26zM31 33h3v1H31zM37 33h1v1H37zM39 33h1v1H39zM42 33h2v1H42zM5 34h1v1H5zM7 34h1v1H7zM10 34h2v1H10zM15 34h2v1H15zM18 34h5v1H18zM28 34h3v1H28zM33 34h3v1H33zM38 34h2v1H38zM43 34h1v1H43zM4 35h1v1H4zM7 35h3v1H7zM12 35h1v1H12zM15 35h1v1H15zM22 35h3v1H22zM26 35h2v1H26zM29 35h1v1H29zM34 35h7v1H34zM11 36h1v1H11zM15 36h1v1H15zM19 36h3v1H19zM24 36h1v1H24zM26 36h1v1H26zM28 36h1v1H28zM34 36h2v1H34zM39 36h3v1H39zM43 36h1v1H43zM3 37h7v1H3zM13 37h3v1H13zM19 37h3v1H19zM24 37h4v1H24zM31 37h2v1H31zM34 37h2v1H34zM37 37h1v1H37zM39 37h4v1H39zM3 38h1v1H3zM9 38h1v1H9zM12 38h2v1H12zM20 38h1v1H20zM24 38h2v1H24zM29 38h2v1H29zM33 38h1v1H33zM35 38h1v1H35zM39 38h2v1H39zM42 38h1v1H42zM3 39h1v1H3zM5 39h3v1H5zM9 39h1v1H9zM11 39h1v1H11zM13 39h4v1H13zM20 39h1v1H20zM22 39h1v1H22zM25 39h1v1H25zM29 39h1v1H29zM31 39h2v1H31zM35 39h5v1H35zM41 39h2v1H41zM3 40h1v1H3zM5 40h3v1H5zM9 40h1v1H9zM12 40h1v1H12zM14 40h4v1H14zM22 40h4v1H22zM29 40h2v1H29zM32 40h1v1H32zM35 40h3v1H35zM41 40h2v1H41zM3 41h1v1H3zM5 41h3v1H5zM9 41h1v1H9zM11 41h1v1H11zM14 41h3v1H14zM18 41h1v1H18zM20 41h2v1H20zM25 41h2v1H25zM28 41h1v1H28zM30 41h3v1H30zM34 41h1v1H34zM37 41h2v1H37zM40 41h1v1H40zM3 42h1v1H3zM9 42h1v1H9zM11 42h4v1H11zM16 42h2v1H16zM20 42h1v1H20zM22 42h5v1H22zM29 42h11v1H29zM41 42h1v1H41zM43 42h1v1H43zM3 43h7v1H3zM11 43h1v1H11zM13 43h2v1H13zM16 43h1v1H16zM18 43h4v1H18zM26 43h2v1H26zM30 43h2v1H30zM39 43h1v1H39zM41 43h1v1H41z"/></svg></div>
+              <div class="qr-label">Scan &middot; save contact</div>
+            </div>
+            <div class="celestial-main">
+              <section class="celestial-identity" aria-label="Identity">
+                <div class="name" data-holder="name">Manav Bajaj</div>
+                <div class="title" data-holder="title">Founder</div>
+              </section>
+              <div class="celestial-contact-list" aria-label="Contact details">
+                <a class="contact-row" href="https://wa.me/917011842360" data-href="whatsapp">
+                  <span class="seal-star contact-star" aria-hidden="true"></span><span class="contact-label">WhatsApp</span><span class="contact-value" data-holder="whatsapp">+91 70118 42360</span>
+                </a>
+                <a class="contact-row" href="mailto:hello@driftibo.com" data-href="email">
+                  <span class="seal-star contact-star" aria-hidden="true"></span><span class="contact-label">Email</span><span class="contact-value" data-holder="email">hello@driftibo.com</span>
+                </a>
+                <div class="contact-pair-row">
+                  <a class="contact-row" href="https://driftibo.com" data-href="site">
+                    <span class="seal-star contact-star" aria-hidden="true"></span><span class="contact-label">Web</span><span class="contact-value" data-holder="site">driftibo.com</span>
+                  </a>
+                  <div class="contact-row handle-row">
+                    <span class="seal-star contact-star" aria-hidden="true"></span><span class="contact-label">Handle</span><span class="contact-value" data-holder="handle">@driftibo</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="celestial-footer">
+              <a class="coords-readout mono" href="https://www.google.com/maps?q=30.32,78.03" target="_blank" rel="noopener">
+                <span>Coordinates</span><strong>30.32&deg;N 78.03&deg;E</strong>
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="caption">
+        <p><strong>Offline finish</strong> Silver/copper foil constellation; blind-deboss coords.</p>
+        <p><strong>Digital twist</strong> Stars twinkle; the compass seal is the north star; coords open a live map.</p>
+        <p class="wildcard">Wildcard: Launch-date sky edition.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const HOLDER = {
+      name: 'Manav Bajaj',
+      title: 'Founder',
+      whatsapp: '+91 70118 42360',
+      whatsappRaw: '917011842360',
+      site: 'driftibo.com',
+      handle: '@driftibo',
+      email: 'hello@driftibo.com',
+      tagline: 'Travel by your own star'
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const classGroups = {
+        size: ['size-indian', 'size-square', 'size-tag'],
+        side: ['side-front', 'side-back', 'side-both'],
+        motion: ['motion-on', 'motion-off']
+      };
+      const printPage = document.getElementById('print-page');
+      const pageSizes = {
+        indian: '91mm 61mm',
+        square: '61mm 61mm',
+        tag: '91mm 61mm'
+      };
+
+      function setText(selector, value) {
+        document.querySelectorAll(selector).forEach((node) => {
+          node.textContent = value;
+        });
+      }
+
+      function escapeVcard(value) {
+        return String(value)
+          .replace(/\\/g, '\\\\')
+          .replace(/\n/g, '\\n')
+          .replace(/,/g, '\\,')
+          .replace(/;/g, '\\;');
+      }
+
+      function buildVcard() {
+        const siteUrl = `https://${HOLDER.site.replace(/^https?:\/\//, '')}`;
+        return [
+          'BEGIN:VCARD',
+          'VERSION:3.0',
+          `FN:${escapeVcard(HOLDER.name)}`,
+          `TITLE:${escapeVcard(HOLDER.title)}`,
+          `TEL;TYPE=CELL:${escapeVcard(HOLDER.whatsapp)}`,
+          `EMAIL:${escapeVcard(HOLDER.email)}`,
+          `URL:${escapeVcard(siteUrl)}`,
+          `NOTE:${escapeVcard(HOLDER.tagline)}`,
+          'END:VCARD'
+        ].join('\r\n') + '\r\n';
+      }
+
+      function populateHolder() {
+        document.querySelectorAll('[data-holder]').forEach((node) => {
+          const key = node.dataset.holder;
+          if (Object.prototype.hasOwnProperty.call(HOLDER, key)) {
+            node.textContent = HOLDER[key];
+          }
+        });
+
+        const siteUrl = `https://${HOLDER.site.replace(/^https?:\/\//, '')}`;
+        const whatsappUrl = `https://wa.me/${HOLDER.whatsappRaw}`;
+        const emailUrl = `mailto:${HOLDER.email}`;
+
+        document.querySelectorAll('[data-href="site"]').forEach((node) => { node.href = siteUrl; });
+        document.querySelectorAll('[data-href="whatsapp"]').forEach((node) => { node.href = whatsappUrl; });
+        document.querySelectorAll('[data-href="email"]').forEach((node) => { node.href = emailUrl; });
+        setText('[data-qr-text]', `wa.me/${HOLDER.whatsappRaw}`);
+
+        const vcardHref = `data:text/vcard;charset=utf-8,${encodeURIComponent(buildVcard())}`;
+        document.querySelectorAll('[data-vcard]').forEach((node) => {
+          node.href = vcardHref;
+          node.setAttribute('download', 'manav-bajaj-driftibo.vcf');
+        });
+      }
+
+      function currentSize() {
+        return document.querySelector('input[name="size"]:checked').value;
+      }
+
+      function applyToolbarState() {
+        const size = currentSize();
+        const side = document.querySelector('input[name="side"]:checked').value;
+        const motionOn = document.getElementById('motion-toggle').checked;
+        document.body.classList.remove(...classGroups.size, ...classGroups.side, ...classGroups.motion);
+        document.body.classList.add(`size-${size}`, `side-${side}`, motionOn ? 'motion-on' : 'motion-off');
+      }
+
+      function cleanupPrint() {
+        document.body.classList.remove('print-mode');
+        document.querySelectorAll('.concept.is-printing').forEach((node) => node.classList.remove('is-printing'));
+      }
+
+      document.querySelectorAll('input[name="size"], input[name="side"], #motion-toggle').forEach((input) => {
+        input.addEventListener('change', applyToolbarState);
+      });
+
+      document.querySelectorAll('[data-print-card]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const concept = button.closest('.concept');
+          const size = currentSize();
+          printPage.textContent = `@media print { @page { size: ${pageSizes[size]}; margin: 0; } }`;
+          document.body.classList.add('print-mode');
+          document.querySelectorAll('.concept').forEach((node) => {
+            node.classList.toggle('is-printing', node === concept);
+          });
+          window.setTimeout(() => window.print(), 80);
+        });
+      });
+
+      window.addEventListener('afterprint', cleanupPrint);
+      populateHolder();
+      applyToolbarState();
+    });
+  </script>
+</body>
+</html>

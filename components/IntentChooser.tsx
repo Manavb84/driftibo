@@ -91,6 +91,10 @@ export default function IntentChooser() {
         <div style={{ textAlign: "center", marginBottom: 22 }}>
           <span className="seal t-coral breathe" style={{ width: 60, margin: "0 auto" }}>
             <span className="ring" />
+            <span className="card-pt pn">N</span>
+            <span className="card-pt pe">E</span>
+            <span className="card-pt ps">S</span>
+            <span className="card-pt pw">W</span>
             <span className="star" />
           </span>
           <p className="kicker" style={{ marginTop: 16 }}>

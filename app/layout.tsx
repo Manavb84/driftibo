@@ -24,7 +24,8 @@ export const metadata: Metadata = {
   title: "Driftibo · Travel by your own star",
   description:
     "Stop choosing. Start packing. Surprise travel, hand-planned: you set the limits, your star picks a real place, and we close it on WhatsApp. Seven taps, no destination choice — India's hidden corners and visa-easy escapes beyond.",
-  icons: { icon: "/favicon.svg" },
+  icons: { icon: "/favicon.svg", apple: "/apple-touch-icon.png" },
+  manifest: "/site.webmanifest",
   openGraph: {
     title: "Driftibo · Travel by your own star",
     description:
@@ -47,7 +48,7 @@ export default function RootLayout({
     "@type": "Organization",
     name: "Driftibo",
     url: "https://driftibo.com",
-    logo: "https://driftibo.com/favicon.svg",
+    logo: "https://driftibo.com/driftibo-seal.svg",
     description:
       "Driftibo plans surprise trips to real places — India's hidden corners and easy escapes abroad — and closes them on WhatsApp. You set the limits; your star picks.",
     sameAs: ["https://instagram.com/driftibo"],

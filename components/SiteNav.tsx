@@ -155,7 +155,7 @@ export default function SiteNav() {
               flexShrink: 0,
             }}
           >
-            <span className={`seal ${sky ? "t-ink" : "t-paper"}`} style={{ width: 30 }}>
+            <span className={`seal mini ${sky ? "t-ink" : "t-paper"}`} style={{ width: 30 }}>
               <span className="ring" />
               <span className="star" />
             </span>

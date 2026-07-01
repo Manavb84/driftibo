@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  PRINT SPEC
+  Trim: 90x54mm business card with 3mm bleed on all sides. Print page: 96x60mm.
+  Teal #1F4A52: CMYK approx C62 M10 Y0 K68.
+  Coral #F0A582: CMYK approx C0 M31 Y46 K6.
+  Finishing: coral foil on the constellation, blind-deboss on the coordinates line,
+  optional silver/copper foil variant for the constellation and compass accents.
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driftibo &mdash; Sunil Chandila &middot; Business Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300&amp;family=JetBrains+Mono:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #1F4A52;
+      --teal-soft: #2E5C66;
+      --on-ink: #ECF3F4;
+      --coral: #F0A582;
+      --coral-deep: #D87555;
+      --paper: #F4F7F9;
+      --panel: #EAF0F2;
+      --card: #FBFDFD;
+      --sky: #DCE9EE;
+      --text: #2A3A40;
+      --muted: #748389;
+      --line: #CDD8DB;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --shadow: 0 18px 50px rgba(31, 74, 82, 0.16);
+      --toolbar-h: 72px;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--sky);
+    }
+
+    body {
+      --card-w: 90mm;
+      --card-h: 54mm;
+      --safe-left: 6mm;
+      --safe-right: 6mm;
+      --safe-top: 4.8mm;
+      --safe-bottom: 4.8mm;
+      min-height: 100dvh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(240, 165, 130, 0.16), transparent 30rem),
+        linear-gradient(180deg, var(--sky), var(--paper) 44%, var(--panel));
+      font-family: var(--sans);
+      line-height: 1.45;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+    }
+
+    body.size-square {
+      --card-w: 55mm;
+      --card-h: 55mm;
+      --safe-left: 4.2mm;
+      --safe-right: 4.2mm;
+      --safe-top: 4mm;
+      --safe-bottom: 4mm;
+    }
+
+    a {
+      color: inherit;
+      text-decoration-color: rgba(216, 117, 85, 0.5);
+      text-underline-offset: 0.18em;
+    }
+
+    button,
+    input,
+    label {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 72px;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      align-items: center;
+      justify-content: space-between;
+      min-height: var(--toolbar-h);
+      margin: 0 -16px 36px;
+      padding: 12px 16px;
+      border: 1px solid rgba(205, 216, 219, 0.78);
+      border-radius: 0 0 8px 8px;
+      background: rgba(244, 247, 249, 0.92);
+      box-shadow: 0 10px 28px rgba(31, 74, 82, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .control-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .control-title {
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .segmented {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(251, 253, 253, 0.76);
+    }
+
+    .segment {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 6px;
+      color: var(--teal-soft);
+      cursor: pointer;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      transition: color 0.18s ease, background-color 0.18s ease;
+    }
+
+    .segment input {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segment:has(input:checked) {
+      color: var(--on-ink);
+      background: var(--teal);
+    }
+
+    .print-btn,
+    .save-link,
+    .card-save {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(251, 253, 253, 0.8);
+      color: var(--teal);
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .print-btn {
+      border-color: var(--teal);
+      background: var(--teal);
+      color: var(--on-ink);
+    }
+
+    .save-link:hover,
+    .card-save:hover {
+      border-color: var(--coral);
+      color: var(--coral-deep);
+    }
+
+    .concept {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card-pair {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .card-shell {
+      position: relative;
+      flex: 0 0 auto;
+      width: var(--card-w);
+      height: var(--card-h);
+      filter: drop-shadow(0 16px 28px rgba(31, 74, 82, 0.16));
+    }
+
+    .business-card {
+      position: relative;
+      width: var(--card-w);
+      height: var(--card-h);
+      overflow: hidden;
+      border: 1px solid rgba(205, 216, 219, 0.74);
+      border-radius: 4mm;
+      background: var(--card);
+      color: var(--text);
+      isolation: isolate;
+    }
+
+    body.size-square .business-card {
+      border-radius: 3mm;
+    }
+
+    body.side-front .card-shell.back,
+    body.side-back .card-shell.front {
+      display: none;
+    }
+
+    .crop-tick {
+      display: none;
+      position: absolute;
+      z-index: 45;
+      width: 5mm;
+      height: 5mm;
+      pointer-events: none;
+      opacity: 0.74;
+    }
+
+    .crop-tick::before,
+    .crop-tick::after {
+      content: "";
+      position: absolute;
+      background: rgba(42, 58, 64, 0.74);
+    }
+
+    .crop-tick::before { width: 4mm; height: 0.18mm; }
+    .crop-tick::after { width: 0.18mm; height: 4mm; }
+    .crop-tl { top: 1mm; left: 1mm; }
+    .crop-tl::before { top: 0; left: 0; }
+    .crop-tl::after { top: 0; left: 0; }
+    .crop-tr { top: 1mm; right: 1mm; }
+    .crop-tr::before { top: 0; right: 0; }
+    .crop-tr::after { top: 0; right: 0; }
+    .crop-bl { bottom: 1mm; left: 1mm; }
+    .crop-bl::before { bottom: 0; left: 0; }
+    .crop-bl::after { bottom: 0; left: 0; }
+    .crop-br { right: 1mm; bottom: 1mm; }
+    .crop-br::before { right: 0; bottom: 0; }
+    .crop-br::after { right: 0; bottom: 0; }
+
+    .tag-hole,
+    .tag-corner {
+      display: none;
+      position: absolute;
+      z-index: 28;
+      pointer-events: none;
+    }
+
+    .wordmark {
+      font-family: var(--serif);
+      font-weight: 300;
+      letter-spacing: -0.018em;
+      line-height: 0.95;
+    }
+
+    .wordmark em {
+      font-family: var(--serif);
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .mono {
+      font-family: var(--mono);
+    }
+
+    .seal {
+      --seal-size: 21mm;
+      position: relative;
+      display: inline-grid;
+      place-items: center;
+      width: var(--seal-size);
+      height: var(--seal-size);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 45% 42%, rgba(255,255,255,0.08), transparent 28%),
+        var(--teal);
+      color: var(--coral);
+      box-shadow: inset 0 0 0 calc(var(--seal-size) * 0.035) rgba(236, 243, 244, 0.18);
+    }
+
+    .seal::before {
+      content: "";
+      position: absolute;
+      inset: 15%;
+      border: calc(var(--seal-size) * 0.028) solid currentColor;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 calc(var(--seal-size) * 0.012) currentColor;
+      opacity: 0.95;
+    }
+
+    .seal::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: currentColor;
+      -webkit-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g stroke='%23000' stroke-linecap='butt' fill='none'><line x1='50' y1='23' x2='50' y2='19' stroke-width='0.7'/><line x1='53.52' y1='23.23' x2='54.05' y2='19.27' stroke-width='0.7'/><line x1='56.99' y1='23.92' x2='58.02' y2='20.06' stroke-width='0.7'/><line x1='60.33' y1='25.06' x2='61.86' y2='21.36' stroke-width='0.7'/><line x1='63.5' y1='26.62' x2='65.5' y2='23.15' stroke-width='0.7'/><line x1='66.44' y1='28.58' x2='68.87' y2='25.41' stroke-width='0.7'/><line x1='69.09' y1='30.91' x2='71.92' y2='28.08' stroke-width='0.7'/><line x1='71.42' y1='33.56' x2='74.59' y2='31.13' stroke-width='0.7'/><line x1='73.38' y1='36.5' x2='76.85' y2='34.5' stroke-width='0.7'/><line x1='74.94' y1='39.67' x2='78.64' y2='38.14' stroke-width='0.7'/><line x1='76.08' y1='43.01' x2='79.94' y2='41.98' stroke-width='0.7'/><line x1='76.77' y1='46.48' x2='80.73' y2='45.95' stroke-width='0.7'/><line x1='77' y1='50' x2='81' y2='50' stroke-width='0.7'/><line x1='76.77' y1='53.52' x2='80.73' y2='54.05' stroke-width='0.7'/><line x1='76.08' y1='56.99' x2='79.94' y2='58.02' stroke-width='0.7'/><line x1='74.94' y1='60.33' x2='78.64' y2='61.86' stroke-width='0.7'/><line x1='73.38' y1='63.5' x2='76.85' y2='65.5' stroke-width='0.7'/><line x1='71.42' y1='66.44' x2='74.59' y2='68.87' stroke-width='0.7'/><line x1='69.09' y1='69.09' x2='71.92' y2='71.92' stroke-width='0.7'/><line x1='66.44' y1='71.42' x2='68.87' y2='74.59' stroke-width='0.7'/><line x1='63.5' y1='73.38' x2='65.5' y2='76.85' stroke-width='0.7'/><line x1='60.33' y1='74.94' x2='61.86' y2='78.64' stroke-width='0.7'/><line x1='56.99' y1='76.08' x2='58.02' y2='79.94' stroke-width='0.7'/><line x1='53.52' y1='76.77' x2='54.05' y2='80.73' stroke-width='0.7'/><line x1='50' y1='77' x2='50' y2='81' stroke-width='0.7'/><line x1='46.48' y1='76.77' x2='45.95' y2='80.73' stroke-width='0.7'/><line x1='43.01' y1='76.08' x2='41.98' y2='79.94' stroke-width='0.7'/><line x1='39.67' y1='74.94' x2='38.14' y2='78.64' stroke-width='0.7'/><line x1='36.5' y1='73.38' x2='34.5' y2='76.85' stroke-width='0.7'/><line x1='33.56' y1='71.42' x2='31.13' y2='74.59' stroke-width='0.7'/><line x1='30.91' y1='69.09' x2='28.08' y2='71.92' stroke-width='0.7'/><line x1='28.58' y1='66.44' x2='25.41' y2='68.87' stroke-width='0.7'/><line x1='26.62' y1='63.5' x2='23.15' y2='65.5' stroke-width='0.7'/><line x1='25.06' y1='60.33' x2='21.36' y2='61.86' stroke-width='0.7'/><line x1='23.92' y1='56.99' x2='20.06' y2='58.02' stroke-width='0.7'/><line x1='23.23' y1='53.52' x2='19.27' y2='54.05' stroke-width='0.7'/><line x1='23' y1='50' x2='19' y2='50' stroke-width='0.7'/><line x1='23.23' y1='46.48' x2='19.27' y2='45.95' stroke-width='0.7'/><line x1='23.92' y1='43.01' x2='20.06' y2='41.98' stroke-width='0.7'/><line x1='25.06' y1='39.67' x2='21.36' y2='38.14' stroke-width='0.7'/><line x1='26.62' y1='36.5' x2='23.15' y2='34.5' stroke-width='0.7'/><line x1='28.58' y1='33.56' x2='25.41' y2='31.13' stroke-width='0.7'/><line x1='30.91' y1='30.91' x2='28.08' y2='28.08' stroke-width='0.7'/><line x1='33.56' y1='28.58' x2='31.13' y2='25.41' stroke-width='0.7'/><line x1='36.5' y1='26.62' x2='34.5' y2='23.15' stroke-width='0.7'/><line x1='39.67' y1='25.06' x2='38.14' y2='21.36' stroke-width='0.7'/><line x1='43.01' y1='23.92' x2='41.98' y2='20.06' stroke-width='0.7'/><line x1='46.48' y1='23.23' x2='45.95' y2='19.27' stroke-width='0.7'/><line x1='50' y1='25.5' x2='50' y2='18.5' stroke-width='1.4'/><line x1='62.25' y1='28.78' x2='65.75' y2='22.72' stroke-width='1.4'/><line x1='71.22' y1='37.75' x2='77.28' y2='34.25' stroke-width='1.4'/><line x1='74.5' y1='50' x2='81.5' y2='50' stroke-width='1.4'/><line x1='71.22' y1='62.25' x2='77.28' y2='65.75' stroke-width='1.4'/><line x1='62.25' y1='71.22' x2='65.75' y2='77.28' stroke-width='1.4'/><line x1='50' y1='74.5' x2='50' y2='81.5' stroke-width='1.4'/><line x1='37.75' y1='71.22' x2='34.25' y2='77.28' stroke-width='1.4'/><line x1='28.78' y1='62.25' x2='22.72' y2='65.75' stroke-width='1.4'/><line x1='25.5' y1='50' x2='18.5' y2='50' stroke-width='1.4'/><line x1='28.78' y1='37.75' x2='22.72' y2='34.25' stroke-width='1.4'/><line x1='37.75' y1='28.78' x2='34.25' y2='22.72' stroke-width='1.4'/></g></svg>") center / contain no-repeat;
+              mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g stroke='%23000' stroke-linecap='butt' fill='none'><line x1='50' y1='23' x2='50' y2='19' stroke-width='0.7'/><line x1='53.52' y1='23.23' x2='54.05' y2='19.27' stroke-width='0.7'/><line x1='56.99' y1='23.92' x2='58.02' y2='20.06' stroke-width='0.7'/><line x1='60.33' y1='25.06' x2='61.86' y2='21.36' stroke-width='0.7'/><line x1='63.5' y1='26.62' x2='65.5' y2='23.15' stroke-width='0.7'/><line x1='66.44' y1='28.58' x2='68.87' y2='25.41' stroke-width='0.7'/><line x1='69.09' y1='30.91' x2='71.92' y2='28.08' stroke-width='0.7'/><line x1='71.42' y1='33.56' x2='74.59' y2='31.13' stroke-width='0.7'/><line x1='73.38' y1='36.5' x2='76.85' y2='34.5' stroke-width='0.7'/><line x1='74.94' y1='39.67' x2='78.64' y2='38.14' stroke-width='0.7'/><line x1='76.08' y1='43.01' x2='79.94' y2='41.98' stroke-width='0.7'/><line x1='76.77' y1='46.48' x2='80.73' y2='45.95' stroke-width='0.7'/><line x1='77' y1='50' x2='81' y2='50' stroke-width='0.7'/><line x1='76.77' y1='53.52' x2='80.73' y2='54.05' stroke-width='0.7'/><line x1='76.08' y1='56.99' x2='79.94' y2='58.02' stroke-width='0.7'/><line x1='74.94' y1='60.33' x2='78.64' y2='61.86' stroke-width='0.7'/><line x1='73.38' y1='63.5' x2='76.85' y2='65.5' stroke-width='0.7'/><line x1='71.42' y1='66.44' x2='74.59' y2='68.87' stroke-width='0.7'/><line x1='69.09' y1='69.09' x2='71.92' y2='71.92' stroke-width='0.7'/><line x1='66.44' y1='71.42' x2='68.87' y2='74.59' stroke-width='0.7'/><line x1='63.5' y1='73.38' x2='65.5' y2='76.85' stroke-width='0.7'/><line x1='60.33' y1='74.94' x2='61.86' y2='78.64' stroke-width='0.7'/><line x1='56.99' y1='76.08' x2='58.02' y2='79.94' stroke-width='0.7'/><line x1='53.52' y1='76.77' x2='54.05' y2='80.73' stroke-width='0.7'/><line x1='50' y1='77' x2='50' y2='81' stroke-width='0.7'/><line x1='46.48' y1='76.77' x2='45.95' y2='80.73' stroke-width='0.7'/><line x1='43.01' y1='76.08' x2='41.98' y2='79.94' stroke-width='0.7'/><line x1='39.67' y1='74.94' x2='38.14' y2='78.64' stroke-width='0.7'/><line x1='36.5' y1='73.38' x2='34.5' y2='76.85' stroke-width='0.7'/><line x1='33.56' y1='71.42' x2='31.13' y2='74.59' stroke-width='0.7'/><line x1='30.91' y1='69.09' x2='28.08' y2='71.92' stroke-width='0.7'/><line x1='28.58' y1='66.44' x2='25.41' y2='68.87' stroke-width='0.7'/><line x1='26.62' y1='63.5' x2='23.15' y2='65.5' stroke-width='0.7'/><line x1='25.06' y1='60.33' x2='21.36' y2='61.86' stroke-width='0.7'/><line x1='23.92' y1='56.99' x2='20.06' y2='58.02' stroke-width='0.7'/><line x1='23.23' y1='53.52' x2='19.27' y2='54.05' stroke-width='0.7'/><line x1='23' y1='50' x2='19' y2='50' stroke-width='0.7'/><line x1='23.23' y1='46.48' x2='19.27' y2='45.95' stroke-width='0.7'/><line x1='23.92' y1='43.01' x2='20.06' y2='41.98' stroke-width='0.7'/><line x1='25.06' y1='39.67' x2='21.36' y2='38.14' stroke-width='0.7'/><line x1='26.62' y1='36.5' x2='23.15' y2='34.5' stroke-width='0.7'/><line x1='28.58' y1='33.56' x2='25.41' y2='31.13' stroke-width='0.7'/><line x1='30.91' y1='30.91' x2='28.08' y2='28.08' stroke-width='0.7'/><line x1='33.56' y1='28.58' x2='31.13' y2='25.41' stroke-width='0.7'/><line x1='36.5' y1='26.62' x2='34.5' y2='23.15' stroke-width='0.7'/><line x1='39.67' y1='25.06' x2='38.14' y2='21.36' stroke-width='0.7'/><line x1='43.01' y1='23.92' x2='41.98' y2='20.06' stroke-width='0.7'/><line x1='46.48' y1='23.23' x2='45.95' y2='19.27' stroke-width='0.7'/><line x1='50' y1='25.5' x2='50' y2='18.5' stroke-width='1.4'/><line x1='62.25' y1='28.78' x2='65.75' y2='22.72' stroke-width='1.4'/><line x1='71.22' y1='37.75' x2='77.28' y2='34.25' stroke-width='1.4'/><line x1='74.5' y1='50' x2='81.5' y2='50' stroke-width='1.4'/><line x1='71.22' y1='62.25' x2='77.28' y2='65.75' stroke-width='1.4'/><line x1='62.25' y1='71.22' x2='65.75' y2='77.28' stroke-width='1.4'/><line x1='50' y1='74.5' x2='50' y2='81.5' stroke-width='1.4'/><line x1='37.75' y1='71.22' x2='34.25' y2='77.28' stroke-width='1.4'/><line x1='28.78' y1='62.25' x2='22.72' y2='65.75' stroke-width='1.4'/><line x1='25.5' y1='50' x2='18.5' y2='50' stroke-width='1.4'/><line x1='28.78' y1='37.75' x2='22.72' y2='34.25' stroke-width='1.4'/><line x1='37.75' y1='28.78' x2='34.25' y2='22.72' stroke-width='1.4'/></g></svg>") center / contain no-repeat;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .seal-star {
+      width: 42%;
+      height: 42%;
+      background: var(--coral);
+      clip-path: polygon(50% 0%,56% 44%,100% 50%,56% 56%,50% 100%,44% 56%,0% 50%,44% 44%);
+      filter: drop-shadow(0 1px 0 rgba(0,0,0,0.08));
+    }
+
+    .cardinal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      color: var(--on-ink);
+      font-size: calc(var(--seal-size) * 0.092);
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .north { transform: translate(-50%, -50%) translateY(calc(var(--seal-size) * -0.42)); }
+    .south { transform: translate(-50%, -50%) translateY(calc(var(--seal-size) * 0.42)); }
+    .east { transform: translate(-50%, -50%) translateX(calc(var(--seal-size) * 0.42)); }
+    .west { transform: translate(-50%, -50%) translateX(calc(var(--seal-size) * -0.42)); }
+
+    .seal-lg { --seal-size: 22mm; }
+    .seal-sm { --seal-size: 13mm; }
+    .seal-xs { --seal-size: 22px; }
+    .seal-xs .cardinal { display: none; }
+    .seal-xs::after { display: none; }
+
+    body.size-square .seal-lg { --seal-size: 16mm; }
+    body.size-square .seal-sm { --seal-size: 10mm; }
+
+    .qr {
+      --qr-color: var(--teal);
+      position: relative;
+      display: grid;
+      place-items: end center;
+      width: 16mm;
+      height: 16mm;
+      overflow: hidden;
+      border: 0.35mm solid currentColor;
+      border-radius: 1.8mm;
+      background: var(--card);
+      color: var(--qr-color);
+      font-size: 1.65mm;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      text-align: center;
+      text-transform: none;
+    }
+
+    .qr::before {
+      content: "";
+      position: absolute;
+      inset: 1.1mm;
+      background:
+        linear-gradient(90deg, currentColor 0 12%, transparent 12% 21%, currentColor 21% 31%, transparent 31% 42%, currentColor 42% 55%, transparent 55% 66%, currentColor 66% 73%, transparent 73% 83%, currentColor 83% 100%),
+        linear-gradient(0deg, currentColor 0 9%, transparent 9% 18%, currentColor 18% 31%, transparent 31% 45%, currentColor 45% 53%, transparent 53% 64%, currentColor 64% 72%, transparent 72% 83%, currentColor 83% 100%);
+      background-blend-mode: multiply;
+      background-size: 3.4mm 3.4mm;
+      opacity: 0.74;
+    }
+
+    .qr::after {
+      content: "";
+      position: absolute;
+      left: 1.3mm;
+      top: 1.3mm;
+      width: 3.5mm;
+      height: 3.5mm;
+      border: 0.85mm solid currentColor;
+      background: var(--card);
+      box-shadow: 8.8mm 0 0 -0.85mm var(--card), 8.8mm 0 0 0 currentColor, 0 8.8mm 0 -0.85mm var(--card), 0 8.8mm 0 0 currentColor;
+    }
+
+    .qr span {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      padding: 0.75mm 0.5mm 0.8mm;
+      background: rgba(251, 253, 253, 0.9);
+      color: var(--teal);
+    }
+
+    body.size-square .qr {
+      width: 13.5mm;
+      height: 13.5mm;
+      font-size: 1.35mm;
+    }
+
+    .contact-row {
+      display: flex;
+      gap: 2mm;
+      align-items: center;
+      min-width: 0;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .card-save {
+      width: fit-content;
+      padding: 1.3mm 2.2mm;
+      border: 0.25mm solid currentColor;
+      background: transparent;
+      color: inherit;
+      font-size: 1.7mm;
+      letter-spacing: 0.12em;
+      line-height: 1;
+    }
+
+    .celestial-front,
+    .celestial-back {
+      color: var(--on-ink);
+    }
+
+    .celestial-front {
+      position: relative;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        radial-gradient(circle at 18% 24%, rgba(236,243,244,0.8) 0 0.25mm, transparent 0.3mm),
+        radial-gradient(circle at 32% 62%, rgba(236,243,244,0.56) 0 0.22mm, transparent 0.28mm),
+        radial-gradient(circle at 48% 18%, rgba(236,243,244,0.42) 0 0.18mm, transparent 0.25mm),
+        radial-gradient(circle at 63% 40%, rgba(236,243,244,0.62) 0 0.22mm, transparent 0.28mm),
+        radial-gradient(circle at 78% 70%, rgba(236,243,244,0.48) 0 0.2mm, transparent 0.26mm),
+        radial-gradient(circle at 91% 28%, rgba(236,243,244,0.5) 0 0.18mm, transparent 0.24mm),
+        linear-gradient(135deg, var(--teal), #173a41);
+    }
+
+    .star-map {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .star-map line {
+      stroke: rgba(236, 243, 244, 0.26);
+      stroke-width: 0.4;
+    }
+
+    .star-map .constellation-line {
+      stroke: rgba(236, 243, 244, 0.38);
+      stroke-width: 0.54;
+    }
+
+    .star-map .chart-tick {
+      stroke: rgba(236, 243, 244, 0.18);
+      stroke-width: 0.34;
+    }
+
+    .star-map path {
+      fill: none;
+      stroke: rgba(236, 243, 244, 0.16);
+      stroke-width: 0.46;
+      stroke-dasharray: 10 15;
+    }
+
+    .star-map circle {
+      fill: rgba(236, 243, 244, 0.75);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .celestial-front .celestial-north-star {
+      position: absolute;
+      top: 5.4mm;
+      right: 8.8mm;
+      z-index: 3;
+      display: inline-grid;
+      place-items: center;
+      width: 18.5mm;
+      height: 18.5mm;
+      filter: drop-shadow(0 0 8px rgba(240,165,130,0.5));
+    }
+
+    .celestial-front .celestial-north-star .seal {
+      --seal-size: 16.5mm;
+      box-shadow:
+        inset 0 0 0 calc(var(--seal-size) * 0.035) rgba(236, 243, 244, 0.18),
+        0 0 0 0.42mm rgba(240,165,130,0.2),
+        0 0 12px rgba(240,165,130,0.46);
+    }
+
+    .celestial-front-copy {
+      position: absolute;
+      left: var(--safe-left);
+      bottom: var(--safe-bottom);
+      z-index: 2;
+      display: grid;
+      gap: 1.25mm;
+      max-width: 52mm;
+    }
+
+    .celestial-kicker {
+      color: var(--coral);
+      font-size: 1.55mm;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .celestial-front .wordmark {
+      position: relative;
+      color: var(--on-ink);
+      font-size: 8.4mm;
+      letter-spacing: -0.025em;
+      text-shadow: 0 1px 16px rgba(23, 58, 65, 0.3);
+    }
+
+    .celestial-front .wordmark em {
+      color: var(--coral);
+    }
+
+    .celestial-front .coords {
+      position: relative;
+      color: rgba(236,243,244,0.72);
+      font-size: 1.72mm;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .celestial-back {
+      display: grid;
+      grid-template-rows: auto 0.25mm minmax(0, 1fr) auto;
+      gap: 1.5mm;
+      position: relative;
+      padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+      background:
+        radial-gradient(circle at 83% 18%, rgba(240,165,130,0.26), transparent 25mm),
+        linear-gradient(135deg, var(--paper), var(--sky));
+      color: var(--teal);
+    }
+
+    .celestial-back::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.62;
+      background:
+        radial-gradient(ellipse at 84% 20%, transparent 0 25mm, rgba(31,74,82,0.15) 25.15mm 25.48mm, transparent 25.66mm),
+        repeating-linear-gradient(90deg, rgba(31,74,82,0.05) 0 0.12mm, transparent 0.12mm 8.5mm),
+        repeating-linear-gradient(0deg, rgba(31,74,82,0.04) 0 0.12mm, transparent 0.12mm 8.5mm);
+    }
+
+    .celestial-lockup,
+    .celestial-rule,
+    .celestial-main,
+    .celestial-footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    .celestial-lockup {
+      display: flex;
+      align-items: center;
+      gap: 2.4mm;
+      margin-right: 17mm;
+      min-width: 0;
+    }
+
+    .celestial-lockup .seal {
+      --seal-size: 8.4mm;
+      flex: 0 0 auto;
+      box-shadow:
+        inset 0 0 0 calc(var(--seal-size) * 0.035) rgba(236, 243, 244, 0.18),
+        0 1px 4px rgba(31, 74, 82, 0.12);
+    }
+
+    .celestial-lockup .wordmark {
+      color: var(--teal);
+      font-size: 5.5mm;
+      letter-spacing: -0.025em;
+    }
+
+    .celestial-lockup .wordmark em {
+      color: var(--coral);
+    }
+
+    .lockup-tagline {
+      margin-top: 0.5mm;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 2.08mm;
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .celestial-rule {
+      width: auto;
+      height: 0.25mm;
+      margin-right: 17mm;
+      background: linear-gradient(90deg, rgba(31,74,82,0.34), rgba(31,74,82,0.06));
+    }
+
+    .celestial-main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.55mm;
+      align-items: start;
+      min-width: 0;
+    }
+
+    .celestial-identity {
+      max-width: calc(100% - 20mm);
+      min-width: 0;
+    }
+
+    .celestial-back .name {
+      color: var(--teal);
+      font-family: var(--serif);
+      font-size: 5.8mm;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 0.96;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .celestial-back .title {
+      margin-top: 1mm;
+      color: var(--coral-deep);
+      font-size: 1.72mm;
+      font-weight: 800;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .celestial-contact-list {
+      display: grid;
+      gap: 1.25mm;
+      align-content: start;
+      min-width: 0;
+    }
+
+    .celestial-back .contact-row {
+      display: grid;
+      grid-template-columns: 2.4mm 14mm minmax(0, 1fr);
+      gap: 1.55mm;
+      align-items: baseline;
+      min-width: 0;
+      color: var(--teal-soft);
+      font-size: 1.98mm;
+      font-weight: 700;
+      line-height: 1.2;
+      text-decoration: none;
+    }
+
+    .celestial-back .contact-star {
+      align-self: center;
+      width: 1.8mm;
+      height: 1.8mm;
+      background: var(--coral-deep);
+      filter: none;
+    }
+
+    .contact-label {
+      color: var(--muted);
+      font-size: 1.38mm;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .contact-value {
+      min-width: 0;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+
+    .contact-pair-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0;
+      align-items: baseline;
+      min-width: 0;
+    }
+
+    .contact-pair-row .contact-row {
+      grid-template-columns: 2.4mm 14mm minmax(0, 1fr);
+      gap: 1.55mm;
+    }
+
+    .handle-row {
+      max-width: 100%;
+    }
+
+    .handle-row .contact-value {
+      position: relative;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .handle-row .contact-value::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -0.52mm;
+      height: 0.18mm;
+      background: rgba(31,74,82,0.26);
+    }
+
+    .celestial-footer {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      justify-items: start;
+      padding-top: 1mm;
+      border-top: 0.22mm solid rgba(31,74,82,0.22);
+    }
+
+    .coords-readout {
+      display: grid;
+      gap: 0.75mm;
+      width: fit-content;
+      color: var(--teal);
+      line-height: 1;
+      text-decoration: none;
+    }
+
+    .coords-readout span {
+      color: var(--muted);
+      font-size: 1.28mm;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .coords-readout strong {
+      display: block;
+      color: var(--teal);
+      font-size: 2.05mm;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .celestial-qr-corner {
+      position: absolute;
+      top: var(--safe-top);
+      right: var(--safe-right);
+      z-index: 2;
+      display: grid;
+      justify-items: center;
+      gap: 0.75mm;
+      width: 16mm;
+    }
+
+    .qr-wrap {
+      min-width: 0;
+    }
+
+    .qr-label {
+      max-width: 16mm;
+      color: var(--muted);
+      font-size: 1.18mm;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      line-height: 1.16;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: normal;
+    }
+
+    .celestial-back .qr {
+      --qr-color: var(--teal);
+      width: 15mm;
+      height: 15mm;
+      background: var(--card);
+    }
+
+    .celestial-back .qr::before,
+    .celestial-back .qr::after {
+      display: none;
+    }
+
+    .celestial-back .qr svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    body.size-square .celestial-front .celestial-north-star {
+      top: 5mm;
+      right: 5.2mm;
+      width: 14.4mm;
+      height: 14.4mm;
+    }
+
+    body.size-square .celestial-front .celestial-north-star .seal {
+      --seal-size: 13mm;
+    }
+
+    body.size-square .celestial-front-copy {
+      gap: 1mm;
+      max-width: 34mm;
+    }
+
+    body.size-square .celestial-kicker {
+      font-size: 1.22mm;
+      letter-spacing: 0.22em;
+    }
+
+    body.size-square .celestial-front .wordmark { font-size: 6.35mm; }
+
+    body.size-square .celestial-front .coords {
+      max-width: 32mm;
+      font-size: 1.42mm;
+      letter-spacing: 0.1em;
+    }
+
+    body.size-square .celestial-back {
+      gap: 1.35mm;
+    }
+
+    body.size-square .celestial-lockup {
+      gap: 1.65mm;
+      margin-right: 16.4mm;
+    }
+
+    body.size-square .celestial-lockup .seal {
+      --seal-size: 7mm;
+    }
+
+    body.size-square .celestial-lockup .wordmark {
+      font-size: 4.65mm;
+    }
+
+    body.size-square .lockup-tagline {
+      font-size: 1.62mm;
+    }
+
+    body.size-square .celestial-rule {
+      margin-right: 16.4mm;
+    }
+
+    body.size-square .celestial-main {
+      grid-template-columns: 1fr;
+      gap: 1.35mm;
+    }
+
+    body.size-square .celestial-identity {
+      max-width: calc(100% - 19mm);
+    }
+
+    body.size-square .celestial-back .name { font-size: 5.15mm; }
+
+    body.size-square .celestial-back .title {
+      margin-top: 0.65mm;
+      font-size: 1.42mm;
+    }
+
+    body.size-square .celestial-contact-list {
+      gap: 0.72mm;
+    }
+
+    body.size-square .celestial-back .contact-row {
+      grid-template-columns: 2mm 11.2mm minmax(0, 1fr);
+      gap: 1.05mm;
+      font-size: 1.42mm;
+    }
+
+    body.size-square .contact-pair-row {
+      gap: 0;
+    }
+
+    body.size-square .contact-pair-row .contact-row {
+      grid-template-columns: 2mm 11.2mm minmax(0, 1fr);
+      gap: 1.05mm;
+    }
+
+    body.size-square .celestial-back .contact-star {
+      width: 1.42mm;
+      height: 1.42mm;
+    }
+
+    body.size-square .contact-label {
+      font-size: 1.02mm;
+      letter-spacing: 0.13em;
+    }
+
+    body.size-square .celestial-footer {
+      padding-top: 1.25mm;
+    }
+
+    body.size-square .coords-readout {
+      gap: 0.55mm;
+    }
+
+    body.size-square .coords-readout span {
+      font-size: 1mm;
+      letter-spacing: 0.16em;
+    }
+
+    body.size-square .coords-readout strong {
+      font-size: 1.55mm;
+      letter-spacing: 0.03em;
+    }
+
+    body.size-square .celestial-qr-corner {
+      width: 16mm;
+      gap: 0.52mm;
+    }
+
+    body.size-square .qr-label {
+      max-width: 16mm;
+      font-size: 0.92mm;
+      letter-spacing: 0.02em;
+    }
+
+    body.size-square .celestial-back .qr {
+      width: 15mm;
+      height: 15mm;
+      font-size: 1.05mm;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.36; transform: scale(0.88); }
+      45% { opacity: 1; transform: scale(1.08); }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .star-map circle {
+        animation: twinkle 2.6s ease-in-out infinite;
+      }
+
+      .star-map circle:nth-of-type(2n) { animation-delay: 0.6s; }
+      .star-map circle:nth-of-type(3n) { animation-delay: 1.1s; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .page {
+        width: min(100% - 20px, 980px);
+        padding-top: 20px;
+      }
+
+      .toolbar {
+        margin-inline: -10px;
+        border-radius: 0;
+      }
+
+      .card-pair {
+        gap: 16px;
+        justify-content: flex-start;
+      }
+    }
+
+    @media print {
+      @page { size: 96mm 60mm; margin: 0; }
+
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      html,
+      body {
+        width: auto;
+        min-height: 0;
+        background: white !important;
+      }
+
+      body::before,
+      .toolbar {
+        display: none !important;
+      }
+
+      .page {
+        width: auto;
+        margin: 0;
+        padding: 0;
+      }
+
+      .concept {
+        display: block;
+      }
+
+      .card-pair {
+        display: block;
+      }
+
+      .card-shell {
+        display: block;
+        width: var(--card-w);
+        height: var(--card-h);
+        margin: 3mm;
+        break-after: page;
+        page-break-after: always;
+        filter: none;
+      }
+
+      .card-shell:last-child {
+        break-after: auto;
+        page-break-after: auto;
+      }
+
+      body.side-front .card-shell.back,
+      body.side-back .card-shell.front {
+        display: none !important;
+      }
+
+      .business-card {
+        box-shadow: none !important;
+      }
+
+      .crop-tick {
+        display: block;
+      }
+    }
+  </style>
+  <style id="print-page">
+    @media print { @page { size: 96mm 60mm; margin: 0; } }
+  </style>
+</head>
+<body class="size-standard side-both">
+  <main class="page">
+    <form class="toolbar" aria-label="Business card preview controls">
+      <div class="control-group" role="radiogroup" aria-label="Size and shape">
+        <span class="control-title">Size</span>
+        <div class="segmented">
+          <label class="segment"><input type="radio" name="size" value="standard" checked><span>Standard 90x54 mm</span></label>
+          <label class="segment"><input type="radio" name="size" value="square"><span>Square 55x55 mm</span></label>
+        </div>
+      </div>
+
+      <div class="control-group" role="radiogroup" aria-label="Visible side">
+        <span class="control-title">Side</span>
+        <div class="segmented">
+          <label class="segment"><input type="radio" name="side" value="front"><span>Front</span></label>
+          <label class="segment"><input type="radio" name="side" value="back"><span>Back</span></label>
+          <label class="segment"><input type="radio" name="side" value="both" checked><span>Both</span></label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <a class="save-link" href="#" data-vcard>Save contact</a>
+        <button class="print-btn" type="button" data-print-card>Print</button>
+      </div>
+    </form>
+
+    <section class="concept" data-concept="celestial-star-map" aria-label="Celestial Star-Map business card">
+      <div class="card-pair">
+        <div class="card-shell front">
+          <article class="business-card celestial-front" aria-label="Celestial Star-Map front">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <svg class="star-map" viewBox="0 0 900 540" preserveAspectRatio="none" aria-hidden="true">
+              <path class="chart-arc" d="M-44 458 C188 318 485 263 942 114"></path>
+              <path class="chart-arc" d="M46 532 C288 385 555 328 924 210"></path>
+              <line class="chart-tick" x1="61" y1="453" x2="89" y2="478"></line>
+              <line class="chart-tick" x1="186" y1="379" x2="216" y2="406"></line>
+              <line class="chart-tick" x1="322" y1="318" x2="349" y2="349"></line>
+              <line class="chart-tick" x1="680" y1="183" x2="703" y2="216"></line>
+              <line class="constellation-line" x1="140" y1="402" x2="284" y2="316"></line>
+              <line class="constellation-line" x1="284" y1="316" x2="445" y2="244"></line>
+              <line class="constellation-line" x1="445" y1="244" x2="599" y2="157"></line>
+              <line class="constellation-line" x1="599" y1="157" x2="771" y2="79"></line>
+              <line x1="445" y1="244" x2="525" y2="361"></line>
+              <line x1="599" y1="157" x2="638" y2="289"></line>
+              <circle cx="104" cy="116" r="2.2"></circle>
+              <circle cx="140" cy="402" r="4"></circle>
+              <circle cx="227" cy="190" r="2.8"></circle>
+              <circle cx="284" cy="316" r="3.5"></circle>
+              <circle cx="362" cy="84" r="2.3"></circle>
+              <circle cx="445" cy="244" r="3.2"></circle>
+              <circle cx="525" cy="361" r="2.7"></circle>
+              <circle cx="599" cy="157" r="3.8"></circle>
+              <circle cx="638" cy="289" r="2.4"></circle>
+              <circle cx="752" cy="410" r="2.6"></circle>
+              <circle cx="836" cy="242" r="2.1"></circle>
+            </svg>
+            <span class="celestial-north-star" aria-hidden="true">
+              <span class="seal seal-sm"><span class="seal-star"></span><span class="cardinal north">N</span><span class="cardinal east">E</span><span class="cardinal south">S</span><span class="cardinal west">W</span></span>
+            </span>
+            <div class="celestial-front-copy">
+              <div class="celestial-kicker">BY YOUR OWN STAR</div>
+              <div class="wordmark" aria-label="Driftibo">Drifti<em>b</em>o</div>
+              <div class="coords mono">30.32&deg;N 78.03&deg;E &middot; mag 0.0</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="card-shell back">
+          <article class="business-card celestial-back" aria-label="Celestial Star-Map back">
+            <span class="crop-tick crop-tl"></span><span class="crop-tick crop-tr"></span><span class="crop-tick crop-bl"></span><span class="crop-tick crop-br"></span>
+            <span class="tag-hole"></span><span class="tag-corner"></span>
+            <header class="celestial-lockup">
+              <span class="seal seal-sm can-spin" aria-label="Driftibo compass seal"><span class="seal-star"></span><span class="cardinal north">N</span><span class="cardinal east">E</span><span class="cardinal south">S</span><span class="cardinal west">W</span></span>
+              <div>
+                <div class="wordmark" aria-label="Driftibo">Drifti<em>b</em>o</div>
+                <div class="lockup-tagline" data-holder="tagline">Travel by your own star</div>
+              </div>
+            </header>
+            <div class="celestial-rule"></div>
+            <div class="celestial-qr-corner qr-wrap">
+              <div class="qr" aria-label="QR code: save Sunil Chandila contact"><svg class="qr-code" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47 47" shape-rendering="crispEdges"><path fill="#FBFDFD" d="M0 0h47v47H0z"/><path stroke="#1F4A52" d="M3 3.5h7m3 0h1m1 0h1m1 0h1m7 0h3m1 0h4m2 0h1m1 0h7M3 4.5h1m5 0h1m2 0h2m3 0h2m2 0h3m1 0h3m3 0h2m2 0h1m1 0h1m5 0h1M3 5.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h4m4 0h1m3 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1M3 6.5h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h2m3 0h1m2 0h3m3 0h1m3 0h2m1 0h1m1 0h3m1 0h1M3 7.5h1m1 0h3m1 0h1m1 0h1m1 0h1m9 0h2m1 0h2m1 0h1m3 0h1m1 0h1m1 0h1m1 0h3m1 0h1M3 8.5h1m5 0h1m1 0h1m1 0h1m1 0h2m1 0h1m3 0h2m1 0h2m1 0h5m1 0h1m2 0h1m5 0h1M3 9.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M11 10.5h1m1 0h3m5 0h1m6 0h1m1 0h4M3 11.5h1m1 0h5m4 0h2m1 0h2m6 0h1m3 0h3m1 0h1m1 0h1m1 0h5M3 12.5h5m2 0h1m1 0h3m2 0h2m1 0h1m2 0h2m5 0h1m2 0h2m1 0h1m3 0h2m1 0h1M5 13.5h1m3 0h1m2 0h1m1 0h3m2 0h1m1 0h1m1 0h2m4 0h1m3 0h1m1 0h1m1 0h3m1 0h3M4 14.5h5m1 0h3m3 0h1m1 0h3m2 0h1m1 0h2m2 0h1m1 0h3m6 0h2M6 15.5h1m1 0h2m3 0h1m1 0h1m1 0h5m6 0h1m1 0h1m1 0h1m3 0h2m4 0h2M3 16.5h2m2 0h1m2 0h3m1 0h2m1 0h2m1 0h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m3 0h1m4 0h2M3 17.5h1m1 0h3m1 0h1m1 0h4m1 0h2m3 0h2m1 0h2m11 0h1m1 0h2m1 0h2M3 18.5h1m2 0h1m1 0h1m3 0h2m2 0h1m1 0h1m1 0h1m1 0h2m3 0h3m1 0h1m3 0h4M3 19.5h2m1 0h4m1 0h2m2 0h5m2 0h1m4 0h1m1 0h1m4 0h1m1 0h3m3 0h1M5 20.5h1m4 0h1m2 0h2m1 0h2m1 0h2m1 0h1m1 0h3m1 0h2m3 0h3m3 0h2m2 0h1M3 21.5h4m1 0h7m1 0h1m3 0h1m1 0h3m1 0h4m1 0h1m1 0h2m2 0h2m1 0h1m1 0h2M4 22.5h3m1 0h1m2 0h1m1 0h4m1 0h1m1 0h2m2 0h2m2 0h1m1 0h1m4 0h1m1 0h1m1 0h1m1 0h3M3 23.5h1m2 0h2m1 0h2m1 0h2m2 0h4m2 0h3m1 0h1m2 0h1m3 0h1m1 0h4m3 0h1M4 24.5h1m1 0h3m3 0h2m3 0h3m1 0h1m2 0h2m1 0h1m2 0h1m5 0h1m3 0h2m1 0h1M6 25.5h1m1 0h2m1 0h2m1 0h2m1 0h1m1 0h1m2 0h2m1 0h2m1 0h5m1 0h2m1 0h3m2 0h1M5 26.5h2m1 0h1m1 0h3m1 0h2m3 0h3m5 0h1m2 0h2m1 0h2m3 0h1m2 0h1M5 27.5h1m2 0h3m7 0h1m4 0h2m5 0h1m2 0h1m2 0h3m1 0h2M5 28.5h4m2 0h1m1 0h3m2 0h1m2 0h2m1 0h4m1 0h4m2 0h1m1 0h1m2 0h1m1 0h1M5 29.5h1m1 0h1m1 0h3m1 0h1m2 0h1m1 0h2m2 0h3m5 0h1m8 0h1m2 0h2M4 30.5h2m1 0h2m1 0h1m2 0h1m6 0h1m1 0h1m2 0h1m2 0h1m2 0h1m4 0h1m1 0h1m1 0h1M3 31.5h1m2 0h1m2 0h2m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m3 0h5m1 0h2m2 0h2M3 32.5h1m3 0h1m2 0h1m2 0h4m8 0h1m4 0h1m1 0h1m1 0h6M3 33.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m2 0h1m1 0h5m2 0h2m1 0h2m2 0h5m1 0h1M3 34.5h1m3 0h1m4 0h4m2 0h3m4 0h2m1 0h3m4 0h1m1 0h1M3 35.5h1m4 0h2m2 0h2m1 0h2m2 0h3m2 0h1m1 0h2m1 0h2m1 0h12M11 36.5h1m2 0h1m2 0h3m1 0h1m1 0h1m1 0h1m5 0h2m1 0h2m3 0h1m1 0h3M3 37.5h7m2 0h1m1 0h1m3 0h1m2 0h3m1 0h2m5 0h1m1 0h2m1 0h1m1 0h2m1 0h2M3 38.5h1m5 0h1m1 0h5m1 0h3m7 0h1m1 0h2m1 0h2m1 0h1m3 0h1m1 0h1m1 0h1M3 39.5h1m1 0h3m1 0h1m1 0h2m1 0h4m3 0h1m2 0h2m1 0h1m2 0h2m2 0h9M3 40.5h1m1 0h3m1 0h1m1 0h1m4 0h1m2 0h2m3 0h1m1 0h2m1 0h1m3 0h2m2 0h2m2 0h2M3 41.5h1m1 0h3m1 0h1m1 0h6m2 0h3m1 0h1m1 0h2m1 0h1m1 0h3m1 0h3m2 0h2m1 0h1M3 42.5h1m5 0h1m3 0h1m1 0h1m2 0h1m2 0h1m1 0h1m3 0h2m1 0h5m3 0h2m1 0h3M3 43.5h7m1 0h2m2 0h1m2 0h5m1 0h4m1 0h2m1 0h1m1 0h1m1 0h1m1 0h1m3 0h1"/></svg></div>
+              <div class="qr-label">Scan &middot; save contact</div>
+            </div>
+            <div class="celestial-main">
+              <section class="celestial-identity" aria-label="Identity">
+                <div class="name" data-holder="name">Sunil Chandila</div>
+                <div class="title" data-holder="title">Founder</div>
+              </section>
+              <div class="celestial-contact-list" aria-label="Contact details">
+                <a class="contact-row" href="https://wa.me/919811900334" data-href="whatsapp">
+                  <span class="seal-star contact-star" aria-hidden="true"></span><span class="contact-label">WhatsApp</span><span class="contact-value" data-holder="whatsapp">+91 98119 00334</span>
+                </a>
+                <a class="contact-row" href="mailto:hello@driftibo.com" data-href="email">
+                  <span class="seal-star contact-star" aria-hidden="true"></span><span class="contact-label">Email</span><span class="contact-value" data-holder="email">hello@driftibo.com</span>
+                </a>
+                <div class="contact-pair-row">
+                  <a class="contact-row" href="https://driftibo.com" data-href="site">
+                    <span class="seal-star contact-star" aria-hidden="true"></span><span class="contact-label">Web</span><span class="contact-value" data-holder="site">driftibo.com</span>
+                  </a>
+                  <div class="contact-row handle-row">
+                    <span class="seal-star contact-star" aria-hidden="true"></span><span class="contact-label">Handle</span><span class="contact-value" data-holder="handle">@driftibo</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="celestial-footer">
+              <a class="coords-readout mono" href="https://www.google.com/maps?q=30.32,78.03" target="_blank" rel="noopener">
+                <span>Coordinates</span><strong>30.32&deg;N 78.03&deg;E</strong>
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const HOLDER = {
+      name: 'Sunil Chandila',
+      title: 'Founder',
+      whatsapp: '+91 98119 00334',
+      whatsappRaw: '919811900334',
+      site: 'driftibo.com',
+      handle: '@driftibo',
+      email: 'hello@driftibo.com',
+      tagline: 'Travel by your own star'
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const classGroups = {
+        size: ['size-standard', 'size-square'],
+        side: ['side-front', 'side-back', 'side-both']
+      };
+      const printPage = document.getElementById('print-page');
+      const pageSizes = {
+        standard: '96mm 60mm',
+        square: '61mm 61mm'
+      };
+
+      function setText(selector, value) {
+        document.querySelectorAll(selector).forEach((node) => {
+          node.textContent = value;
+        });
+      }
+
+      function escapeVcard(value) {
+        return String(value)
+          .replace(/\\/g, '\\\\')
+          .replace(/\n/g, '\\n')
+          .replace(/,/g, '\\,')
+          .replace(/;/g, '\\;');
+      }
+
+      function buildVcard() {
+        const siteUrl = `https://${HOLDER.site.replace(/^https?:\/\//, '')}`;
+        return [
+          'BEGIN:VCARD',
+          'VERSION:3.0',
+          `FN:${escapeVcard(HOLDER.name)}`,
+          'ORG:Driftibo',
+          `TITLE:${escapeVcard(HOLDER.title)}`,
+          `TEL;TYPE=CELL:${escapeVcard(HOLDER.whatsapp)}`,
+          `EMAIL:${escapeVcard(HOLDER.email)}`,
+          `URL:${escapeVcard(siteUrl)}`,
+          `NOTE:${escapeVcard(HOLDER.tagline)}`,
+          'END:VCARD'
+        ].join('\r\n') + '\r\n';
+      }
+
+      function populateHolder() {
+        document.querySelectorAll('[data-holder]').forEach((node) => {
+          const key = node.dataset.holder;
+          if (Object.prototype.hasOwnProperty.call(HOLDER, key)) {
+            node.textContent = HOLDER[key];
+          }
+        });
+
+        const siteUrl = `https://${HOLDER.site.replace(/^https?:\/\//, '')}`;
+        const whatsappUrl = `https://wa.me/${HOLDER.whatsappRaw}`;
+        const emailUrl = `mailto:${HOLDER.email}`;
+
+        document.querySelectorAll('[data-href="site"]').forEach((node) => { node.href = siteUrl; });
+        document.querySelectorAll('[data-href="whatsapp"]').forEach((node) => { node.href = whatsappUrl; });
+        document.querySelectorAll('[data-href="email"]').forEach((node) => { node.href = emailUrl; });
+        setText('[data-qr-text]', `wa.me/${HOLDER.whatsappRaw}`);
+
+        const vcardHref = `data:text/vcard;charset=utf-8,${encodeURIComponent(buildVcard())}`;
+        const vcardFilename = `${HOLDER.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}-driftibo.vcf`;
+        document.querySelectorAll('[data-vcard]').forEach((node) => {
+          node.href = vcardHref;
+          node.setAttribute('download', vcardFilename);
+        });
+      }
+
+      function currentRadioValue(name, fallback) {
+        const selected = document.querySelector(`input[name="${name}"]:checked`);
+        return selected ? selected.value : fallback;
+      }
+
+      function applyToolbarState() {
+        const size = currentRadioValue('size', 'standard');
+        const side = currentRadioValue('side', 'both');
+        document.body.classList.remove(...classGroups.size, ...classGroups.side);
+        document.body.classList.add(`size-${size}`, `side-${side}`);
+      }
+
+      function cleanupPrint() {
+        document.body.classList.remove('print-mode');
+        document.querySelectorAll('.concept.is-printing').forEach((node) => node.classList.remove('is-printing'));
+      }
+
+      document.querySelectorAll('input[name="size"], input[name="side"]').forEach((input) => {
+        input.addEventListener('change', applyToolbarState);
+      });
+
+      document.querySelectorAll('[data-print-card]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const concept = button.closest('.concept') || document.querySelector('.concept');
+          const size = currentRadioValue('size', 'standard');
+          if (printPage) {
+            printPage.textContent = `@media print { @page { size: ${pageSizes[size] || pageSizes.standard}; margin: 0; } }`;
+          }
+          document.body.classList.add('print-mode');
+          if (concept) {
+            concept.classList.add('is-printing');
+          }
+          window.setTimeout(() => window.print(), 80);
+        });
+      });
+
+      window.addEventListener('afterprint', cleanupPrint);
+      populateHolder();
+      applyToolbarState();
+    });
+  </script>
+</body>
+</html>

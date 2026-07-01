@@ -139,6 +139,10 @@ export default function SiteFooter() {
         <div style={{ maxWidth: 300 }}>
           <span className="seal t-ink" style={{ width: 48 }}>
             <span className="ring" />
+            <span className="card-pt pn">N</span>
+            <span className="card-pt pe">E</span>
+            <span className="card-pt ps">S</span>
+            <span className="card-pt pw">W</span>
             <span className="star" />
           </span>
           <p
