@@ -1,12 +1,12 @@
-<!-- Driftibo FINAL logo — compass-star seal. Canonical mark. Supersedes the legacy sage drift-line (#7A9E84). Tokens: teal #1F4A52, coral #F0A582, on-ink #ECF3F4. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Driftibo compass-star seal">
+<!-- Driftibo seal — ON-CORAL variant. Teal disc + cream rim/marks, for coral accent backgrounds. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Driftibo compass-star seal on coral">
   <circle cx="50" cy="50" r="50" fill="#1F4A52"/>
-  <circle cx="50" cy="50" r="46.2" fill="none" stroke="#F0A582" stroke-width="1.6"/>
-  <g stroke="#F0A582" fill="none" opacity="0.95">
+  <circle cx="50" cy="50" r="46.2" fill="none" stroke="#ECF3F4" stroke-width="1.6"/>
+  <g stroke="#ECF3F4" fill="none" opacity="0.95">
     <circle cx="50" cy="50" r="33.6" stroke-width="2.8"/>
     <circle cx="50" cy="50" r="31.6" stroke-width="1.2"/>
   </g>
-  <g stroke="#F0A582" stroke-linecap="butt" fill="none" opacity="0.85">
+  <g stroke="#ECF3F4" stroke-linecap="butt" fill="none" opacity="0.85">
     <line x1='50' y1='23' x2='50' y2='19' stroke-width='0.7'/>
     <line x1='53.52' y1='23.23' x2='54.05' y2='19.27' stroke-width='0.7'/>
     <line x1='56.99' y1='23.92' x2='58.02' y2='20.06' stroke-width='0.7'/>
@@ -68,7 +68,7 @@
     <line x1='28.78' y1='37.75' x2='22.72' y2='34.25' stroke-width='1.4'/>
     <line x1='37.75' y1='28.78' x2='34.25' y2='22.72' stroke-width='1.4'/>
   </g>
-  <polygon points="50,29 52.52,47.48 71,50 52.52,52.52 50,71 47.48,52.52 29,50 47.48,47.48" fill="#F0A582"/>
+  <polygon points="50,29 52.52,47.48 71,50 52.52,52.52 50,71 47.48,52.52 29,50 47.48,47.48" fill="#ECF3F4"/>
   <g font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="9.2" fill="#ECF3F4" text-anchor="middle" dominant-baseline="central">
     <text x="50" y="8">N</text>
     <text x="92" y="50">E</text>

@@ -184,7 +184,9 @@ body {
 .mask-circle { border-radius: 50%; aspect-ratio: 1; }
 
 /* ── Compass seal — finalized compass-star seal (double ring + degree-tick bezel + cardinals), size-aware ── */
-.seal { position: relative; border-radius: 50%; display: grid; place-items: center; aspect-ratio: 1; width: 120px; container-type: inline-size; }
+.seal { --seal-edge: var(--pk-accent); position: relative; border-radius: 50%; display: grid; place-items: center; aspect-ratio: 1; width: 120px; container-type: inline-size; }
+/* crisp edge rim — defined boundary just inside the disc edge, coral by default */
+.seal::before { content: ""; position: absolute; inset: 3%; border-radius: 50%; border: 1.6cqw solid var(--seal-edge); pointer-events: none; }
 /* double coral ring (spins) */
 .seal .ring { position: absolute; inset: 15%; border-radius: 50%; border: 2.8cqw solid currentColor; box-shadow: inset 0 0 0 1.2cqw currentColor; opacity: .95; }
 /* degree-tick bezel — static compass ring, currentColor, hidden at small sizes */
@@ -202,6 +204,9 @@ body {
 @container (max-width: 32px) { .seal::after { display: none; } .seal .card-pt { display: none; } }
 .seal.mini::after { display: none; }
 .seal.mini .card-pt { display: none; }
+/* full-detail opt-out — show ticks + cardinals even below the size-aware threshold (used by the nav) */
+.seal.full::after { display: block !important; }
+.seal.full .card-pt { display: block !important; }
 /* theme: ink ground, coral star */
 .seal.t-ink  { background: var(--pk-ink); color: var(--pk-accent); }
 .seal.t-ink .star  { background: var(--pk-accent); }
@@ -211,6 +216,7 @@ body {
 /* theme: coral solid */
 .seal.t-coral { background: var(--pk-accent); color: oklch(0.30 0.05 32); }
 .seal.t-coral .star { background: oklch(0.30 0.05 32); }
+.seal.t-coral { --seal-edge: oklch(0.30 0.05 32); }
 
 /* spin */
 @keyframes spinRing { from { transform: rotate(0); } to { transform: rotate(1080deg); } }
